@@ -1,0 +1,28 @@
+:root {
+  --admin-bg: #f3f1eb;
+  --admin-ink: #242723;
+  --admin-muted: #717770;
+  --admin-line: rgba(36, 39, 35, 0.11);
+  --admin-display: 'STSong', 'SimSun', 'Songti SC', serif;
+  --admin-body:
+    'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+    sans-serif;
+  --admin-mono: 'Cascadia Mono', Consolas, monospace;
+  color: var(--admin-ink);
+  background: var(--admin-bg);
+  font-family: var(--admin-body);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}

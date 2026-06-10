@@ -1,0 +1,54 @@
+name: eventhub
+
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: eventhub-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-eventhub}
+      MYSQL_USER: ${MYSQL_USER:-eventhub}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-eventhub_dev}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-eventhub_root_dev}
+      TZ: Asia/Shanghai
+    ports:
+      - "${MYSQL_PORT:-3307}:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD --silent",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - eventhub
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: eventhub-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - eventhub
+
+volumes:
+  mysql-data:
+  redis-data:
+
+networks:
+  eventhub:
+    driver: bridge
