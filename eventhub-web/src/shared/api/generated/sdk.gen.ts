@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { StatusData, StatusResponses } from './types.gen';
+import type { AdminSessionData, AdminSessionResponses, LoginData, LoginResponses, LogoutData, LogoutResponses, MeData, MerchantSessionData, MerchantSessionResponses, MeResponses, RefreshData, RefreshResponses, RegisterData, RegisterResponses, StatusData, StatusResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -19,6 +19,55 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 };
 
 /**
- * Get public system status
+ * 注册普通用户
+ */
+export const register = <ThrowOnError extends boolean = false>(options: Options<RegisterData, ThrowOnError>): RequestResult<RegisterResponses, unknown, ThrowOnError> => (options.client ?? client).post<RegisterResponses, unknown, ThrowOnError>({
+    url: '/api/auth/register',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * 刷新登录状态
+ */
+export const refresh = <ThrowOnError extends boolean = false>(options: Options<RefreshData, ThrowOnError>): RequestResult<RefreshResponses, unknown, ThrowOnError> => (options.client ?? client).post<RefreshResponses, unknown, ThrowOnError>({ url: '/api/auth/refresh', ...options });
+
+/**
+ * 退出登录
+ */
+export const logout = <ThrowOnError extends boolean = false>(options: Options<LogoutData, ThrowOnError>): RequestResult<LogoutResponses, unknown, ThrowOnError> => (options.client ?? client).post<LogoutResponses, unknown, ThrowOnError>({ url: '/api/auth/logout', ...options });
+
+/**
+ * 登录
+ */
+export const login = <ThrowOnError extends boolean = false>(options: Options<LoginData, ThrowOnError>): RequestResult<LoginResponses, unknown, ThrowOnError> => (options.client ?? client).post<LoginResponses, unknown, ThrowOnError>({
+    url: '/api/auth/login',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * 获取公开系统状态
  */
 export const status = <ThrowOnError extends boolean = false>(options?: Options<StatusData, ThrowOnError>): RequestResult<StatusResponses, unknown, ThrowOnError> => (options?.client ?? client).get<StatusResponses, unknown, ThrowOnError>({ url: '/api/system/status', ...options });
+
+/**
+ * 验证商家后台会话
+ */
+export const merchantSession = <ThrowOnError extends boolean = false>(options?: Options<MerchantSessionData, ThrowOnError>): RequestResult<MerchantSessionResponses, unknown, ThrowOnError> => (options?.client ?? client).get<MerchantSessionResponses, unknown, ThrowOnError>({ url: '/api/merchant/session', ...options });
+
+/**
+ * 获取当前用户
+ */
+export const me = <ThrowOnError extends boolean = false>(options?: Options<MeData, ThrowOnError>): RequestResult<MeResponses, unknown, ThrowOnError> => (options?.client ?? client).get<MeResponses, unknown, ThrowOnError>({ url: '/api/auth/me', ...options });
+
+/**
+ * 验证平台管理会话
+ */
+export const adminSession = <ThrowOnError extends boolean = false>(options?: Options<AdminSessionData, ThrowOnError>): RequestResult<AdminSessionResponses, unknown, ThrowOnError> => (options?.client ?? client).get<AdminSessionResponses, unknown, ThrowOnError>({ url: '/api/admin/session', ...options });

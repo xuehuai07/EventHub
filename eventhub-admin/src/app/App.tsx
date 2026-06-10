@@ -9,7 +9,16 @@ import {
 } from '@ant-design/icons'
 import { Layout, Menu, Tag } from 'antd'
 import { lazy, Suspense } from 'react'
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom'
+import { LoginPage } from '../pages/LoginPage'
+import { logoutAdmin } from '../shared/auth/authApi'
+import { useAuthStore } from '../shared/auth/authStore'
 import './app.css'
 
 const { Content, Header, Sider } = Layout
@@ -44,8 +53,39 @@ function PlaceholderPage({ title }: { title: string }) {
 }
 
 export function App() {
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/*" element={<ProtectedAdminWorkspace />} />
+    </Routes>
+  )
+}
+
+function ProtectedAdminWorkspace() {
+  const location = useLocation()
+  const status = useAuthStore((state) => state.status)
+  const user = useAuthStore((state) => state.user)
+  const allowed =
+    user?.roles?.includes('ADMIN') || user?.roles?.includes('MERCHANT')
+
+  if (status !== 'authenticated' || !allowed) {
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{ from: `${location.pathname}${location.search}` }}
+      />
+    )
+  }
+
+  return <AdminWorkspace />
+}
+
+function AdminWorkspace() {
   const navigate = useNavigate()
   const location = useLocation()
+  const user = useAuthStore((state) => state.user)
+  const roleLabel = user?.roles?.includes('ADMIN') ? '平台管理员' : '商家员工'
 
   return (
     <Layout className="admin-shell">
@@ -65,8 +105,8 @@ export function App() {
           onClick={({ key }) => navigate(key)}
         />
         <div className="stage-badge">
-          <Tag color="processing">阶段 0</Tag>
-          <p>基础工程环境</p>
+          <Tag color="processing">阶段 1</Tag>
+          <p>身份与权限体系</p>
         </div>
       </Sider>
 
@@ -77,11 +117,17 @@ export function App() {
             <strong>平台运营管理</strong>
           </div>
           <div className="operator-chip">
-            <span>管</span>
+            <span>{user?.displayName?.slice(0, 1) || '管'}</span>
             <div>
-              <strong>演示管理员</strong>
-              <small>平台管理员</small>
+              <strong>{user?.displayName || user?.username}</strong>
+              <small>{roleLabel}</small>
             </div>
+            <button
+              className="operator-logout"
+              onClick={() => void logoutAdmin()}
+            >
+              退出
+            </button>
           </div>
         </Header>
 

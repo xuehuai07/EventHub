@@ -4,6 +4,9 @@ server:
 spring:
   application:
     name: eventhub-server
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
   datasource:
     url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3307}/${DB_NAME:eventhub}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
     username: ${DB_USERNAME:eventhub}
@@ -33,3 +36,21 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+eventhub:
+  auth:
+    jwt-secret: ${AUTH_JWT_SECRET:change-this-development-secret-before-production-32-bytes}
+    access-token-ttl: ${AUTH_ACCESS_TOKEN_TTL:15m}
+    refresh-token-ttl: ${AUTH_REFRESH_TOKEN_TTL:14d}
+    cookie-secure: ${AUTH_COOKIE_SECURE:false}
+    login-max-failures: ${AUTH_LOGIN_MAX_FAILURES:5}
+    login-failure-window: ${AUTH_LOGIN_FAILURE_WINDOW:10m}
+    login-lock-duration: ${AUTH_LOGIN_LOCK_DURATION:15m}
+  bootstrap:
+    admin-username: ${BOOTSTRAP_ADMIN_USERNAME:}
+    admin-password: ${BOOTSTRAP_ADMIN_PASSWORD:}
+    admin-display-name: ${BOOTSTRAP_ADMIN_DISPLAY_NAME:平台管理员}

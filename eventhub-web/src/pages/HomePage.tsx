@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { getSystemStatus } from '../shared/api/system'
+import { logoutUser, userLabel } from '../shared/auth/authApi'
+import { useAuthStore } from '../shared/auth/authStore'
 
 const features = [
   {
@@ -26,6 +28,7 @@ export function HomePage() {
     queryFn: getSystemStatus,
   })
   const isUp = systemQuery.data?.data.status === 'UP'
+  const user = useAuthStore((state) => state.user)
 
   return (
     <div className="site-shell">
@@ -39,9 +42,23 @@ export function HomePage() {
           <a href="#how-it-works">使用方式</a>
           <a href="#system">系统状态</a>
         </nav>
-        <a className="header-action" href="#discover">
-          浏览活动
-        </a>
+        {user ? (
+          <div className="account-actions">
+            <span>你好，{userLabel(user)}</span>
+            <button className="header-action" onClick={() => void logoutUser()}>
+              退出登录
+            </button>
+          </div>
+        ) : (
+          <div className="account-actions">
+            <Link className="text-action" to="/login">
+              登录
+            </Link>
+            <Link className="header-action" to="/register">
+              免费注册
+            </Link>
+          </div>
+        )}
       </header>
 
       <main>

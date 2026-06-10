@@ -3,6 +3,7 @@ import { ConfigProvider } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import type { PropsWithChildren } from 'react'
 import { BrowserRouter } from 'react-router-dom'
+import { AuthBootstrap } from '../shared/auth/AuthBootstrap'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,7 +30,9 @@ export function AppProviders({ children }: PropsWithChildren) {
       }}
     >
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>{children}</BrowserRouter>
+        <BrowserRouter>
+          <AuthBootstrap>{children}</AuthBootstrap>
+        </BrowserRouter>
       </QueryClientProvider>
     </ConfigProvider>
   )

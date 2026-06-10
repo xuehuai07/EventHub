@@ -70,3 +70,14 @@ npm run check
 ```
 
 本地默认将 MySQL 映射到宿主机 `3307` 端口，以避开已有的本机 MySQL `3306` 服务。端口和开发凭据可通过根目录 `.env` 覆盖，真实 `.env` 不提交。
+
+首次创建本地管理员时，在启动后端的 PowerShell 会话中设置：
+
+```powershell
+$env:BOOTSTRAP_ADMIN_USERNAME = 'admin'
+$env:BOOTSTRAP_ADMIN_PASSWORD = '请替换为本地强密码'
+$env:AUTH_JWT_SECRET = '请替换为至少 32 位的随机字符串'
+.\mvnw spring-boot:run
+```
+
+管理员仅在账号不存在时创建，密码不会写入仓库或日志。

@@ -4,6 +4,58 @@ export type ClientOptions = {
     baseURL: 'http://localhost:8080' | (string & {});
 };
 
+export type RegisterRequest = {
+    username?: string;
+    phone?: string;
+    password: string;
+    displayName: string;
+};
+
+export type ApiResponseAuthUserView = {
+    code?: string;
+    message?: string;
+    data?: AuthUserView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type AuthUserView = {
+    id?: number;
+    username?: string;
+    phone?: string;
+    displayName?: string;
+    roles?: Array<string>;
+    permissions?: Array<string>;
+};
+
+export type ApiResponseAuthResponse = {
+    code?: string;
+    message?: string;
+    data?: AuthResponse;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type AuthResponse = {
+    accessToken?: string;
+    expiresInSeconds?: number;
+    user?: AuthUserView;
+};
+
+export type ApiResponseVoid = {
+    code?: string;
+    message?: string;
+    data?: unknown;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type LoginRequest = {
+    identifier: string;
+    password: string;
+    clientType: 'USER_WEB' | 'ADMIN_WEB';
+};
+
 export type ApiResponseSystemStatus = {
     code?: string;
     message?: string;
@@ -16,6 +68,78 @@ export type SystemStatus = {
     service?: string;
     status?: string;
 };
+
+export type RegisterData = {
+    body: RegisterRequest;
+    path?: never;
+    query?: never;
+    url: '/api/auth/register';
+};
+
+export type RegisterResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseAuthUserView;
+};
+
+export type RegisterResponse = RegisterResponses[keyof RegisterResponses];
+
+export type RefreshData = {
+    body?: never;
+    headers: {
+        'X-Client-Type': 'USER_WEB' | 'ADMIN_WEB';
+        'X-CSRF-Token'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/api/auth/refresh';
+};
+
+export type RefreshResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseAuthResponse;
+};
+
+export type RefreshResponse = RefreshResponses[keyof RefreshResponses];
+
+export type LogoutData = {
+    body?: never;
+    headers: {
+        'X-Client-Type': 'USER_WEB' | 'ADMIN_WEB';
+        'X-CSRF-Token'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/api/auth/logout';
+};
+
+export type LogoutResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseVoid;
+};
+
+export type LogoutResponse = LogoutResponses[keyof LogoutResponses];
+
+export type LoginData = {
+    body: LoginRequest;
+    path?: never;
+    query?: never;
+    url: '/api/auth/login';
+};
+
+export type LoginResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseAuthResponse;
+};
+
+export type LoginResponse = LoginResponses[keyof LoginResponses];
 
 export type StatusData = {
     body?: never;
@@ -32,3 +156,51 @@ export type StatusResponses = {
 };
 
 export type StatusResponse = StatusResponses[keyof StatusResponses];
+
+export type MerchantSessionData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/merchant/session';
+};
+
+export type MerchantSessionResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseAuthUserView;
+};
+
+export type MerchantSessionResponse = MerchantSessionResponses[keyof MerchantSessionResponses];
+
+export type MeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/auth/me';
+};
+
+export type MeResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseAuthUserView;
+};
+
+export type MeResponse = MeResponses[keyof MeResponses];
+
+export type AdminSessionData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/admin/session';
+};
+
+export type AdminSessionResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseAuthUserView;
+};
+
+export type AdminSessionResponse = AdminSessionResponses[keyof AdminSessionResponses];

@@ -5,3 +5,14 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
       - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
+eventhub:
+  auth:
+    jwt-secret: test-secret-key-must-have-at-least-thirty-two-bytes
+    access-token-ttl: 15m
+    refresh-token-ttl: 14d
+    cookie-secure: false
+    login-max-failures: 5
+    login-failure-window: 10m
+    login-lock-duration: 15m

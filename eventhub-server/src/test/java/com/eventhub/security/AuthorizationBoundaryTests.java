@@ -1,0 +1,65 @@
+package com.eventhub.security;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.eventhub.user.UserIdentityMapper;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+class AuthorizationBoundaryTests {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private JwtService jwtService;
+
+    @MockitoBean
+    private UserIdentityMapper userIdentityMapper;
+
+    @Test
+    void userCannotAccessMerchantOrAdminEndpoints() throws Exception {
+        String token = token(List.of("USER"), ClientType.USER_WEB);
+
+        mockMvc.perform(get("/api/merchant/session").header("Authorization", "Bearer " + token))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value("AUTH_FORBIDDEN"));
+        mockMvc.perform(get("/api/admin/session").header("Authorization", "Bearer " + token))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value("AUTH_FORBIDDEN"));
+    }
+
+    @Test
+    void merchantCanAccessMerchantButNotAdminEndpoint() throws Exception {
+        String token = token(List.of("MERCHANT"), ClientType.ADMIN_WEB);
+
+        mockMvc.perform(get("/api/merchant/session").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/admin/session").header("Authorization", "Bearer " + token))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void adminCanAccessBothBoundaries() throws Exception {
+        String token = token(List.of("ADMIN"), ClientType.ADMIN_WEB);
+
+        mockMvc.perform(get("/api/merchant/session").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/admin/session").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+    }
+
+    private String token(List<String> roles, ClientType clientType) {
+        return jwtService.createAccessToken(new AuthenticatedUser(
+                1L, "tester", null, "测试用户", roles, List.of("PROFILE_READ"), clientType, "test-session"));
+    }
+}

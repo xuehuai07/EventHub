@@ -8,12 +8,12 @@ import { useQuery } from '@tanstack/react-query'
 import { Progress, Tag } from 'antd'
 import { getSystemStatus } from '../shared/api/system'
 
-const foundationItems = [
-  'Java 21 与 Spring Boot 3.5',
-  'MySQL 与 Redis 容器环境',
-  '统一 API 响应协议',
-  'OpenAPI 客户端代码生成',
-  '独立 React 用户端与管理端',
+const identityItems = [
+  '用户、角色与权限数据模型',
+  'JWT Access Token 身份认证',
+  'Redis Refresh Token 安全轮换',
+  '用户端注册、登录与会话恢复',
+  '管理端角色边界与受保护路由',
 ]
 
 export function DashboardPage() {
@@ -29,15 +29,14 @@ export function DashboardPage() {
       <section className="dashboard-intro">
         <div>
           <span className="section-label">环境概览</span>
-          <h1>核心业务开发环境已就绪</h1>
+          <h1>身份与权限体系已就绪</h1>
           <p>
-            工程结构、接口契约和本地基础设施均已完成。下一阶段将实现用户认证、
-            角色权限和商家身份体系。
+            用户注册、双端登录、令牌轮换和角色访问边界均已接通，现可进入活动管理业务开发。
           </p>
         </div>
         <div className="release-card">
           <span>当前里程碑</span>
-          <strong>基础工程</strong>
+          <strong>身份与权限</strong>
           <Tag bordered={false} color="success">
             已完成
           </Tag>
@@ -79,8 +78,8 @@ export function DashboardPage() {
           </span>
           <div>
             <small>下一里程碑</small>
-            <strong>身份与权限</strong>
-            <p>用户、角色、商家与登录令牌</p>
+            <strong>活动管理</strong>
+            <p>活动创建、发布与报名配置</p>
           </div>
         </article>
       </section>
@@ -89,13 +88,13 @@ export function DashboardPage() {
         <article className="foundation-panel">
           <div className="panel-heading">
             <div>
-              <span className="section-label">阶段 0 检查项</span>
-              <h2>工程基础能力</h2>
+              <span className="section-label">阶段 1 检查项</span>
+              <h2>身份基础能力</h2>
             </div>
             <Progress type="circle" percent={100} size={62} />
           </div>
           <div className="foundation-list">
-            {foundationItems.map((item) => (
+            {identityItems.map((item) => (
               <div key={item}>
                 <CheckCircleFilled />
                 <span>{item}</span>
