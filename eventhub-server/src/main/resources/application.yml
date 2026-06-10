@@ -54,3 +54,7 @@ eventhub:
     admin-username: ${BOOTSTRAP_ADMIN_USERNAME:}
     admin-password: ${BOOTSTRAP_ADMIN_PASSWORD:}
     admin-display-name: ${BOOTSTRAP_ADMIN_DISPLAY_NAME:平台管理员}
+    merchant-username: ${BOOTSTRAP_MERCHANT_USERNAME:}
+    merchant-password: ${BOOTSTRAP_MERCHANT_PASSWORD:}
+    merchant-display-name: ${BOOTSTRAP_MERCHANT_DISPLAY_NAME:演示商家员工}
+    merchant-name: ${BOOTSTRAP_MERCHANT_NAME:EventHub 演示商家}

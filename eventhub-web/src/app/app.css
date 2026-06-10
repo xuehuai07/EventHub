@@ -323,6 +323,14 @@ button.header-action {
   backdrop-filter: blur(12px);
 }
 
+.route-loading {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  color: #596158;
+  background: #f5f1e8;
+}
+
 .system-bar strong {
   color: var(--ink);
 }

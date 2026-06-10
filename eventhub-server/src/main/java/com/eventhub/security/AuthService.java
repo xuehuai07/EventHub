@@ -2,6 +2,7 @@ package com.eventhub.security;
 
 import com.eventhub.common.error.BusinessException;
 import com.eventhub.common.error.ErrorCode;
+import com.eventhub.user.MerchantBinding;
 import com.eventhub.user.UserIdentityMapper;
 import com.eventhub.user.UserRecord;
 import java.security.SecureRandom;
@@ -153,6 +154,12 @@ public class AuthService {
                 };
         if (!allowed) {
             throw new BusinessException(ErrorCode.AUTH_CLIENT_NOT_ALLOWED);
+        }
+        if (user.clientType() == ClientType.ADMIN_WEB && roles.contains("MERCHANT") && !roles.contains("ADMIN")) {
+            MerchantBinding binding = mapper.findMerchantBinding(user.id());
+            if (binding == null || !binding.active()) {
+                throw new BusinessException(ErrorCode.MERCHANT_INACTIVE);
+            }
         }
     }
 

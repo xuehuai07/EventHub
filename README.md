@@ -76,8 +76,20 @@ npm run check
 ```powershell
 $env:BOOTSTRAP_ADMIN_USERNAME = 'admin'
 $env:BOOTSTRAP_ADMIN_PASSWORD = '请替换为本地强密码'
+$env:BOOTSTRAP_MERCHANT_USERNAME = 'merchant'
+$env:BOOTSTRAP_MERCHANT_PASSWORD = '请替换为本地强密码'
+$env:BOOTSTRAP_MERCHANT_NAME = '本地演示商家'
 $env:AUTH_JWT_SECRET = '请替换为至少 32 位的随机字符串'
 .\mvnw spring-boot:run
 ```
 
-管理员仅在账号不存在时创建，密码不会写入仓库或日志。
+管理员和演示商家仅在账号不存在时创建，密码不会写入仓库或日志。
+
+## 阶段 2 功能入口
+
+- 用户端活动列表：http://localhost:3000/activities
+- 管理端活动管理或审核：http://localhost:3001/activities
+- 管理端场馆管理：http://localhost:3001/venues
+- 管理端商家管理：http://localhost:3001/merchants
+
+商家可以创建场馆、配置固定座位、创建活动和场次票档并提交审核。管理员审核通过后，活动会出现在用户端列表和详情页。

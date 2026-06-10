@@ -1,0 +1,127 @@
+.detail-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  max-width: 1240px;
+  min-height: 560px;
+  margin: 24px auto 0;
+  padding: 0 34px;
+  gap: 28px;
+}
+
+.detail-copy {
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  flex-direction: column;
+  padding: 50px 8%;
+}
+
+.detail-copy h1 {
+  max-width: 720px;
+  margin: 20px 0;
+  font-size: clamp(46px, 6vw, 82px);
+  line-height: 1.08;
+}
+
+.detail-copy p {
+  max-width: 600px;
+  color: #656b62;
+  font-size: 18px;
+  line-height: 1.9;
+}
+
+.detail-cover {
+  min-height: 520px;
+  background:
+    linear-gradient(145deg, rgb(35 54 43 / 8%), rgb(183 76 47 / 20%)), #d8c6a9;
+  background-position: center;
+  background-size: cover;
+}
+
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 0.9fr;
+  max-width: 1160px;
+  margin: 80px auto;
+  padding: 0 34px;
+  gap: 80px;
+}
+
+.detail-description h2 {
+  margin: 15px 0 24px;
+  font-size: 42px;
+}
+
+.detail-description p {
+  color: #5e645b;
+  font-size: 16px;
+  line-height: 2.1;
+  white-space: pre-wrap;
+}
+
+.session-panel {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+
+.session-card {
+  padding: 24px;
+  background: #fffdf8;
+  border: 1px solid #e2dacb;
+}
+
+.session-card > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.session-card p,
+.session-card time {
+  color: #70766d;
+  font-size: 13px;
+}
+
+.ticket-list,
+.seat-preview {
+  display: grid;
+  margin: 18px 0;
+  gap: 8px;
+}
+
+.ticket-list div,
+.seat-preview span {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: #f3eee4;
+}
+
+.seat-preview span {
+  color: #62685f;
+  font-size: 12px;
+}
+
+.session-card button {
+  width: 100%;
+  padding: 13px;
+  color: #8b8d87;
+  background: #e5e2db;
+  border: 0;
+}
+
+@media (max-width: 900px) {
+  .detail-hero,
+  .detail-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .detail-hero,
+  .detail-layout {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+}

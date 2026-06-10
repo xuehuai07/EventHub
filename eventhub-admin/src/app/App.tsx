@@ -4,6 +4,7 @@ import {
   CalendarOutlined,
   DashboardOutlined,
   SafetyCertificateOutlined,
+  BankOutlined,
   ShopOutlined,
   TeamOutlined,
 } from '@ant-design/icons'
@@ -27,11 +28,29 @@ const DashboardPage = lazy(() =>
     default: module.DashboardPage,
   })),
 )
+const ActivityManagementPage = lazy(() =>
+  import('../pages/ActivityManagementPage').then((module) => ({
+    default: module.ActivityManagementPage,
+  })),
+)
+const ActivityReviewPage = lazy(() =>
+  import('../pages/ActivityReviewPage').then((module) => ({
+    default: module.ActivityReviewPage,
+  })),
+)
+const MerchantManagementPage = lazy(() =>
+  import('../pages/MerchantManagementPage').then((module) => ({
+    default: module.MerchantManagementPage,
+  })),
+)
+const VenueManagementPage = lazy(() =>
+  import('../pages/VenueManagementPage').then((module) => ({
+    default: module.VenueManagementPage,
+  })),
+)
 
-const navigation = [
+const commonNavigation = [
   { key: '/', icon: <DashboardOutlined />, label: '工作台' },
-  { key: '/activities', icon: <CalendarOutlined />, label: '活动管理' },
-  { key: '/merchants', icon: <ShopOutlined />, label: '商家管理' },
   { key: '/orders', icon: <AppstoreOutlined />, label: '订单管理' },
   {
     key: '/verification',
@@ -86,6 +105,19 @@ function AdminWorkspace() {
   const location = useLocation()
   const user = useAuthStore((state) => state.user)
   const roleLabel = user?.roles?.includes('ADMIN') ? '平台管理员' : '商家员工'
+  const isAdmin = user?.roles?.includes('ADMIN')
+  const navigation = [
+    ...commonNavigation.slice(0, 1),
+    {
+      key: '/activities',
+      icon: <CalendarOutlined />,
+      label: isAdmin ? '活动审核' : '活动管理',
+    },
+    ...(isAdmin
+      ? [{ key: '/merchants', icon: <ShopOutlined />, label: '商家管理' }]
+      : [{ key: '/venues', icon: <BankOutlined />, label: '场馆管理' }]),
+    ...commonNavigation.slice(1),
+  ]
 
   return (
     <Layout className="admin-shell">
@@ -105,8 +137,8 @@ function AdminWorkspace() {
           onClick={({ key }) => navigate(key)}
         />
         <div className="stage-badge">
-          <Tag color="processing">阶段 1</Tag>
-          <p>身份与权限体系</p>
+          <Tag color="processing">阶段 2</Tag>
+          <p>活动发布与审核</p>
         </div>
       </Sider>
 
@@ -139,11 +171,29 @@ function AdminWorkspace() {
               <Route path="/" element={<DashboardPage />} />
               <Route
                 path="/activities"
-                element={<PlaceholderPage title="活动管理" />}
+                element={
+                  isAdmin ? <ActivityReviewPage /> : <ActivityManagementPage />
+                }
               />
               <Route
                 path="/merchants"
-                element={<PlaceholderPage title="商家入驻审核" />}
+                element={
+                  isAdmin ? (
+                    <MerchantManagementPage />
+                  ) : (
+                    <Navigate to="/" replace />
+                  )
+                }
+              />
+              <Route
+                path="/venues"
+                element={
+                  isAdmin ? (
+                    <Navigate to="/" replace />
+                  ) : (
+                    <VenueManagementPage />
+                  )
+                }
               />
               <Route
                 path="/orders"

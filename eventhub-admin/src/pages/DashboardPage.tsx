@@ -6,14 +6,15 @@ import {
 } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Progress, Tag } from 'antd'
+import { summary } from '../shared/api/generated/sdk.gen'
 import { getSystemStatus } from '../shared/api/system'
 
 const identityItems = [
-  '用户、角色与权限数据模型',
-  'JWT Access Token 身份认证',
-  'Redis Refresh Token 安全轮换',
-  '用户端注册、登录与会话恢复',
-  '管理端角色边界与受保护路由',
+  '商家与场馆数据归属',
+  '活动草稿与状态机',
+  '场次、票档与固定座位',
+  '管理员审核与发布',
+  '用户端公开活动浏览',
 ]
 
 export function DashboardPage() {
@@ -23,20 +24,25 @@ export function DashboardPage() {
     refetchInterval: 30_000,
   })
   const apiOnline = statusQuery.data?.data.status === 'UP'
+  const summaryQuery = useQuery({
+    queryKey: ['activity-dashboard-summary'],
+    queryFn: async () => (await summary({ throwOnError: true })).data.data,
+  })
+  const metrics = summaryQuery.data
 
   return (
     <div className="dashboard">
       <section className="dashboard-intro">
         <div>
           <span className="section-label">环境概览</span>
-          <h1>身份与权限体系已就绪</h1>
+          <h1>活动发布链路已接通</h1>
           <p>
-            用户注册、双端登录、令牌轮换和角色访问边界均已接通，现可进入活动管理业务开发。
+            商家可以配置场馆、场次和票档，管理员完成审核后，活动将实时出现在用户端。
           </p>
         </div>
         <div className="release-card">
           <span>当前里程碑</span>
-          <strong>身份与权限</strong>
+          <strong>活动与场次</strong>
           <Tag bordered={false} color="success">
             已完成
           </Tag>
@@ -67,8 +73,8 @@ export function DashboardPage() {
           </span>
           <div>
             <small>本地基础设施</small>
-            <strong>2 个服务</strong>
-            <p>MySQL 8.4 · Redis 7.4</p>
+            <strong>{metrics?.merchantCount ?? 0} 个商家</strong>
+            <p>{metrics?.publishedCount ?? 0} 个活动已发布</p>
           </div>
         </article>
 
@@ -78,8 +84,8 @@ export function DashboardPage() {
           </span>
           <div>
             <small>下一里程碑</small>
-            <strong>活动管理</strong>
-            <p>活动创建、发布与报名配置</p>
+            <strong>{metrics?.upcomingSessionCount ?? 0} 个近期场次</strong>
+            <p>{metrics?.pendingReviewCount ?? 0} 个活动等待审核</p>
           </div>
         </article>
       </section>
@@ -88,8 +94,8 @@ export function DashboardPage() {
         <article className="foundation-panel">
           <div className="panel-heading">
             <div>
-              <span className="section-label">阶段 1 检查项</span>
-              <h2>身份基础能力</h2>
+              <span className="section-label">阶段 2 检查项</span>
+              <h2>活动业务能力</h2>
             </div>
             <Progress type="circle" percent={100} size={62} />
           </div>

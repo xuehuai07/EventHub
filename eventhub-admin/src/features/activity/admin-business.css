@@ -1,0 +1,105 @@
+.business-page {
+  display: grid;
+  gap: 24px;
+}
+
+.business-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 8px 2px;
+}
+
+.business-heading span {
+  color: #b94d2f;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.business-heading h1 {
+  margin: 6px 0 8px;
+  color: #252922;
+  font-family: 'Noto Serif SC', 'Songti SC', serif;
+  font-size: clamp(30px, 4vw, 46px);
+  font-weight: 500;
+}
+
+.business-heading p {
+  max-width: 640px;
+  margin: 0;
+  color: #6f756c;
+}
+
+.table-primary {
+  display: grid;
+  max-width: 420px;
+  gap: 5px;
+}
+
+.table-primary strong {
+  color: #242923;
+}
+
+.table-primary span {
+  overflow: hidden;
+  color: #7a8077;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.form-grid-two,
+.ticket-form-row {
+  display: grid;
+  gap: 12px;
+}
+
+.form-grid-two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ticket-form-row {
+  grid-template-columns: 1.2fr 1fr 0.8fr 0.7fr;
+}
+
+.form-note {
+  margin-bottom: 18px;
+  color: #6d7469;
+  background: #f6f2e9;
+  border-color: #e7ddca;
+}
+
+.review-sessions {
+  display: grid;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.review-sessions article {
+  display: grid;
+  gap: 5px;
+  padding: 16px;
+  background: #f7f4ed;
+  border: 1px solid #e9e1d3;
+  border-radius: 12px;
+}
+
+.review-sessions span,
+.review-sessions p {
+  margin: 0;
+  color: #71776e;
+}
+
+@media (max-width: 760px) {
+  .business-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .form-grid-two,
+  .ticket-form-row {
+    grid-template-columns: 1fr;
+  }
+}

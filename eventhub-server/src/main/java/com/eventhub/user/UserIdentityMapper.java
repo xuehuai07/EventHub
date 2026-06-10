@@ -46,6 +46,12 @@ public interface UserIdentityMapper {
             """)
     void assignRole(@Param("userId") long userId, @Param("roleCode") String roleCode);
 
+    @Insert("""
+            INSERT IGNORE INTO eh_user_role (user_id, role_id)
+            SELECT #{userId}, id FROM eh_role WHERE code = #{roleCode}
+            """)
+    void assignRoleIfMissing(@Param("userId") long userId, @Param("roleCode") String roleCode);
+
     @Select("""
             SELECT role.code
             FROM eh_role role
@@ -64,4 +70,28 @@ public interface UserIdentityMapper {
             ORDER BY permission.code
             """)
     List<String> findPermissions(long userId);
+
+    @Select("""
+            SELECT merchant.id AS merchant_id,
+                   merchant.name AS merchant_name,
+                   merchant.status AS merchant_status,
+                   staff.status AS staff_status
+            FROM eh_merchant_staff staff
+            JOIN eh_merchant merchant ON merchant.id = staff.merchant_id
+            WHERE staff.user_id = #{userId}
+            """)
+    MerchantBinding findMerchantBinding(long userId);
+
+    @Insert("""
+            INSERT INTO eh_merchant (name, description, status)
+            VALUES (#{name}, #{description}, 'ACTIVE')
+            """)
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    void insertMerchant(MerchantRecord merchant);
+
+    @Insert("""
+            INSERT INTO eh_merchant_staff (merchant_id, user_id, staff_role, status)
+            VALUES (#{merchantId}, #{userId}, 'OWNER', 'ACTIVE')
+            """)
+    void bindMerchantStaff(@Param("merchantId") long merchantId, @Param("userId") long userId);
 }

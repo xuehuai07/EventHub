@@ -6,6 +6,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.eventhub.activity.infrastructure.persistence.ActivityCommandMapper;
+import com.eventhub.activity.infrastructure.persistence.ActivityQueryMapper;
+import com.eventhub.activity.infrastructure.persistence.VenueMapper;
+import com.eventhub.admin.dashboard.ActivityDashboardMapper;
+import com.eventhub.admin.merchant.MerchantAdminMapper;
 import com.eventhub.common.request.RequestIdFilter;
 import com.eventhub.user.UserIdentityMapper;
 import org.junit.jupiter.api.Test;
@@ -24,6 +29,21 @@ class SystemControllerTests {
 
     @MockitoBean
     private UserIdentityMapper userIdentityMapper;
+
+    @MockitoBean
+    private ActivityCommandMapper activityCommandMapper;
+
+    @MockitoBean
+    private ActivityQueryMapper activityQueryMapper;
+
+    @MockitoBean
+    private VenueMapper venueMapper;
+
+    @MockitoBean
+    private MerchantAdminMapper merchantAdminMapper;
+
+    @MockitoBean
+    private ActivityDashboardMapper activityDashboardMapper;
 
     @Test
     void returnsSystemStatusWithGeneratedRequestId() throws Exception {

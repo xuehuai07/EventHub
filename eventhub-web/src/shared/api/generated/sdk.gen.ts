@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AdminSessionData, AdminSessionResponses, LoginData, LoginResponses, LogoutData, LogoutResponses, MeData, MerchantSessionData, MerchantSessionResponses, MeResponses, RefreshData, RefreshResponses, RegisterData, RegisterResponses, StatusData, StatusResponses } from './types.gen';
+import type { ActivitiesData, ActivitiesResponses, AdminSessionData, AdminSessionResponses, ApproveData, ApproveResponses, BindStaffData, BindStaffResponses, CategoriesData, CategoriesResponses, Create1Data, Create1Responses, Create2Data, Create2Responses, CreateData, CreateResponses, CreateSessionData, CreateSessionResponses, DeleteSessionData, DeleteSessionResponses, Detail1Data, Detail1Responses, Detail2Data, Detail2Responses, DetailData, DetailResponses, GenerateSeatsData, GenerateSeatsResponses, List1Data, List1Responses, List2Data, List2Responses, ListData, ListResponses, LoginData, LoginResponses, LogoutData, LogoutResponses, MeData, MerchantSessionData, MerchantSessionResponses, MeResponses, OffShelfData, OffShelfResponses, PendingData, PendingResponses, RefreshData, RefreshResponses, RegisterData, RegisterResponses, RejectData, RejectResponses, StatusData, StatusResponses, SubmitData, SubmitResponses, SummaryData, SummaryResponses, Update1Data, Update1Responses, UpdateData, UpdateResponses, UpdateSessionData, UpdateSessionResponses, UpdateStatusData, UpdateStatusResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -17,6 +17,115 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
      */
     meta?: keyof ClientMeta extends never ? Record<string, unknown> : ClientMeta;
 };
+
+/**
+ * 修改场馆
+ */
+export const update = <ThrowOnError extends boolean = false>(options: Options<UpdateData, ThrowOnError>): RequestResult<UpdateResponses, unknown, ThrowOnError> => (options.client ?? client).put<UpdateResponses, unknown, ThrowOnError>({
+    url: '/api/merchant/venues/{venueId}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * 批量生成固定座位
+ */
+export const generateSeats = <ThrowOnError extends boolean = false>(options: Options<GenerateSeatsData, ThrowOnError>): RequestResult<GenerateSeatsResponses, unknown, ThrowOnError> => (options.client ?? client).put<GenerateSeatsResponses, unknown, ThrowOnError>({
+    url: '/api/merchant/venues/{venueId}/seats',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const detail = <ThrowOnError extends boolean = false>(options: Options<DetailData, ThrowOnError>): RequestResult<DetailResponses, unknown, ThrowOnError> => (options.client ?? client).get<DetailResponses, unknown, ThrowOnError>({ url: '/api/merchant/activities/{activityId}', ...options });
+
+/**
+ * 修改活动草稿
+ */
+export const update1 = <ThrowOnError extends boolean = false>(options: Options<Update1Data, ThrowOnError>): RequestResult<Update1Responses, unknown, ThrowOnError> => (options.client ?? client).put<Update1Responses, unknown, ThrowOnError>({
+    url: '/api/merchant/activities/{activityId}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const deleteSession = <ThrowOnError extends boolean = false>(options: Options<DeleteSessionData, ThrowOnError>): RequestResult<DeleteSessionResponses, unknown, ThrowOnError> => (options.client ?? client).delete<DeleteSessionResponses, unknown, ThrowOnError>({ url: '/api/merchant/activities/{activityId}/sessions/{sessionId}', ...options });
+
+/**
+ * 修改活动场次和票档
+ */
+export const updateSession = <ThrowOnError extends boolean = false>(options: Options<UpdateSessionData, ThrowOnError>): RequestResult<UpdateSessionResponses, unknown, ThrowOnError> => (options.client ?? client).put<UpdateSessionResponses, unknown, ThrowOnError>({
+    url: '/api/merchant/activities/{activityId}/sessions/{sessionId}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const updateStatus = <ThrowOnError extends boolean = false>(options: Options<UpdateStatusData, ThrowOnError>): RequestResult<UpdateStatusResponses, unknown, ThrowOnError> => (options.client ?? client).put<UpdateStatusResponses, unknown, ThrowOnError>({
+    url: '/api/admin/merchants/{merchantId}/status',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * 查询当前商家的场馆
+ */
+export const list = <ThrowOnError extends boolean = false>(options?: Options<ListData, ThrowOnError>): RequestResult<ListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<ListResponses, unknown, ThrowOnError>({ url: '/api/merchant/venues', ...options });
+
+/**
+ * 创建场馆
+ */
+export const create = <ThrowOnError extends boolean = false>(options: Options<CreateData, ThrowOnError>): RequestResult<CreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<CreateResponses, unknown, ThrowOnError>({
+    url: '/api/merchant/venues',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const list1 = <ThrowOnError extends boolean = false>(options?: Options<List1Data, ThrowOnError>): RequestResult<List1Responses, unknown, ThrowOnError> => (options?.client ?? client).get<List1Responses, unknown, ThrowOnError>({ url: '/api/merchant/activities', ...options });
+
+/**
+ * 创建活动草稿
+ */
+export const create1 = <ThrowOnError extends boolean = false>(options: Options<Create1Data, ThrowOnError>): RequestResult<Create1Responses, unknown, ThrowOnError> => (options.client ?? client).post<Create1Responses, unknown, ThrowOnError>({
+    url: '/api/merchant/activities',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * 提交活动审核
+ */
+export const submit = <ThrowOnError extends boolean = false>(options: Options<SubmitData, ThrowOnError>): RequestResult<SubmitResponses, unknown, ThrowOnError> => (options.client ?? client).post<SubmitResponses, unknown, ThrowOnError>({ url: '/api/merchant/activities/{activityId}/submit', ...options });
+
+/**
+ * 新增活动场次和票档
+ */
+export const createSession = <ThrowOnError extends boolean = false>(options: Options<CreateSessionData, ThrowOnError>): RequestResult<CreateSessionResponses, unknown, ThrowOnError> => (options.client ?? client).post<CreateSessionResponses, unknown, ThrowOnError>({
+    url: '/api/merchant/activities/{activityId}/sessions',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * 注册普通用户
@@ -52,6 +161,46 @@ export const login = <ThrowOnError extends boolean = false>(options: Options<Log
     }
 });
 
+export const list2 = <ThrowOnError extends boolean = false>(options?: Options<List2Data, ThrowOnError>): RequestResult<List2Responses, unknown, ThrowOnError> => (options?.client ?? client).get<List2Responses, unknown, ThrowOnError>({ url: '/api/admin/merchants', ...options });
+
+export const create2 = <ThrowOnError extends boolean = false>(options: Options<Create2Data, ThrowOnError>): RequestResult<Create2Responses, unknown, ThrowOnError> => (options.client ?? client).post<Create2Responses, unknown, ThrowOnError>({
+    url: '/api/admin/merchants',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const bindStaff = <ThrowOnError extends boolean = false>(options: Options<BindStaffData, ThrowOnError>): RequestResult<BindStaffResponses, unknown, ThrowOnError> => (options.client ?? client).post<BindStaffResponses, unknown, ThrowOnError>({
+    url: '/api/admin/merchants/{merchantId}/staff',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const reject = <ThrowOnError extends boolean = false>(options: Options<RejectData, ThrowOnError>): RequestResult<RejectResponses, unknown, ThrowOnError> => (options.client ?? client).post<RejectResponses, unknown, ThrowOnError>({
+    url: '/api/admin/activities/{activityId}/reject',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const offShelf = <ThrowOnError extends boolean = false>(options: Options<OffShelfData, ThrowOnError>): RequestResult<OffShelfResponses, unknown, ThrowOnError> => (options.client ?? client).post<OffShelfResponses, unknown, ThrowOnError>({
+    url: '/api/admin/activities/{activityId}/off-shelf',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const approve = <ThrowOnError extends boolean = false>(options: Options<ApproveData, ThrowOnError>): RequestResult<ApproveResponses, unknown, ThrowOnError> => (options.client ?? client).post<ApproveResponses, unknown, ThrowOnError>({ url: '/api/admin/activities/{activityId}/approve', ...options });
+
 /**
  * 获取公开系统状态
  */
@@ -71,3 +220,24 @@ export const me = <ThrowOnError extends boolean = false>(options?: Options<MeDat
  * 验证平台管理会话
  */
 export const adminSession = <ThrowOnError extends boolean = false>(options?: Options<AdminSessionData, ThrowOnError>): RequestResult<AdminSessionResponses, unknown, ThrowOnError> => (options?.client ?? client).get<AdminSessionResponses, unknown, ThrowOnError>({ url: '/api/admin/session', ...options });
+
+export const summary = <ThrowOnError extends boolean = false>(options?: Options<SummaryData, ThrowOnError>): RequestResult<SummaryResponses, unknown, ThrowOnError> => (options?.client ?? client).get<SummaryResponses, unknown, ThrowOnError>({ url: '/api/admin/dashboard/activity-summary', ...options });
+
+export const detail1 = <ThrowOnError extends boolean = false>(options: Options<Detail1Data, ThrowOnError>): RequestResult<Detail1Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail1Responses, unknown, ThrowOnError>({ url: '/api/admin/activities/{activityId}', ...options });
+
+export const pending = <ThrowOnError extends boolean = false>(options?: Options<PendingData, ThrowOnError>): RequestResult<PendingResponses, unknown, ThrowOnError> => (options?.client ?? client).get<PendingResponses, unknown, ThrowOnError>({ url: '/api/admin/activities/reviews', ...options });
+
+/**
+ * 查询活动分类
+ */
+export const categories = <ThrowOnError extends boolean = false>(options?: Options<CategoriesData, ThrowOnError>): RequestResult<CategoriesResponses, unknown, ThrowOnError> => (options?.client ?? client).get<CategoriesResponses, unknown, ThrowOnError>({ url: '/api/activity-categories', ...options });
+
+/**
+ * 查询已发布活动
+ */
+export const activities = <ThrowOnError extends boolean = false>(options?: Options<ActivitiesData, ThrowOnError>): RequestResult<ActivitiesResponses, unknown, ThrowOnError> => (options?.client ?? client).get<ActivitiesResponses, unknown, ThrowOnError>({ url: '/api/activities', ...options });
+
+/**
+ * 查询已发布活动详情
+ */
+export const detail2 = <ThrowOnError extends boolean = false>(options: Options<Detail2Data, ThrowOnError>): RequestResult<Detail2Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail2Responses, unknown, ThrowOnError>({ url: '/api/activities/{activityId}', ...options });

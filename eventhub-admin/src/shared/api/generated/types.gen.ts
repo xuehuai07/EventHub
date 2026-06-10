@@ -4,6 +4,145 @@ export type ClientOptions = {
     baseURL: 'http://localhost:8080' | (string & {});
 };
 
+export type VenueRequest = {
+    name: string;
+    city: string;
+    address: string;
+    seatMode: 'GENERAL' | 'FIXED';
+    capacity?: number;
+    version?: number;
+};
+
+export type ApiResponseVenueView = {
+    code?: string;
+    message?: string;
+    data?: VenueView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type SeatAreaView = {
+    areaName?: string;
+    seatGrade?: string;
+    seatCount?: number;
+};
+
+export type VenueView = {
+    id?: number;
+    name?: string;
+    city?: string;
+    address?: string;
+    seatMode?: 'GENERAL' | 'FIXED';
+    capacity?: number;
+    status?: string;
+    version?: number;
+    seatAreas?: Array<SeatAreaView>;
+};
+
+export type SeatBlockRequest = {
+    areaName: string;
+    seatGrade: string;
+    rowPrefix: string;
+    rowCount?: number;
+    seatsPerRow?: number;
+};
+
+export type SeatGenerationRequest = {
+    blocks: Array<SeatBlockRequest>;
+};
+
+export type ActivityRequest = {
+    categoryId: number;
+    title: string;
+    summary: string;
+    description: string;
+    coverUrl?: string;
+    city: string;
+    version?: number;
+};
+
+export type ActivityDetailView = {
+    id?: number;
+    categoryId?: number;
+    categoryName?: string;
+    merchantName?: string;
+    title?: string;
+    summary?: string;
+    description?: string;
+    coverUrl?: string;
+    city?: string;
+    status?: 'DRAFT' | 'PENDING_REVIEW' | 'PUBLISHED' | 'REJECTED' | 'OFF_SHELF' | 'FINISHED';
+    reviewReason?: string;
+    version?: number;
+    sessions?: Array<SessionView>;
+};
+
+export type ApiResponseActivityDetailView = {
+    code?: string;
+    message?: string;
+    data?: ActivityDetailView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type SessionView = {
+    id?: number;
+    venueId?: number;
+    venueName?: string;
+    venueAddress?: string;
+    seatMode?: 'GENERAL' | 'FIXED';
+    name?: string;
+    startAt?: string;
+    endAt?: string;
+    saleStartAt?: string;
+    saleEndAt?: string;
+    status?: string;
+    version?: number;
+    ticketTypes?: Array<TicketTypeView>;
+    seatAreas?: Array<SeatAreaView>;
+};
+
+export type TicketTypeView = {
+    id?: number;
+    name?: string;
+    seatGrade?: string;
+    priceCents?: number;
+    totalStock?: number;
+    availableStock?: number;
+    saleLimitPerUser?: number;
+};
+
+export type SessionRequest = {
+    venueId: number;
+    name: string;
+    startAt: string;
+    endAt: string;
+    saleStartAt: string;
+    saleEndAt: string;
+    ticketTypes: Array<TicketTypeRequest>;
+    version?: number;
+};
+
+export type TicketTypeRequest = {
+    name: string;
+    seatGrade?: string;
+    priceCents?: number;
+    totalStock?: number;
+    saleLimitPerUser?: number;
+};
+
+export type MerchantStatusRequest = {
+    status: string;
+};
+
+export type ApiResponseVoid = {
+    code?: string;
+    message?: string;
+    data?: unknown;
+    requestId?: string;
+    timestamp?: string;
+};
+
 export type RegisterRequest = {
     username?: string;
     phone?: string;
@@ -42,18 +181,40 @@ export type AuthResponse = {
     user?: AuthUserView;
 };
 
-export type ApiResponseVoid = {
-    code?: string;
-    message?: string;
-    data?: unknown;
-    requestId?: string;
-    timestamp?: string;
-};
-
 export type LoginRequest = {
     identifier: string;
     password: string;
     clientType: 'USER_WEB' | 'ADMIN_WEB';
+};
+
+export type MerchantCreateRequest = {
+    name: string;
+    description?: string;
+};
+
+export type ApiResponseMerchantView = {
+    code?: string;
+    message?: string;
+    data?: MerchantView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type MerchantView = {
+    id?: number;
+    name?: string;
+    description?: string;
+    status?: string;
+    staffCount?: number;
+    createdAt?: string;
+};
+
+export type MerchantStaffRequest = {
+    identifier: string;
+};
+
+export type ReviewRequest = {
+    reason: string;
 };
 
 export type ApiResponseSystemStatus = {
@@ -68,6 +229,315 @@ export type SystemStatus = {
     service?: string;
     status?: string;
 };
+
+export type ApiResponseListVenueView = {
+    code?: string;
+    message?: string;
+    data?: Array<VenueView>;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type ActivitySummaryView = {
+    id?: number;
+    title?: string;
+    summary?: string;
+    coverUrl?: string;
+    city?: string;
+    categoryName?: string;
+    merchantName?: string;
+    status?: 'DRAFT' | 'PENDING_REVIEW' | 'PUBLISHED' | 'REJECTED' | 'OFF_SHELF' | 'FINISHED';
+    nextSessionAt?: string;
+    minimumPriceCents?: number;
+    version?: number;
+};
+
+export type ApiResponsePageResponseActivitySummaryView = {
+    code?: string;
+    message?: string;
+    data?: PageResponseActivitySummaryView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type PageResponseActivitySummaryView = {
+    items?: Array<ActivitySummaryView>;
+    page?: number;
+    pageSize?: number;
+    total?: number;
+    totalPages?: number;
+};
+
+export type ApiResponseListMerchantView = {
+    code?: string;
+    message?: string;
+    data?: Array<MerchantView>;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type ActivityDashboardSummary = {
+    merchantCount?: number;
+    draftCount?: number;
+    pendingReviewCount?: number;
+    publishedCount?: number;
+    upcomingSessionCount?: number;
+};
+
+export type ApiResponseActivityDashboardSummary = {
+    code?: string;
+    message?: string;
+    data?: ActivityDashboardSummary;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type ApiResponseListCategoryView = {
+    code?: string;
+    message?: string;
+    data?: Array<CategoryView>;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type CategoryView = {
+    id?: number;
+    code?: string;
+    name?: string;
+};
+
+export type UpdateData = {
+    body: VenueRequest;
+    path: {
+        venueId: number;
+    };
+    query?: never;
+    url: '/api/merchant/venues/{venueId}';
+};
+
+export type UpdateResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseVenueView;
+};
+
+export type UpdateResponse = UpdateResponses[keyof UpdateResponses];
+
+export type GenerateSeatsData = {
+    body: SeatGenerationRequest;
+    path: {
+        venueId: number;
+    };
+    query?: never;
+    url: '/api/merchant/venues/{venueId}/seats';
+};
+
+export type GenerateSeatsResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseVenueView;
+};
+
+export type GenerateSeatsResponse = GenerateSeatsResponses[keyof GenerateSeatsResponses];
+
+export type DetailData = {
+    body?: never;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/merchant/activities/{activityId}';
+};
+
+export type DetailResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityDetailView;
+};
+
+export type DetailResponse = DetailResponses[keyof DetailResponses];
+
+export type Update1Data = {
+    body: ActivityRequest;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/merchant/activities/{activityId}';
+};
+
+export type Update1Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityDetailView;
+};
+
+export type Update1Response = Update1Responses[keyof Update1Responses];
+
+export type DeleteSessionData = {
+    body?: never;
+    path: {
+        activityId: number;
+        sessionId: number;
+    };
+    query?: never;
+    url: '/api/merchant/activities/{activityId}/sessions/{sessionId}';
+};
+
+export type DeleteSessionResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityDetailView;
+};
+
+export type DeleteSessionResponse = DeleteSessionResponses[keyof DeleteSessionResponses];
+
+export type UpdateSessionData = {
+    body: SessionRequest;
+    path: {
+        activityId: number;
+        sessionId: number;
+    };
+    query?: never;
+    url: '/api/merchant/activities/{activityId}/sessions/{sessionId}';
+};
+
+export type UpdateSessionResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityDetailView;
+};
+
+export type UpdateSessionResponse = UpdateSessionResponses[keyof UpdateSessionResponses];
+
+export type UpdateStatusData = {
+    body: MerchantStatusRequest;
+    path: {
+        merchantId: number;
+    };
+    query?: never;
+    url: '/api/admin/merchants/{merchantId}/status';
+};
+
+export type UpdateStatusResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseVoid;
+};
+
+export type UpdateStatusResponse = UpdateStatusResponses[keyof UpdateStatusResponses];
+
+export type ListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/merchant/venues';
+};
+
+export type ListResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseListVenueView;
+};
+
+export type ListResponse = ListResponses[keyof ListResponses];
+
+export type CreateData = {
+    body: VenueRequest;
+    path?: never;
+    query?: never;
+    url: '/api/merchant/venues';
+};
+
+export type CreateResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseVenueView;
+};
+
+export type CreateResponse = CreateResponses[keyof CreateResponses];
+
+export type List1Data = {
+    body?: never;
+    path?: never;
+    query?: {
+        status?: 'DRAFT' | 'PENDING_REVIEW' | 'PUBLISHED' | 'REJECTED' | 'OFF_SHELF' | 'FINISHED';
+        keyword?: string;
+        page?: number;
+        pageSize?: number;
+    };
+    url: '/api/merchant/activities';
+};
+
+export type List1Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponsePageResponseActivitySummaryView;
+};
+
+export type List1Response = List1Responses[keyof List1Responses];
+
+export type Create1Data = {
+    body: ActivityRequest;
+    path?: never;
+    query?: never;
+    url: '/api/merchant/activities';
+};
+
+export type Create1Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityDetailView;
+};
+
+export type Create1Response = Create1Responses[keyof Create1Responses];
+
+export type SubmitData = {
+    body?: never;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/merchant/activities/{activityId}/submit';
+};
+
+export type SubmitResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityDetailView;
+};
+
+export type SubmitResponse = SubmitResponses[keyof SubmitResponses];
+
+export type CreateSessionData = {
+    body: SessionRequest;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/merchant/activities/{activityId}/sessions';
+};
+
+export type CreateSessionResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityDetailView;
+};
+
+export type CreateSessionResponse = CreateSessionResponses[keyof CreateSessionResponses];
 
 export type RegisterData = {
     body: RegisterRequest;
@@ -141,6 +611,110 @@ export type LoginResponses = {
 
 export type LoginResponse = LoginResponses[keyof LoginResponses];
 
+export type List2Data = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/admin/merchants';
+};
+
+export type List2Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponseListMerchantView;
+};
+
+export type List2Response = List2Responses[keyof List2Responses];
+
+export type Create2Data = {
+    body: MerchantCreateRequest;
+    path?: never;
+    query?: never;
+    url: '/api/admin/merchants';
+};
+
+export type Create2Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponseMerchantView;
+};
+
+export type Create2Response = Create2Responses[keyof Create2Responses];
+
+export type BindStaffData = {
+    body: MerchantStaffRequest;
+    path: {
+        merchantId: number;
+    };
+    query?: never;
+    url: '/api/admin/merchants/{merchantId}/staff';
+};
+
+export type BindStaffResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseVoid;
+};
+
+export type BindStaffResponse = BindStaffResponses[keyof BindStaffResponses];
+
+export type RejectData = {
+    body: ReviewRequest;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/admin/activities/{activityId}/reject';
+};
+
+export type RejectResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityDetailView;
+};
+
+export type RejectResponse = RejectResponses[keyof RejectResponses];
+
+export type OffShelfData = {
+    body: ReviewRequest;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/admin/activities/{activityId}/off-shelf';
+};
+
+export type OffShelfResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityDetailView;
+};
+
+export type OffShelfResponse = OffShelfResponses[keyof OffShelfResponses];
+
+export type ApproveData = {
+    body?: never;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/admin/activities/{activityId}/approve';
+};
+
+export type ApproveResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityDetailView;
+};
+
+export type ApproveResponse = ApproveResponses[keyof ApproveResponses];
+
 export type StatusData = {
     body?: never;
     path?: never;
@@ -204,3 +778,114 @@ export type AdminSessionResponses = {
 };
 
 export type AdminSessionResponse = AdminSessionResponses[keyof AdminSessionResponses];
+
+export type SummaryData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/admin/dashboard/activity-summary';
+};
+
+export type SummaryResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityDashboardSummary;
+};
+
+export type SummaryResponse = SummaryResponses[keyof SummaryResponses];
+
+export type Detail1Data = {
+    body?: never;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/admin/activities/{activityId}';
+};
+
+export type Detail1Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityDetailView;
+};
+
+export type Detail1Response = Detail1Responses[keyof Detail1Responses];
+
+export type PendingData = {
+    body?: never;
+    path?: never;
+    query?: {
+        keyword?: string;
+        page?: number;
+        pageSize?: number;
+    };
+    url: '/api/admin/activities/reviews';
+};
+
+export type PendingResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponsePageResponseActivitySummaryView;
+};
+
+export type PendingResponse = PendingResponses[keyof PendingResponses];
+
+export type CategoriesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/activity-categories';
+};
+
+export type CategoriesResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseListCategoryView;
+};
+
+export type CategoriesResponse = CategoriesResponses[keyof CategoriesResponses];
+
+export type ActivitiesData = {
+    body?: never;
+    path?: never;
+    query?: {
+        categoryId?: number;
+        city?: string;
+        keyword?: string;
+        date?: string;
+        page?: number;
+        pageSize?: number;
+    };
+    url: '/api/activities';
+};
+
+export type ActivitiesResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponsePageResponseActivitySummaryView;
+};
+
+export type ActivitiesResponse = ActivitiesResponses[keyof ActivitiesResponses];
+
+export type Detail2Data = {
+    body?: never;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/activities/{activityId}';
+};
+
+export type Detail2Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityDetailView;
+};
+
+export type Detail2Response = Detail2Responses[keyof Detail2Responses];

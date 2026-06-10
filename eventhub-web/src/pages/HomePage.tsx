@@ -1,8 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
+import { getActivities } from '../entities/activity/api'
+import { ActivityCard } from '../entities/activity/ActivityCard'
 import { getSystemStatus } from '../shared/api/system'
 import { logoutUser, userLabel } from '../shared/auth/authApi'
 import { useAuthStore } from '../shared/auth/authStore'
+import '../features/activity/activity.css'
 
 const features = [
   {
@@ -29,6 +32,10 @@ export function HomePage() {
   })
   const isUp = systemQuery.data?.data.status === 'UP'
   const user = useAuthStore((state) => state.user)
+  const featuredQuery = useQuery({
+    queryKey: ['featured-activities'],
+    queryFn: () => getActivities({ page: 1, pageSize: 3 }),
+  })
 
   return (
     <div className="site-shell">
@@ -38,7 +45,7 @@ export function HomePage() {
           EventHub
         </Link>
         <nav className="nav-links" aria-label="主导航">
-          <a href="#discover">发现活动</a>
+          <Link to="/activities">发现活动</Link>
           <a href="#how-it-works">使用方式</a>
           <a href="#system">系统状态</a>
         </nav>
@@ -73,9 +80,9 @@ export function HomePage() {
               为你提供清晰顺畅的一站式活动体验。
             </p>
             <div className="hero-actions">
-              <a className="primary-action" href="#how-it-works">
+              <Link className="primary-action" to="/activities">
                 开始探索
-              </a>
+              </Link>
               <a className="secondary-action" href="#system">
                 查看平台状态
               </a>
@@ -93,6 +100,19 @@ export function HomePage() {
               <p>在老仓库街区体验音乐、灯光与独立文化交织的城市夜晚。</p>
             </div>
           </aside>
+        </section>
+
+        <section className="home-activities">
+          <div className="home-section-heading">
+            <span>正在发生</span>
+            <h2>经过审核的城市现场</h2>
+            <Link to="/activities">浏览全部活动</Link>
+          </div>
+          <div className="activity-grid home-activity-grid">
+            {featuredQuery.data?.items?.map((activity) => (
+              <ActivityCard key={activity.id} activity={activity} />
+            ))}
+          </div>
         </section>
 
         <section

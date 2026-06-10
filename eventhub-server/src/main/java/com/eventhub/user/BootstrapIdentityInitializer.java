@@ -25,6 +25,11 @@ public class BootstrapIdentityInitializer implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments arguments) {
+        createAdmin();
+        createMerchant();
+    }
+
+    private void createAdmin() {
         if (!hasText(properties.adminUsername()) || !hasText(properties.adminPassword())) {
             return;
         }
@@ -38,6 +43,25 @@ public class BootstrapIdentityInitializer implements ApplicationRunner {
                 properties.adminDisplayName());
         mapper.insert(admin);
         mapper.assignRole(admin.getId(), "ADMIN");
+    }
+
+    private void createMerchant() {
+        if (!hasText(properties.merchantUsername()) || !hasText(properties.merchantPassword())) {
+            return;
+        }
+        if (mapper.findByIdentifier(properties.merchantUsername()) != null) {
+            return;
+        }
+        UserRecord user = new UserRecord(
+                properties.merchantUsername().trim(),
+                null,
+                passwordEncoder.encode(properties.merchantPassword()),
+                properties.merchantDisplayName());
+        mapper.insert(user);
+        mapper.assignRole(user.getId(), "MERCHANT");
+        MerchantRecord merchant = new MerchantRecord(properties.merchantName(), "本地开发演示商家");
+        mapper.insertMerchant(merchant);
+        mapper.bindMerchantStaff(merchant.getId(), user.getId());
     }
 
     private boolean hasText(String value) {
