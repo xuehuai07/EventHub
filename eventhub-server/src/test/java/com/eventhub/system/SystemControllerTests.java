@@ -13,10 +13,13 @@ import com.eventhub.activity.infrastructure.persistence.VenueMapper;
 import com.eventhub.admin.dashboard.ActivityDashboardMapper;
 import com.eventhub.admin.merchant.MerchantAdminMapper;
 import com.eventhub.common.request.RequestIdFilter;
+import com.eventhub.order.infrastructure.messaging.MessageConsumeMapper;
+import com.eventhub.order.infrastructure.outbox.OutboxEventMapper;
 import com.eventhub.order.infrastructure.persistence.AvailabilityMapper;
 import com.eventhub.order.infrastructure.persistence.OrderCommandMapper;
 import com.eventhub.order.infrastructure.persistence.OrderQueryMapper;
 import com.eventhub.order.infrastructure.persistence.SeatLockMapper;
+import com.eventhub.ticket.TicketMapper;
 import com.eventhub.user.UserIdentityMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +67,15 @@ class SystemControllerTests {
 
     @MockitoBean
     private OrderQueryMapper orderQueryMapper;
+
+    @MockitoBean
+    private OutboxEventMapper outboxEventMapper;
+
+    @MockitoBean
+    private MessageConsumeMapper messageConsumeMapper;
+
+    @MockitoBean
+    private TicketMapper ticketMapper;
 
     @Test
     void returnsSystemStatusWithGeneratedRequestId() throws Exception {

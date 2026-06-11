@@ -18,6 +18,19 @@ spring:
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD:}
       timeout: 2s
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:eventhub}
+    password: ${RABBITMQ_PASSWORD:eventhub_dev}
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    template:
+      mandatory: true
+    listener:
+      simple:
+        acknowledge-mode: auto
+        default-requeue-rejected: false
   flyway:
     enabled: true
     locations: classpath:db/migration
@@ -48,6 +61,13 @@ mybatis:
 eventhub:
   media:
     upload-root: ${UPLOAD_ROOT:.data/uploads}
+  order:
+    payment-timeout: ${ORDER_PAYMENT_TIMEOUT:15m}
+    timeout-scan-delay: ${ORDER_TIMEOUT_SCAN_DELAY:60s}
+    messaging:
+      outbox-scan-delay: ${ORDER_OUTBOX_SCAN_DELAY:5s}
+      confirm-timeout: ${ORDER_PUBLISH_CONFIRM_TIMEOUT:5s}
+      publisher-enabled: ${ORDER_OUTBOX_PUBLISHER_ENABLED:true}
   auth:
     jwt-secret: ${AUTH_JWT_SECRET:change-this-development-secret-before-production-32-bytes}
     access-token-ttl: ${AUTH_ACCESS_TOKEN_TTL:15m}

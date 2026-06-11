@@ -5,7 +5,6 @@ import com.eventhub.order.infrastructure.persistence.OrderQueryMapper;
 import java.time.LocalDateTime;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderTimeoutService {
@@ -19,9 +18,7 @@ public class OrderTimeoutService {
     }
 
     @Scheduled(fixedDelayString = "${eventhub.order.timeout-scan-delay:60000}")
-    @Transactional
     public void closeExpiredOrders() {
-        queries.findExpiredOrderIds(LocalDateTime.now(), 100)
-                .forEach(orderId -> actions.closeExpired(queries.findById(orderId)));
+        queries.findExpiredOrderIds(LocalDateTime.now(), 100).forEach(actions::closeExpired);
     }
 }

@@ -6,6 +6,7 @@ import com.eventhub.common.error.ErrorCode;
 import com.eventhub.order.dto.CreateOrderRequest;
 import com.eventhub.order.dto.OrderView;
 import com.eventhub.order.infrastructure.idempotency.IdempotencyGuard;
+import com.eventhub.order.infrastructure.outbox.OrderOutboxService;
 import com.eventhub.order.infrastructure.persistence.AvailabilityMapper;
 import com.eventhub.order.infrastructure.persistence.OrderCommandMapper;
 import com.eventhub.order.infrastructure.persistence.OrderItemRecord;
@@ -20,10 +21,12 @@ import com.eventhub.security.AuthenticatedUser;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
@@ -42,6 +45,8 @@ public class OrderCreationService {
     private final IdempotencyGuard guard;
     private final FixedSeatLockStore fixedLocks;
     private final GeneralStockLockStore stockLocks;
+    private final OrderOutboxService outbox;
+    private final Duration paymentTimeout;
 
     public OrderCreationService(
             SeatLockMapper locks,
@@ -51,7 +56,9 @@ public class OrderCreationService {
             OrderViewAssembler assembler,
             IdempotencyGuard guard,
             FixedSeatLockStore fixedLocks,
-            GeneralStockLockStore stockLocks) {
+            GeneralStockLockStore stockLocks,
+            OrderOutboxService outbox,
+            @Value("${eventhub.order.payment-timeout:15m}") Duration paymentTimeout) {
         this.locks = locks;
         this.availability = availability;
         this.commands = commands;
@@ -60,6 +67,8 @@ public class OrderCreationService {
         this.guard = guard;
         this.fixedLocks = fixedLocks;
         this.stockLocks = stockLocks;
+        this.outbox = outbox;
+        this.paymentTimeout = paymentTimeout;
     }
 
     @Transactional
@@ -114,7 +123,7 @@ public class OrderCreationService {
                 null,
                 context.priceCents() * lock.quantity(),
                 lock.quantity(),
-                LocalDateTime.now().plusMinutes(15),
+                LocalDateTime.now().plus(paymentTimeout),
                 null,
                 null,
                 context.activityTitle(),
@@ -134,6 +143,7 @@ public class OrderCreationService {
                 "ORDER",
                 order.id(),
                 LocalDateTime.now().plusDays(1));
+        outbox.appendCreated(order);
         releaseLockAfterCommit(lock, seatIds);
         return assembler.view(queries.findById(order.id()));
     }

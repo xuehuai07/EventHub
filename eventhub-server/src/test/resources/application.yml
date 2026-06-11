@@ -1,6 +1,10 @@
 spring:
   application:
     name: eventhub-server
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
@@ -10,6 +14,13 @@ spring:
 eventhub:
   media:
     upload-root: ${java.io.tmpdir}/eventhub-test-uploads
+  order:
+    payment-timeout: 15m
+    timeout-scan-delay: 1h
+    messaging:
+      outbox-scan-delay: 1h
+      confirm-timeout: 1s
+      publisher-enabled: false
   auth:
     jwt-secret: test-secret-key-must-have-at-least-thirty-two-bytes
     access-token-ttl: 15m

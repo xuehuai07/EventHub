@@ -6,6 +6,7 @@ import com.eventhub.order.application.order.InventoryRestorer;
 import com.eventhub.order.application.order.OrderViewAssembler;
 import com.eventhub.order.domain.order.OrderStatus;
 import com.eventhub.order.dto.OrderView;
+import com.eventhub.order.infrastructure.outbox.OrderOutboxService;
 import com.eventhub.order.infrastructure.persistence.OrderCommandMapper;
 import com.eventhub.order.infrastructure.persistence.OrderQueryMapper;
 import com.eventhub.order.infrastructure.persistence.OrderRecord;
@@ -24,18 +25,21 @@ public class OrderActionService {
     private final SeatLockMapper locks;
     private final InventoryRestorer inventory;
     private final OrderViewAssembler assembler;
+    private final OrderOutboxService outbox;
 
     public OrderActionService(
             OrderQueryMapper queries,
             OrderCommandMapper commands,
             SeatLockMapper locks,
             InventoryRestorer inventory,
-            OrderViewAssembler assembler) {
+            OrderViewAssembler assembler,
+            OrderOutboxService outbox) {
         this.queries = queries;
         this.commands = commands;
         this.locks = locks;
         this.inventory = inventory;
         this.assembler = assembler;
+        this.outbox = outbox;
     }
 
     @Transactional
@@ -61,7 +65,9 @@ public class OrderActionService {
         commands.insertPayment(
                 "PAY" + UUID.randomUUID().toString().replace("-", ""), order.id(), order.totalAmountCents());
         recordAction(user, "PAY_ORDER", orderId, idempotencyKey);
-        return assembler.view(queries.findById(orderId));
+        OrderRecord paidOrder = queries.findById(orderId);
+        outbox.appendPaid(paidOrder);
+        return assembler.view(paidOrder);
     }
 
     @Transactional
@@ -86,8 +92,10 @@ public class OrderActionService {
         return assembler.view(queries.findById(orderId));
     }
 
-    public void closeExpired(OrderRecord order) {
-        if (commands.transition(order.id(), "EXPIRED") == 1) {
+    @Transactional
+    public void closeExpired(long orderId) {
+        OrderRecord order = queries.findById(orderId);
+        if (order != null && commands.expire(order.id(), LocalDateTime.now()) == 1) {
             inventory.restore(locks.findById(order.lockId()));
         }
     }

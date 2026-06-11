@@ -79,6 +79,17 @@ public interface OrderCommandMapper {
             """)
     int transition(@Param("orderId") long orderId, @Param("targetStatus") String targetStatus);
 
+    @Update("""
+            UPDATE eh_ticket_order
+            SET status = 'EXPIRED',
+                expired_at = CURRENT_TIMESTAMP(3),
+                version = version + 1
+            WHERE id = #{orderId}
+              AND status = 'PENDING_PAYMENT'
+              AND payment_deadline_at <= #{now}
+            """)
+    int expire(@Param("orderId") long orderId, @Param("now") LocalDateTime now);
+
     @Insert("""
             INSERT INTO eh_payment_record (payment_no, order_id, amount_cents, status, paid_at)
             VALUES (#{paymentNo}, #{orderId}, #{amountCents}, 'SUCCESS', CURRENT_TIMESTAMP(3))

@@ -2,7 +2,7 @@
 
 ## 版本
 
-当前稳定约束版本：`0.3.1`（2026-06-11）。
+当前稳定约束版本：`0.4.0`（2026-06-11）。
 
 ## 身份与会话
 
@@ -103,6 +103,39 @@ POST /api/admin/activities/{activityId}/off-shelf
 - 订单状态固定为 `PENDING_PAYMENT`、`PAID`、`CANCELLED`、`EXPIRED`。
 - 只有待支付订单允许支付、取消或超时关闭；取消与超时必须恢复库存。
 - 用户只能访问自己的订单，商家只能访问所属商家订单，管理员可以读取平台订单。
+- 订单创建和支付产生的异步事件必须与业务数据在同一事务写入 Outbox，禁止事务提交前直接依赖 RabbitMQ 发布成功。
+- RabbitMQ 超时消息只负责触发，订单状态条件更新和 MySQL 库存仍是最终可信依据。
+- 数据库订单超时扫描必须保留，作为消息延迟、丢失或 RabbitMQ 不可用时的兜底。
+- 取消或过期订单恢复固定座位后，该座位必须允许被新订单重新购买；历史订单明细不得使用场次座位全局唯一约束阻止转售。
+
+## 订单消息
+
+RabbitMQ 使用以下交换机和队列：
+
+```text
+eventhub.order.events
+eventhub.order.delay
+eventhub.order.dlx
+
+eventhub.order.timeout.delay.q
+eventhub.order.timeout.q
+eventhub.order.paid.q
+eventhub.order.dead.q
+```
+
+- `ORDER_CREATED` 事件按支付截止时间设置消息 TTL，经死信路由进入订单超时队列。
+- `ORDER_PAID` 事件进入支付队列并异步生成电子票。
+- Outbox 发布使用 Publisher Confirm，发布失败必须保留事件并退避重试。
+- 消费语义为至少一次，所有消费者必须使用 `(consumer_name, event_id)` 或等价数据库约束实现幂等。
+- 消费失败只能有限重试，超过上限必须进入死信队列，禁止无限重新入队。
+
+## 电子票
+
+- 支付成功后按订单明细数量生成一人一票的 `eh_ticket` 记录。
+- 票号必须使用不可预测随机值，不得直接暴露自增主键。
+- `(order_item_id, unit_no)` 必须唯一，重复支付事件不得生成重复票。
+- 当前票券状态仅为 `UNUSED`；核销状态、核销操作人和审计信息在后续票券阶段扩展。
+- 本阶段不提供公开票券和核销 API。
 
 ## 订单接口
 

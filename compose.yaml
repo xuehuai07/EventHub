@@ -45,9 +45,32 @@ services:
     networks:
       - eventhub
 
+  rabbitmq:
+    image: rabbitmq:4.1-management-alpine
+    container_name: eventhub-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:-eventhub}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-eventhub_dev}
+      TZ: Asia/Shanghai
+    ports:
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    networks:
+      - eventhub
+
 volumes:
   mysql-data:
   redis-data:
+  rabbitmq-data:
 
 networks:
   eventhub:
