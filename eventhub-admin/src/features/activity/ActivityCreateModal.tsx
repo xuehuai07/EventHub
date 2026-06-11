@@ -1,7 +1,9 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Button, Form, Input, Modal, Select, Space, message } from 'antd'
+import { useState } from 'react'
 import { createActivity, getCategories } from '../../entities/activity/api'
 import type { ActivityRequest } from '../../shared/api/generated/types.gen'
+import { ActivityCoverUploader } from './ActivityCoverUploader'
 
 export function ActivityCreateModal({
   open,
@@ -12,6 +14,7 @@ export function ActivityCreateModal({
   onClose: () => void
   onCreated: () => Promise<unknown>
 }) {
+  const [coverUploading, setCoverUploading] = useState(false)
   const categories = useQuery({
     queryKey: ['activity-categories'],
     queryFn: getCategories,
@@ -36,7 +39,13 @@ export function ActivityCreateModal({
       <Form<ActivityRequest>
         layout="vertical"
         initialValues={{ version: 0 }}
-        onFinish={(values) => mutation.mutate(values)}
+        onFinish={(values) => {
+          if (coverUploading) {
+            message.warning('请等待封面上传完成')
+            return
+          }
+          mutation.mutate(values)
+        }}
       >
         <Form.Item name="title" label="活动名称" rules={[{ required: true }]}>
           <Input />
@@ -73,16 +82,24 @@ export function ActivityCreateModal({
         >
           <Input.TextArea rows={5} />
         </Form.Item>
-        <Form.Item name="coverUrl" label="封面图片 URL">
-          <Input placeholder="https://..." />
+        <Form.Item
+          name="coverUrl"
+          label="活动封面"
+          extra="封面会展示在用户端活动列表和详情页"
+        >
+          <ActivityCoverUploader
+            disabled={mutation.isPending}
+            onUploadingChange={setCoverUploading}
+          />
         </Form.Item>
         <Button
           block
           type="primary"
           htmlType="submit"
-          loading={mutation.isPending}
+          disabled={coverUploading}
+          loading={mutation.isPending || coverUploading}
         >
-          保存草稿
+          {coverUploading ? '正在上传封面' : '保存草稿'}
         </Button>
       </Form>
     </Modal>

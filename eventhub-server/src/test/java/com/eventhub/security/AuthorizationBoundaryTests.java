@@ -1,6 +1,7 @@
 package com.eventhub.security;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -74,6 +76,11 @@ class AuthorizationBoundaryTests {
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value("AUTH_FORBIDDEN"));
         mockMvc.perform(get("/api/admin/session").header("Authorization", "Bearer " + token))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value("AUTH_FORBIDDEN"));
+        mockMvc.perform(multipart("/api/merchant/uploads/activity-cover")
+                        .file(new MockMultipartFile("file", "cover.jpg", "image/jpeg", new byte[] {1}))
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value("AUTH_FORBIDDEN"));
     }

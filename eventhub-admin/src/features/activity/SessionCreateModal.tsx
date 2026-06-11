@@ -36,6 +36,7 @@ export function SessionCreateModal({
   onClose: () => void
   onCreated: () => Promise<unknown>
 }) {
+  const [form] = Form.useForm<SessionForm>()
   const venues = useQuery({ queryKey: ['merchant-venues'], queryFn: getVenues })
   const mutation = useMutation({
     mutationFn: (values: SessionForm) =>
@@ -62,6 +63,9 @@ export function SessionCreateModal({
       onClose()
       await onCreated()
     },
+    onError: (error) => {
+      message.error(apiErrorMessage(error))
+    },
   })
 
   return (
@@ -73,6 +77,7 @@ export function SessionCreateModal({
       onCancel={onClose}
     >
       <Form<SessionForm>
+        form={form}
         layout="vertical"
         initialValues={{
           ticketName: '标准票',
@@ -81,9 +86,19 @@ export function SessionCreateModal({
           saleLimitPerUser: 6,
         }}
         onFinish={(values) => mutation.mutate(values)}
+        onFinishFailed={({ errorFields }) => {
+          message.warning('请检查标红的场次信息')
+          if (errorFields[0]) {
+            form.scrollToField(errorFields[0].name, { block: 'center' })
+          }
+        }}
       >
         <Space.Compact block>
-          <Form.Item name="venueId" label="场馆" rules={[{ required: true }]}>
+          <Form.Item
+            name="venueId"
+            label="场馆"
+            rules={[{ required: true, message: '请选择场馆' }]}
+          >
             <Select
               style={{ width: 230 }}
               options={venues.data?.map((item) => ({
@@ -92,43 +107,112 @@ export function SessionCreateModal({
               }))}
             />
           </Form.Item>
-          <Form.Item name="name" label="场次名称" rules={[{ required: true }]}>
+          <Form.Item
+            name="name"
+            label="场次名称"
+            rules={[{ required: true, message: '请输入场次名称' }]}
+          >
             <Input />
           </Form.Item>
         </Space.Compact>
         <div className="form-grid-two">
-          {[
-            ['startAt', '开始时间'],
-            ['endAt', '结束时间'],
-            ['saleStartAt', '开售时间'],
-            ['saleEndAt', '停售时间'],
-          ].map(([name, label]) => (
-            <Form.Item
-              key={name}
-              name={name}
-              label={label}
-              rules={[{ required: true }]}
-            >
-              <Input type="datetime-local" />
-            </Form.Item>
-          ))}
+          <Form.Item
+            name="startAt"
+            label="开始时间"
+            rules={[{ required: true, message: '请选择开始时间' }]}
+          >
+            <Input type="datetime-local" />
+          </Form.Item>
+          <Form.Item
+            name="endAt"
+            label="结束时间"
+            dependencies={['startAt']}
+            rules={[
+              { required: true, message: '请选择结束时间' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  const startAt = getFieldValue('startAt')
+                  return !value ||
+                    !startAt ||
+                    toTimestamp(value) > toTimestamp(startAt)
+                    ? Promise.resolve()
+                    : Promise.reject(new Error('结束时间必须晚于开始时间'))
+                },
+              }),
+            ]}
+          >
+            <Input type="datetime-local" />
+          </Form.Item>
+          <Form.Item
+            name="saleStartAt"
+            label="开售时间"
+            rules={[{ required: true, message: '请选择开售时间' }]}
+          >
+            <Input type="datetime-local" />
+          </Form.Item>
+          <Form.Item
+            name="saleEndAt"
+            label="停售时间"
+            dependencies={['saleStartAt', 'startAt']}
+            extra="停售时间不得晚于场次开始时间"
+            rules={[
+              { required: true, message: '请选择停售时间' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value) return Promise.resolve()
+                  const saleStartAt = getFieldValue('saleStartAt')
+                  const startAt = getFieldValue('startAt')
+                  if (
+                    saleStartAt &&
+                    toTimestamp(value) <= toTimestamp(saleStartAt)
+                  ) {
+                    return Promise.reject(new Error('停售时间必须晚于开售时间'))
+                  }
+                  if (startAt && toTimestamp(value) > toTimestamp(startAt)) {
+                    return Promise.reject(
+                      new Error('停售时间不得晚于场次开始时间'),
+                    )
+                  }
+                  return Promise.resolve()
+                },
+              }),
+            ]}
+          >
+            <Input type="datetime-local" />
+          </Form.Item>
         </div>
         <div className="ticket-form-row">
-          <Form.Item name="ticketName" label="票档名称">
+          <Form.Item
+            name="ticketName"
+            label="票档名称"
+            rules={[{ required: true, message: '请输入票档名称' }]}
+          >
             <Input />
           </Form.Item>
           <Form.Item name="seatGrade" label="座位等级">
             <Input placeholder="固定座位可填写" />
           </Form.Item>
-          <Form.Item name="priceYuan" label="价格（元）">
-            <InputNumber min={0} precision={2} />
+          <Form.Item
+            name="priceYuan"
+            label="价格（元）"
+            rules={[{ required: true, message: '请输入价格' }]}
+          >
+            <InputNumber min={0} precision={2} style={{ width: '100%' }} />
           </Form.Item>
-          <Form.Item name="totalStock" label="库存">
-            <InputNumber min={1} />
+          <Form.Item
+            name="totalStock"
+            label="库存"
+            rules={[{ required: true, message: '请输入库存' }]}
+          >
+            <InputNumber min={1} style={{ width: '100%' }} />
           </Form.Item>
         </div>
-        <Form.Item name="saleLimitPerUser" label="每人限购">
-          <InputNumber min={1} max={20} />
+        <Form.Item
+          name="saleLimitPerUser"
+          label="每人限购"
+          rules={[{ required: true, message: '请输入每人限购数量' }]}
+        >
+          <InputNumber min={1} max={20} style={{ width: 110 }} />
         </Form.Item>
         <Button
           block
@@ -141,4 +225,17 @@ export function SessionCreateModal({
       </Form>
     </Modal>
   )
+}
+
+function toTimestamp(value: string) {
+  return new Date(value).getTime()
+}
+
+function apiErrorMessage(error: unknown) {
+  const response = (
+    error as {
+      response?: { data?: { message?: string } }
+    }
+  ).response
+  return response?.data?.message || '保存失败，请检查场次和票档信息后重试'
 }

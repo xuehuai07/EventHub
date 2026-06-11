@@ -2,7 +2,7 @@
 
 ## 版本
 
-当前稳定约束版本：`0.3.0`（2026-06-11）。
+当前稳定约束版本：`0.3.1`（2026-06-11）。
 
 ## 身份与会话
 
@@ -132,3 +132,12 @@ GET /api/admin/orders/{orderId}
 - Redis Key 和序列化由缓存组件封装。
 - 前端页面只组合 Feature，服务端数据由 TanStack Query 管理。
 - OpenAPI 生成目录禁止手工修改。
+
+## 媒体文件
+
+- 商家活动封面上传接口为 `POST /api/merchant/uploads/activity-cover`。
+- 活动封面公开读取接口为 `GET /api/media/activity-covers/{fileName}`。
+- 上传文件只允许真实 JPG 或 PNG，最大 5 MB，最大尺寸 6000 × 6000。
+- 客户端文件名不得作为服务端路径，存储文件名必须由服务端随机生成。
+- 本地开发默认存储到 `.data/uploads/activity-covers`，可通过 `UPLOAD_ROOT` 覆盖。
+- 业务数据只保存媒体 URL，不依赖本地文件实现；生产环境可替换为对象存储。

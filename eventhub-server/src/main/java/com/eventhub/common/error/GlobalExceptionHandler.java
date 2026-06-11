@@ -12,6 +12,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -42,6 +43,12 @@ public class GlobalExceptionHandler {
     ResponseEntity<ApiResponse<Void>> handleMethodNotAllowed(HttpRequestMethodNotSupportedException exception) {
         ErrorCode errorCode = ErrorCode.METHOD_NOT_ALLOWED;
         return ResponseEntity.status(errorCode.status()).body(ApiResponse.error(errorCode, exception.getMessage()));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    ResponseEntity<ApiResponse<Void>> handleUploadTooLarge(MaxUploadSizeExceededException exception) {
+        ErrorCode errorCode = ErrorCode.MEDIA_FILE_TOO_LARGE;
+        return ResponseEntity.status(errorCode.status()).body(ApiResponse.error(errorCode));
     }
 
     @ExceptionHandler(AccessDeniedException.class)

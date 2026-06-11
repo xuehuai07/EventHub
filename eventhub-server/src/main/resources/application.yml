@@ -21,6 +21,10 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
 
 management:
   endpoints:
@@ -42,6 +46,8 @@ mybatis:
     map-underscore-to-camel-case: true
 
 eventhub:
+  media:
+    upload-root: ${UPLOAD_ROOT:.data/uploads}
   auth:
     jwt-secret: ${AUTH_JWT_SECRET:change-this-development-secret-before-production-32-bytes}
     access-token-ttl: ${AUTH_ACCESS_TOKEN_TTL:15m}

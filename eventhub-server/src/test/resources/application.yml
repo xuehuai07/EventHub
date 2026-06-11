@@ -8,6 +8,8 @@ spring:
       - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
 
 eventhub:
+  media:
+    upload-root: ${java.io.tmpdir}/eventhub-test-uploads
   auth:
     jwt-secret: test-secret-key-must-have-at-least-thirty-two-bytes
     access-token-ttl: 15m
