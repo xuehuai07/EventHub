@@ -143,6 +143,73 @@ export type ApiResponseVoid = {
     timestamp?: string;
 };
 
+export type SeatLockRequest = {
+    sessionId: number;
+    ticketTypeId: number;
+    sessionSeatIds?: Array<number>;
+    quantity?: number;
+};
+
+export type ApiResponseSeatLockView = {
+    code?: string;
+    message?: string;
+    data?: SeatLockView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type SeatLockView = {
+    lockNo?: string;
+    sessionId?: number;
+    ticketTypeId?: number;
+    seatMode?: 'GENERAL' | 'FIXED';
+    quantity?: number;
+    amountCents?: number;
+    status?: string;
+    expiresAt?: string;
+    sessionSeatIds?: Array<number>;
+};
+
+export type CreateOrderRequest = {
+    lockNo: string;
+};
+
+export type ApiResponseOrderView = {
+    code?: string;
+    message?: string;
+    data?: OrderView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type OrderItemView = {
+    id?: number;
+    ticketTypeId?: number;
+    sessionSeatId?: number;
+    quantity?: number;
+    unitPriceCents?: number;
+    subtotalCents?: number;
+    ticketTypeName?: string;
+    areaName?: string;
+    rowLabel?: string;
+    seatNumber?: string;
+};
+
+export type OrderView = {
+    id?: number;
+    orderNo?: string;
+    status?: 'PENDING_PAYMENT' | 'PAID' | 'CANCELLED' | 'EXPIRED';
+    totalAmountCents?: number;
+    totalQuantity?: number;
+    activityTitle?: string;
+    sessionName?: string;
+    venueName?: string;
+    paymentDeadlineAt?: string;
+    paidAt?: string;
+    createdAt?: string;
+    items?: Array<OrderItemView>;
+};
+
 export type RegisterRequest = {
     username?: string;
     phone?: string;
@@ -228,6 +295,65 @@ export type ApiResponseSystemStatus = {
 export type SystemStatus = {
     service?: string;
     status?: string;
+};
+
+export type ApiResponseAvailabilityView = {
+    code?: string;
+    message?: string;
+    data?: AvailabilityView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type AvailabilityView = {
+    sessionId?: number;
+    activityTitle?: string;
+    sessionName?: string;
+    venueName?: string;
+    seatMode?: 'GENERAL' | 'FIXED';
+    saleStartAt?: string;
+    saleEndAt?: string;
+    ticketTypes?: Array<TicketAvailability>;
+    seats?: Array<SeatAvailability>;
+};
+
+export type SeatAvailability = {
+    id?: number;
+    ticketTypeId?: number;
+    areaName?: string;
+    rowLabel?: string;
+    seatNumber?: string;
+    seatGrade?: string;
+    priceCents?: number;
+    status?: string;
+};
+
+export type TicketAvailability = {
+    id?: number;
+    name?: string;
+    seatGrade?: string;
+    priceCents?: number;
+    totalStock?: number;
+    availableStock?: number;
+    lockedStock?: number;
+    lockableStock?: number;
+    saleLimitPerUser?: number;
+};
+
+export type ApiResponsePageResponseOrderView = {
+    code?: string;
+    message?: string;
+    data?: PageResponseOrderView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type PageResponseOrderView = {
+    items?: Array<OrderView>;
+    page?: number;
+    pageSize?: number;
+    total?: number;
+    totalPages?: number;
 };
 
 export type ApiResponseListVenueView = {
@@ -434,39 +560,136 @@ export type UpdateStatusResponses = {
 
 export type UpdateStatusResponse = UpdateStatusResponses[keyof UpdateStatusResponses];
 
-export type ListData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/merchant/venues';
-};
-
-export type ListResponses = {
-    /**
-     * OK
-     */
-    200: ApiResponseListVenueView;
-};
-
-export type ListResponse = ListResponses[keyof ListResponses];
-
 export type CreateData = {
-    body: VenueRequest;
+    body: SeatLockRequest;
     path?: never;
     query?: never;
-    url: '/api/merchant/venues';
+    url: '/api/seat-locks';
 };
 
 export type CreateResponses = {
     /**
      * OK
      */
-    200: ApiResponseVenueView;
+    200: ApiResponseSeatLockView;
 };
 
 export type CreateResponse = CreateResponses[keyof CreateResponses];
 
+export type ListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        status?: 'PENDING_PAYMENT' | 'PAID' | 'CANCELLED' | 'EXPIRED';
+        page?: number;
+        pageSize?: number;
+    };
+    url: '/api/orders';
+};
+
+export type ListResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponsePageResponseOrderView;
+};
+
+export type ListResponse = ListResponses[keyof ListResponses];
+
+export type Create1Data = {
+    body: CreateOrderRequest;
+    headers?: {
+        'Idempotency-Key'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/api/orders';
+};
+
+export type Create1Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponseOrderView;
+};
+
+export type Create1Response = Create1Responses[keyof Create1Responses];
+
+export type PayData = {
+    body?: never;
+    headers?: {
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        orderId: number;
+    };
+    query?: never;
+    url: '/api/orders/{orderId}/pay';
+};
+
+export type PayResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseOrderView;
+};
+
+export type PayResponse = PayResponses[keyof PayResponses];
+
+export type CancelData = {
+    body?: never;
+    headers?: {
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        orderId: number;
+    };
+    query?: never;
+    url: '/api/orders/{orderId}/cancel';
+};
+
+export type CancelResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseOrderView;
+};
+
+export type CancelResponse = CancelResponses[keyof CancelResponses];
+
 export type List1Data = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/merchant/venues';
+};
+
+export type List1Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponseListVenueView;
+};
+
+export type List1Response = List1Responses[keyof List1Responses];
+
+export type Create2Data = {
+    body: VenueRequest;
+    path?: never;
+    query?: never;
+    url: '/api/merchant/venues';
+};
+
+export type Create2Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponseVenueView;
+};
+
+export type Create2Response = Create2Responses[keyof Create2Responses];
+
+export type List2Data = {
     body?: never;
     path?: never;
     query?: {
@@ -478,30 +701,30 @@ export type List1Data = {
     url: '/api/merchant/activities';
 };
 
-export type List1Responses = {
+export type List2Responses = {
     /**
      * OK
      */
     200: ApiResponsePageResponseActivitySummaryView;
 };
 
-export type List1Response = List1Responses[keyof List1Responses];
+export type List2Response = List2Responses[keyof List2Responses];
 
-export type Create1Data = {
+export type Create3Data = {
     body: ActivityRequest;
     path?: never;
     query?: never;
     url: '/api/merchant/activities';
 };
 
-export type Create1Responses = {
+export type Create3Responses = {
     /**
      * OK
      */
     200: ApiResponseActivityDetailView;
 };
 
-export type Create1Response = Create1Responses[keyof Create1Responses];
+export type Create3Response = Create3Responses[keyof Create3Responses];
 
 export type SubmitData = {
     body?: never;
@@ -611,37 +834,37 @@ export type LoginResponses = {
 
 export type LoginResponse = LoginResponses[keyof LoginResponses];
 
-export type List2Data = {
+export type List3Data = {
     body?: never;
     path?: never;
     query?: never;
     url: '/api/admin/merchants';
 };
 
-export type List2Responses = {
+export type List3Responses = {
     /**
      * OK
      */
     200: ApiResponseListMerchantView;
 };
 
-export type List2Response = List2Responses[keyof List2Responses];
+export type List3Response = List3Responses[keyof List3Responses];
 
-export type Create2Data = {
+export type Create4Data = {
     body: MerchantCreateRequest;
     path?: never;
     query?: never;
     url: '/api/admin/merchants';
 };
 
-export type Create2Responses = {
+export type Create4Responses = {
     /**
      * OK
      */
     200: ApiResponseMerchantView;
 };
 
-export type Create2Response = Create2Responses[keyof Create2Responses];
+export type Create4Response = Create4Responses[keyof Create4Responses];
 
 export type BindStaffData = {
     body: MerchantStaffRequest;
@@ -731,6 +954,78 @@ export type StatusResponses = {
 
 export type StatusResponse = StatusResponses[keyof StatusResponses];
 
+export type GetData = {
+    body?: never;
+    path: {
+        sessionId: number;
+    };
+    query?: never;
+    url: '/api/sessions/{sessionId}/availability';
+};
+
+export type GetResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseAvailabilityView;
+};
+
+export type GetResponse = GetResponses[keyof GetResponses];
+
+export type ReleaseData = {
+    body?: never;
+    path: {
+        lockNo: string;
+    };
+    query?: never;
+    url: '/api/seat-locks/{lockNo}';
+};
+
+export type ReleaseResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseSeatLockView;
+};
+
+export type ReleaseResponse = ReleaseResponses[keyof ReleaseResponses];
+
+export type Get1Data = {
+    body?: never;
+    path: {
+        lockNo: string;
+    };
+    query?: never;
+    url: '/api/seat-locks/{lockNo}';
+};
+
+export type Get1Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponseSeatLockView;
+};
+
+export type Get1Response = Get1Responses[keyof Get1Responses];
+
+export type Detail1Data = {
+    body?: never;
+    path: {
+        orderId: number;
+    };
+    query?: never;
+    url: '/api/orders/{orderId}';
+};
+
+export type Detail1Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponseOrderView;
+};
+
+export type Detail1Response = Detail1Responses[keyof Detail1Responses];
+
 export type MerchantSessionData = {
     body?: never;
     path?: never;
@@ -746,6 +1041,45 @@ export type MerchantSessionResponses = {
 };
 
 export type MerchantSessionResponse = MerchantSessionResponses[keyof MerchantSessionResponses];
+
+export type List4Data = {
+    body?: never;
+    path?: never;
+    query?: {
+        status?: 'PENDING_PAYMENT' | 'PAID' | 'CANCELLED' | 'EXPIRED';
+        keyword?: string;
+        page?: number;
+        pageSize?: number;
+    };
+    url: '/api/merchant/orders';
+};
+
+export type List4Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponsePageResponseOrderView;
+};
+
+export type List4Response = List4Responses[keyof List4Responses];
+
+export type Detail2Data = {
+    body?: never;
+    path: {
+        orderId: number;
+    };
+    query?: never;
+    url: '/api/merchant/orders/{orderId}';
+};
+
+export type Detail2Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponseOrderView;
+};
+
+export type Detail2Response = Detail2Responses[keyof Detail2Responses];
 
 export type MeData = {
     body?: never;
@@ -779,6 +1113,45 @@ export type AdminSessionResponses = {
 
 export type AdminSessionResponse = AdminSessionResponses[keyof AdminSessionResponses];
 
+export type List5Data = {
+    body?: never;
+    path?: never;
+    query?: {
+        status?: 'PENDING_PAYMENT' | 'PAID' | 'CANCELLED' | 'EXPIRED';
+        keyword?: string;
+        page?: number;
+        pageSize?: number;
+    };
+    url: '/api/admin/orders';
+};
+
+export type List5Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponsePageResponseOrderView;
+};
+
+export type List5Response = List5Responses[keyof List5Responses];
+
+export type Detail3Data = {
+    body?: never;
+    path: {
+        orderId: number;
+    };
+    query?: never;
+    url: '/api/admin/orders/{orderId}';
+};
+
+export type Detail3Responses = {
+    /**
+     * OK
+     */
+    200: ApiResponseOrderView;
+};
+
+export type Detail3Response = Detail3Responses[keyof Detail3Responses];
+
 export type SummaryData = {
     body?: never;
     path?: never;
@@ -795,7 +1168,7 @@ export type SummaryResponses = {
 
 export type SummaryResponse = SummaryResponses[keyof SummaryResponses];
 
-export type Detail1Data = {
+export type Detail4Data = {
     body?: never;
     path: {
         activityId: number;
@@ -804,14 +1177,14 @@ export type Detail1Data = {
     url: '/api/admin/activities/{activityId}';
 };
 
-export type Detail1Responses = {
+export type Detail4Responses = {
     /**
      * OK
      */
     200: ApiResponseActivityDetailView;
 };
 
-export type Detail1Response = Detail1Responses[keyof Detail1Responses];
+export type Detail4Response = Detail4Responses[keyof Detail4Responses];
 
 export type PendingData = {
     body?: never;
@@ -872,7 +1245,7 @@ export type ActivitiesResponses = {
 
 export type ActivitiesResponse = ActivitiesResponses[keyof ActivitiesResponses];
 
-export type Detail2Data = {
+export type Detail5Data = {
     body?: never;
     path: {
         activityId: number;
@@ -881,11 +1254,11 @@ export type Detail2Data = {
     url: '/api/activities/{activityId}';
 };
 
-export type Detail2Responses = {
+export type Detail5Responses = {
     /**
      * OK
      */
     200: ApiResponseActivityDetailView;
 };
 
-export type Detail2Response = Detail2Responses[keyof Detail2Responses];
+export type Detail5Response = Detail5Responses[keyof Detail5Responses];

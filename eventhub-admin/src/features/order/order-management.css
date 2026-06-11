@@ -1,0 +1,26 @@
+.order-management .ant-table-wrapper {
+  overflow: hidden;
+  background: #fffdf8;
+  border: 1px solid #e4dccd;
+  border-radius: 20px;
+}
+
+.managed-order-items {
+  margin-top: 28px;
+}
+
+.managed-order-items > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid #ece5d9;
+}
+
+.managed-order-items span {
+  display: grid;
+  gap: 4px;
+}
+
+.managed-order-items small {
+  color: #777b74;
+}

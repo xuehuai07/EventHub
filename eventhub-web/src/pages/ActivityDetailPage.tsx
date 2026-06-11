@@ -89,7 +89,12 @@ export function ActivityDetailPage() {
                   ))}
                 </div>
               )}
-              <button disabled>选座购票即将开放</button>
+              <Link
+                className="session-buy-action"
+                to={`/sessions/${session.id}/tickets`}
+              >
+                {session.seatMode === 'FIXED' ? '立即选座' : '选择票档'}
+              </Link>
             </section>
           ))}
         </aside>

@@ -1,10 +1,10 @@
 import {
   approve,
   categories,
-  create1,
+  create3,
   createSession,
-  detail1,
-  list1,
+  detail4,
+  list2,
   pending,
   reject,
   submit,
@@ -21,12 +21,12 @@ export async function getCategories() {
 
 export async function getMerchantActivities() {
   return (
-    await list1({ query: { page: 1, pageSize: 100 }, throwOnError: true })
+    await list2({ query: { page: 1, pageSize: 100 }, throwOnError: true })
   ).data.data
 }
 
 export async function createActivity(body: ActivityRequest) {
-  return (await create1({ body, throwOnError: true })).data.data
+  return (await create3({ body, throwOnError: true })).data.data
 }
 
 export async function addActivitySession(
@@ -53,7 +53,7 @@ export async function getPendingReviews() {
 }
 
 export async function getReviewDetail(activityId: number) {
-  return (await detail1({ path: { activityId }, throwOnError: true })).data.data
+  return (await detail4({ path: { activityId }, throwOnError: true })).data.data
 }
 
 export async function approveActivity(activityId: number) {

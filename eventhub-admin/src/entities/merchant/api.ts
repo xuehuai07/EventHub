@@ -1,17 +1,17 @@
 import {
   bindStaff,
-  create2,
-  list2,
+  create4,
+  list3,
   updateStatus,
 } from '../../shared/api/generated/sdk.gen'
 import type { MerchantCreateRequest } from '../../shared/api/generated/types.gen'
 
 export async function getMerchants() {
-  return (await list2({ throwOnError: true })).data.data ?? []
+  return (await list3({ throwOnError: true })).data.data ?? []
 }
 
 export async function createMerchant(body: MerchantCreateRequest) {
-  return (await create2({ body, throwOnError: true })).data.data
+  return (await create4({ body, throwOnError: true })).data.data
 }
 
 export async function setMerchantStatus(

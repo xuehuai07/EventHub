@@ -38,6 +38,7 @@ public class SecurityConfig {
                                 "/api/activity-categories",
                                 "/api/activities",
                                 "/api/activities/**",
+                                "/api/sessions/*/availability",
                                 "/actuator/health",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",

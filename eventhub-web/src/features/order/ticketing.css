@@ -1,0 +1,446 @@
+.ticketing-page,
+.orders-page,
+.checkout-page,
+.order-detail-page {
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 90% 8%, rgb(239 210 101 / 30%), transparent 26%),
+    var(--paper);
+}
+
+.ticketing-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.ticketing-header > a:last-child {
+  color: var(--muted);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.ticketing-shell {
+  display: grid;
+  grid-template-columns: 0.7fr 1.6fr 0.62fr;
+  gap: 30px;
+  width: min(1240px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 64px 0;
+}
+
+.ticketing-intro > span,
+.orders-heading > span,
+.checkout-kicker {
+  color: var(--signal-dark);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.ticketing-intro h1,
+.orders-heading h1,
+.checkout-card h1,
+.receipt-head h1 {
+  margin: 14px 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 5vw, 5rem);
+  letter-spacing: -0.055em;
+  line-height: 0.96;
+}
+
+.ticketing-intro p,
+.orders-heading p,
+.receipt-head p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.availability-note {
+  margin-top: 32px;
+  padding: 18px;
+  color: #5f665e;
+  background: #fffaf0;
+  border-left: 3px solid #e6b84d;
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+.seat-map-panel,
+.ticket-choice-list,
+.ticketing-summary,
+.checkout-card,
+.order-receipt {
+  background: rgb(255 253 248 / 88%);
+  border: 1px solid var(--line);
+  box-shadow: 0 22px 60px rgb(43 48 43 / 8%);
+}
+
+.seat-map-panel {
+  min-height: 550px;
+  padding: 34px;
+  overflow: auto;
+}
+
+.stage-line {
+  width: 70%;
+  margin: 0 auto 34px;
+  padding: 10px;
+  color: #736e60;
+  background: linear-gradient(90deg, transparent, #e8dfcc, transparent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-align: center;
+}
+
+.seat-legend {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 24px;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.seat-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 34px);
+  justify-content: center;
+  gap: 10px;
+}
+
+.seat {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  color: #365b4b;
+  background: #e7efe8;
+  border: 1px solid #bbd0c1;
+  border-radius: 10px 10px 5px 5px;
+  cursor: pointer;
+}
+
+.seat.is-selected {
+  color: #fff9ef;
+  background: var(--signal);
+  border-color: var(--signal);
+  transform: translateY(-3px);
+}
+
+.seat:disabled {
+  color: #aaa69e;
+  background: #e8e5df;
+  border-color: transparent;
+  cursor: not-allowed;
+}
+
+.ticketing-summary {
+  align-self: start;
+  padding: 26px;
+  position: sticky;
+  top: 24px;
+}
+
+.ticketing-summary > span {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.ticketing-summary > strong {
+  display: block;
+  margin: 12px 0 24px;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+}
+
+.ticketing-summary button,
+.checkout-card > button,
+.order-actions button {
+  width: 100%;
+  min-height: 48px;
+  color: #fffaf0;
+  background: var(--signal);
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+}
+
+.ticketing-summary button:disabled,
+.checkout-card > button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.ticket-choice-list {
+  display: grid;
+  align-content: start;
+  padding: 28px;
+  gap: 12px;
+}
+
+.ticket-choice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  color: var(--ink);
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  text-align: left;
+}
+
+.ticket-choice span {
+  display: grid;
+  gap: 6px;
+}
+
+.ticket-choice small {
+  color: var(--muted);
+}
+
+.ticket-choice.is-selected {
+  border-color: var(--signal);
+  box-shadow: inset 4px 0 var(--signal);
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 18px;
+  font-weight: 700;
+}
+
+.quantity-control input {
+  width: 84px;
+  padding: 10px;
+  border: 1px solid var(--line);
+}
+
+.ticketing-state {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  color: var(--muted);
+  background: var(--paper);
+}
+
+.ticketing-error {
+  color: #a43b2a;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.checkout-page,
+.order-detail-page {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  padding: 40px 20px 80px;
+  gap: 42px;
+}
+
+.checkout-card,
+.order-receipt {
+  width: min(100%, 680px);
+  padding: 46px;
+}
+
+.checkout-countdown,
+.payment-deadline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 30px 0;
+  padding: 18px 20px;
+  color: #5b604f;
+  background: #f5edda;
+}
+
+.countdown {
+  color: #2c5746;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.countdown.is-urgent {
+  color: var(--signal);
+}
+
+.checkout-card dl {
+  margin: 0 0 30px;
+}
+
+.checkout-card dl div,
+.receipt-items > div,
+.receipt-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.checkout-card dt {
+  color: var(--muted);
+}
+
+.checkout-card dd {
+  margin: 0;
+}
+
+.checkout-total,
+.receipt-total strong {
+  color: var(--signal-dark);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+}
+
+.checkout-secondary {
+  margin-top: 10px;
+  color: var(--ink) !important;
+  background: transparent !important;
+  border: 1px solid var(--line-strong) !important;
+}
+
+.orders-shell {
+  width: min(1040px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 70px 0;
+}
+
+.orders-heading {
+  margin-bottom: 42px;
+}
+
+.order-list {
+  display: grid;
+  gap: 12px;
+}
+
+.order-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 28px;
+  color: inherit;
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  text-decoration: none;
+  transition: transform 160ms ease;
+}
+
+.order-row:hover {
+  transform: translateX(5px);
+}
+
+.order-row > div {
+  display: grid;
+  gap: 7px;
+}
+
+.order-row > div:last-child {
+  justify-items: end;
+}
+
+.order-row small,
+.order-row span,
+.receipt-items small {
+  color: var(--muted);
+}
+
+.order-status {
+  color: #8c4b28;
+  font-size: 0.75rem;
+}
+
+.status-paid {
+  color: #2c7654;
+}
+
+.empty-orders {
+  padding: 60px;
+  color: var(--muted);
+  border: 1px dashed var(--line-strong);
+  text-align: center;
+}
+
+.receipt-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.receipt-head h1 {
+  font-size: 3rem;
+}
+
+.receipt-head > b {
+  align-self: start;
+  padding: 8px 12px;
+  color: #8c4b28;
+  background: #f7eadb;
+}
+
+.receipt-items span {
+  display: grid;
+  gap: 6px;
+}
+
+.receipt-total {
+  align-items: center;
+  margin-top: 12px;
+  border-bottom: 0;
+}
+
+.order-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+@media (max-width: 900px) {
+  .ticketing-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .ticketing-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 580px) {
+  .seat-map-panel {
+    padding: 24px 12px;
+  }
+
+  .seat-grid {
+    grid-template-columns: repeat(8, 30px);
+    gap: 7px;
+  }
+
+  .seat {
+    width: 30px;
+    height: 30px;
+  }
+
+  .checkout-card,
+  .order-receipt {
+    padding: 28px 20px;
+  }
+
+  .order-row,
+  .receipt-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

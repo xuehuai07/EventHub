@@ -103,12 +103,22 @@
   font-size: 12px;
 }
 
-.session-card button {
+.session-buy-action {
+  display: block;
   width: 100%;
   padding: 13px;
-  color: #8b8d87;
-  background: #e5e2db;
-  border: 0;
+  color: #fffaf0;
+  background: #b84b32;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.session-buy-action:hover {
+  background: #963924;
+  transform: translateY(-1px);
 }
 
 @media (max-width: 900px) {

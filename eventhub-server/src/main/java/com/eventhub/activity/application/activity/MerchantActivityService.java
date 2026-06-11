@@ -34,6 +34,7 @@ public class MerchantActivityService {
     private final ActivityStateMachine stateMachine;
     private final ActivityViewAssembler assembler;
     private final ActivityDetailCache cache;
+    private final SessionSeatSnapshotService seatSnapshots;
 
     public MerchantActivityService(
             ActivityCommandMapper commands,
@@ -42,7 +43,8 @@ public class MerchantActivityService {
             MerchantContextService merchantContext,
             ActivityStateMachine stateMachine,
             ActivityViewAssembler assembler,
-            ActivityDetailCache cache) {
+            ActivityDetailCache cache,
+            SessionSeatSnapshotService seatSnapshots) {
         this.commands = commands;
         this.queries = queries;
         this.venueMapper = venueMapper;
@@ -50,6 +52,7 @@ public class MerchantActivityService {
         this.stateMachine = stateMachine;
         this.assembler = assembler;
         this.cache = cache;
+        this.seatSnapshots = seatSnapshots;
     }
 
     public PageResponse<ActivitySummaryView> list(
@@ -101,6 +104,7 @@ public class MerchantActivityService {
         SessionRecord session = session(activityId, request);
         commands.insertSession(session);
         replaceTickets(session.getId(), request);
+        seatSnapshots.rebuild(session.getId(), request.venueId());
         cache.evict(activityId);
         return assembler.detail(queries.findDetail(activityId));
     }
@@ -119,6 +123,7 @@ public class MerchantActivityService {
             throw new BusinessException(ErrorCode.ACTIVITY_VERSION_CONFLICT);
         }
         replaceTickets(sessionId, request);
+        seatSnapshots.rebuild(sessionId, request.venueId());
         cache.evict(activityId);
         return assembler.detail(queries.findDetail(activityId));
     }
@@ -132,6 +137,7 @@ public class MerchantActivityService {
         if (session == null) {
             throw new BusinessException(ErrorCode.ACTIVITY_NOT_FOUND, "场次不存在");
         }
+        commands.deleteSessionSeats(sessionId);
         commands.deleteTicketTypes(sessionId);
         commands.deleteSession(activityId, sessionId);
         cache.evict(activityId);
@@ -146,6 +152,7 @@ public class MerchantActivityService {
         if (commands.countCompleteSessions(activityId) == 0) {
             throw new BusinessException(ErrorCode.ACTIVITY_INCOMPLETE);
         }
+        seatSnapshots.requireComplete(activityId);
         if (commands.submit(activityId, merchantId) == 0) {
             throw new BusinessException(ErrorCode.ACTIVITY_STATUS_INVALID);
         }
@@ -154,6 +161,7 @@ public class MerchantActivityService {
     }
 
     private void replaceTickets(long sessionId, SessionRequest request) {
+        commands.deleteSessionSeats(sessionId);
         commands.deleteTicketTypes(sessionId);
         List<TicketTypeRecord> tickets = request.ticketTypes().stream()
                 .map(ticket -> new TicketTypeRecord(

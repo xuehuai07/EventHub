@@ -79,6 +79,9 @@ public interface ActivityCommandMapper {
     @Delete("DELETE FROM eh_session_ticket_type WHERE session_id = #{sessionId}")
     void deleteTicketTypes(long sessionId);
 
+    @Delete("DELETE FROM eh_session_seat WHERE session_id = #{sessionId}")
+    void deleteSessionSeats(long sessionId);
+
     @Insert({
         "<script>",
         "INSERT INTO eh_session_ticket_type",

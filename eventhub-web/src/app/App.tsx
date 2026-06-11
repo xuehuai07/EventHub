@@ -16,6 +16,26 @@ const ActivityDetailPage = lazy(() =>
     default: module.ActivityDetailPage,
   })),
 )
+const SeatSelectionPage = lazy(() =>
+  import('../pages/SeatSelectionPage').then((module) => ({
+    default: module.SeatSelectionPage,
+  })),
+)
+const OrderConfirmationPage = lazy(() =>
+  import('../pages/OrderConfirmationPage').then((module) => ({
+    default: module.OrderConfirmationPage,
+  })),
+)
+const OrderListPage = lazy(() =>
+  import('../pages/OrderListPage').then((module) => ({
+    default: module.OrderListPage,
+  })),
+)
+const OrderDetailPage = lazy(() =>
+  import('../pages/OrderDetailPage').then((module) => ({
+    default: module.OrderDetailPage,
+  })),
+)
 
 export function App() {
   return (
@@ -27,6 +47,13 @@ export function App() {
           path="/activities/:activityId"
           element={<ActivityDetailPage />}
         />
+        <Route
+          path="/sessions/:sessionId/tickets"
+          element={<SeatSelectionPage />}
+        />
+        <Route path="/checkout/:lockNo" element={<OrderConfirmationPage />} />
+        <Route path="/orders" element={<OrderListPage />} />
+        <Route path="/orders/:orderId" element={<OrderDetailPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="*" element={<NotFoundPage />} />

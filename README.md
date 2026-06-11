@@ -85,11 +85,26 @@ $env:AUTH_JWT_SECRET = '请替换为至少 32 位的随机字符串'
 
 管理员和演示商家仅在账号不存在时创建，密码不会写入仓库或日志。
 
-## 阶段 2 功能入口
+## 阶段 3 功能入口
 
 - 用户端活动列表：http://localhost:3000/activities
+- 用户端我的订单：http://localhost:3000/orders
 - 管理端活动管理或审核：http://localhost:3001/activities
+- 管理端订单查询：http://localhost:3001/orders
 - 管理端场馆管理：http://localhost:3001/venues
 - 管理端商家管理：http://localhost:3001/merchants
 
-商家可以创建场馆、配置固定座位、创建活动和场次票档并提交审核。管理员审核通过后，活动会出现在用户端列表和详情页。
+商家可以创建场馆、配置固定座位、创建活动和场次票档并提交审核。管理员审核通过后，用户可在活动详情选择场次，完成锁座、创建订单、模拟支付、取消和订单查询。
+
+固定座位并发验收脚本：
+
+```powershell
+.\scripts\test-seat-lock-concurrency.ps1 `
+  -AccessToken '<用户 Access Token>' `
+  -SessionId 1 `
+  -TicketTypeId 1 `
+  -SessionSeatId 2 `
+  -Requests 100
+```
+
+当前订单超时通过数据库定时扫描补偿，RabbitMQ 延迟消息与正式票券核销将在后续阶段接入。

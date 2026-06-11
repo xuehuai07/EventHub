@@ -48,6 +48,11 @@ const VenueManagementPage = lazy(() =>
     default: module.VenueManagementPage,
   })),
 )
+const OrderManagementPage = lazy(() =>
+  import('../pages/OrderManagementPage').then((module) => ({
+    default: module.OrderManagementPage,
+  })),
+)
 
 const commonNavigation = [
   { key: '/', icon: <DashboardOutlined />, label: '工作台' },
@@ -137,8 +142,8 @@ function AdminWorkspace() {
           onClick={({ key }) => navigate(key)}
         />
         <div className="stage-badge">
-          <Tag color="processing">阶段 2</Tag>
-          <p>活动发布与审核</p>
+          <Tag color="processing">阶段 3</Tag>
+          <p>锁座与订单交易</p>
         </div>
       </Sider>
 
@@ -195,10 +200,7 @@ function AdminWorkspace() {
                   )
                 }
               />
-              <Route
-                path="/orders"
-                element={<PlaceholderPage title="订单运营" />}
-              />
+              <Route path="/orders" element={<OrderManagementPage />} />
               <Route
                 path="/verification"
                 element={<PlaceholderPage title="票券核销" />}

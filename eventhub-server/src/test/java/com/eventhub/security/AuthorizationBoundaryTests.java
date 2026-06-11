@@ -6,9 +6,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.eventhub.activity.infrastructure.persistence.ActivityCommandMapper;
 import com.eventhub.activity.infrastructure.persistence.ActivityQueryMapper;
+import com.eventhub.activity.infrastructure.persistence.SessionSeatSnapshotMapper;
 import com.eventhub.activity.infrastructure.persistence.VenueMapper;
 import com.eventhub.admin.dashboard.ActivityDashboardMapper;
 import com.eventhub.admin.merchant.MerchantAdminMapper;
+import com.eventhub.order.infrastructure.persistence.AvailabilityMapper;
+import com.eventhub.order.infrastructure.persistence.OrderCommandMapper;
+import com.eventhub.order.infrastructure.persistence.OrderQueryMapper;
+import com.eventhub.order.infrastructure.persistence.SeatLockMapper;
 import com.eventhub.user.UserIdentityMapper;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -45,6 +50,21 @@ class AuthorizationBoundaryTests {
 
     @MockitoBean
     private ActivityDashboardMapper activityDashboardMapper;
+
+    @MockitoBean
+    private SessionSeatSnapshotMapper sessionSeatSnapshotMapper;
+
+    @MockitoBean
+    private AvailabilityMapper availabilityMapper;
+
+    @MockitoBean
+    private SeatLockMapper seatLockMapper;
+
+    @MockitoBean
+    private OrderCommandMapper orderCommandMapper;
+
+    @MockitoBean
+    private OrderQueryMapper orderQueryMapper;
 
     @Test
     void userCannotAccessMerchantOrAdminEndpoints() throws Exception {

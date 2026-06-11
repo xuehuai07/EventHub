@@ -1,7 +1,7 @@
 import {
   activities,
   categories,
-  detail2,
+  detail5,
 } from '../../shared/api/generated/sdk.gen'
 import type { ActivitiesData } from '../../shared/api/generated/types.gen'
 
@@ -19,5 +19,5 @@ export async function getActivities(query?: ActivitiesData['query']) {
 }
 
 export async function getActivityDetail(activityId: number) {
-  return (await detail2({ path: { activityId }, throwOnError: true })).data.data
+  return (await detail5({ path: { activityId }, throwOnError: true })).data.data
 }
