@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { getMerchantActivities, submitActivity } from '../entities/activity/api'
 import { ActivityCreateModal } from '../features/activity/ActivityCreateModal'
 import { SessionCreateModal } from '../features/activity/SessionCreateModal'
+import { apiErrorMessage } from '../shared/api/apiErrorMessage'
 import type { ActivitySummaryView } from '../shared/api/generated/types.gen'
 import { ActivityStatusTag } from '../shared/ui/activityStatus'
 import '../features/activity/admin-business.css'
@@ -23,6 +24,11 @@ export function ActivityManagementPage() {
     onSuccess: async () => {
       message.success('活动已提交平台审核')
       await refresh()
+    },
+    onError: (error) => {
+      message.error(
+        apiErrorMessage(error, '提交审核失败，请检查场次和票档后重试'),
+      )
     },
   })
 

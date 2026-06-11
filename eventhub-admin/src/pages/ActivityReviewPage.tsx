@@ -16,6 +16,7 @@ import {
   getReviewDetail,
   rejectActivity,
 } from '../entities/activity/api'
+import { apiErrorMessage } from '../shared/api/apiErrorMessage'
 import type {
   ActivityDetailView,
   ActivitySummaryView,
@@ -46,6 +47,9 @@ export function ActivityReviewPage() {
       setSelectedId(undefined)
       await refresh()
     },
+    onError: (error) => {
+      message.error(apiErrorMessage(error, '审核通过失败，请稍后重试'))
+    },
   })
   const rejectMutation = useMutation({
     mutationFn: ({ id, text }: { id: number; text: string }) =>
@@ -55,6 +59,9 @@ export function ActivityReviewPage() {
       setRejectId(undefined)
       setReason('')
       await refresh()
+    },
+    onError: (error) => {
+      message.error(apiErrorMessage(error, '驳回活动失败，请稍后重试'))
     },
   })
 

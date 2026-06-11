@@ -3,6 +3,7 @@ import { Button, Form, Input, Modal, Select, Space, message } from 'antd'
 import { useState } from 'react'
 import { createActivity, getCategories } from '../../entities/activity/api'
 import type { ActivityRequest } from '../../shared/api/generated/types.gen'
+import { apiErrorMessage } from '../../shared/api/apiErrorMessage'
 import { ActivityCoverUploader } from './ActivityCoverUploader'
 
 export function ActivityCreateModal({
@@ -25,6 +26,11 @@ export function ActivityCreateModal({
       message.success('活动草稿已创建')
       onClose()
       await onCreated()
+    },
+    onError: (error) => {
+      message.error(
+        apiErrorMessage(error, '创建活动失败，请检查活动信息后重试'),
+      )
     },
   })
 
