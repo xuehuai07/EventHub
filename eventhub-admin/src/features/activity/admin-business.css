@@ -11,11 +11,30 @@
   padding: 8px 2px;
 }
 
-.business-heading span {
+.business-heading > div > span {
   color: #b94d2f;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.16em;
+}
+
+.business-primary-action.ant-btn {
+  min-width: 132px;
+  height: 44px;
+  padding-inline: 22px;
+  color: #fffaf4;
+  background: #bd4c2d;
+  border-color: #bd4c2d;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(155, 57, 33, 0.2);
+  font-weight: 700;
+}
+
+.business-primary-action.ant-btn:hover,
+.business-primary-action.ant-btn:focus-visible {
+  color: #fff;
+  background: #9f3e24 !important;
+  border-color: #9f3e24 !important;
 }
 
 .business-heading h1 {
@@ -92,8 +111,132 @@
   color: #71776e;
 }
 
+.session-manager-intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  background: #f6f2e9;
+  border: 1px solid #e8decd;
+  border-radius: 12px;
+}
+
+.session-manager-intro > div {
+  display: grid;
+  gap: 4px;
+}
+
+.session-manager-intro span {
+  color: #747a71;
+  font-size: 12px;
+}
+
+.session-manager-list {
+  display: grid;
+  min-height: 120px;
+  gap: 14px;
+}
+
+.session-manager-card {
+  padding: 18px;
+  background: #fff;
+  border: 1px solid #e8e4db;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(47, 49, 44, 0.05);
+}
+
+.session-manager-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.session-manager-card-head > div {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+
+.session-manager-card-head > div > strong {
+  width: 100%;
+  color: #272b26;
+  font-family: var(--admin-display);
+  font-size: 18px;
+}
+
+.session-manager-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.session-manager-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #737970;
+  font-size: 12px;
+}
+
+.session-ticket-grid {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.session-ticket {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 12px;
+  background: #f8f6f1;
+  border-radius: 10px;
+}
+
+.session-ticket > div {
+  display: grid;
+  gap: 2px;
+}
+
+.session-ticket span {
+  color: #7a8077;
+  font-size: 12px;
+}
+
+.session-grade-warning,
+.session-grade-ok {
+  padding: 9px 11px;
+  margin-top: 10px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.session-grade-warning {
+  color: #a3412b;
+  background: #fff0eb;
+}
+
+.session-grade-ok {
+  color: #397352;
+  background: #edf8ef;
+}
+
 @media (max-width: 760px) {
   .business-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .business-primary-action.ant-btn {
+    width: 100%;
+  }
+
+  .session-manager-intro {
     align-items: stretch;
     flex-direction: column;
   }

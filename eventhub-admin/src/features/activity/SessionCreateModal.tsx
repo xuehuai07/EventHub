@@ -9,9 +9,16 @@ import {
   Space,
   message,
 } from 'antd'
-import { addActivitySession } from '../../entities/activity/api'
+import { useEffect } from 'react'
+import {
+  addActivitySession,
+  updateActivitySession,
+} from '../../entities/activity/api'
 import { getVenues } from '../../entities/venue/api'
-import type { ActivitySummaryView } from '../../shared/api/generated/types.gen'
+import type {
+  ActivitySummaryView,
+  SessionView,
+} from '../../shared/api/generated/types.gen'
 
 type SessionForm = {
   venueId: number
@@ -29,18 +36,20 @@ type SessionForm = {
 
 export function SessionCreateModal({
   activity,
+  session,
   onClose,
   onCreated,
 }: {
   activity?: ActivitySummaryView
+  session?: SessionView
   onClose: () => void
   onCreated: () => Promise<unknown>
 }) {
   const [form] = Form.useForm<SessionForm>()
   const venues = useQuery({ queryKey: ['merchant-venues'], queryFn: getVenues })
   const mutation = useMutation({
-    mutationFn: (values: SessionForm) =>
-      addActivitySession(activity!.id!, {
+    mutationFn: (values: SessionForm) => {
+      const body = {
         venueId: values.venueId,
         name: values.name,
         startAt: values.startAt,
@@ -57,9 +66,13 @@ export function SessionCreateModal({
             saleLimitPerUser: values.saleLimitPerUser,
           },
         ],
-      }),
+      }
+      return session?.id
+        ? updateActivitySession(activity!.id!, session.id, body)
+        : addActivitySession(activity!.id!, body)
+    },
     onSuccess: async () => {
-      message.success('场次和票档已添加')
+      message.success(session ? '场次和票档已更新' : '场次和票档已添加')
       onClose()
       await onCreated()
     },
@@ -68,9 +81,46 @@ export function SessionCreateModal({
     },
   })
 
+  useEffect(() => {
+    if (!activity) {
+      form.resetFields()
+      return
+    }
+    const ticket = session?.ticketTypes?.[0]
+    form.setFieldsValue(
+      session
+        ? {
+            venueId: session.venueId,
+            name: session.name,
+            startAt: inputDateTime(session.startAt),
+            endAt: inputDateTime(session.endAt),
+            saleStartAt: inputDateTime(session.saleStartAt),
+            saleEndAt: inputDateTime(session.saleEndAt),
+            ticketName: ticket?.name,
+            seatGrade: ticket?.seatGrade,
+            priceYuan: (ticket?.priceCents ?? 0) / 100,
+            totalStock: ticket?.totalStock,
+            saleLimitPerUser: ticket?.saleLimitPerUser,
+          }
+        : {
+            venueId: undefined,
+            name: undefined,
+            startAt: undefined,
+            endAt: undefined,
+            saleStartAt: undefined,
+            saleEndAt: undefined,
+            ticketName: '标准票',
+            seatGrade: undefined,
+            priceYuan: 99,
+            totalStock: 100,
+            saleLimitPerUser: 6,
+          },
+    )
+  }, [activity, form, session])
+
   return (
     <Modal
-      title={`添加场次 · ${activity?.title ?? ''}`}
+      title={`${session ? '编辑' : '添加'}场次 · ${activity?.title ?? ''}`}
       open={Boolean(activity)}
       footer={null}
       width={680}
@@ -220,7 +270,7 @@ export function SessionCreateModal({
           htmlType="submit"
           loading={mutation.isPending}
         >
-          保存场次与票档
+          {session ? '更新场次与票档' : '保存场次与票档'}
         </Button>
       </Form>
     </Modal>
@@ -229,6 +279,10 @@ export function SessionCreateModal({
 
 function toTimestamp(value: string) {
   return new Date(value).getTime()
+}
+
+function inputDateTime(value?: string) {
+  return value?.slice(0, 16)
 }
 
 function apiErrorMessage(error: unknown) {

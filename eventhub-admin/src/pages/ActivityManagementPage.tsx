@@ -1,11 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { PlusOutlined } from '@ant-design/icons'
 import { Button, Space, Table, message } from 'antd'
 import { useState } from 'react'
 import { getMerchantActivities, submitActivity } from '../entities/activity/api'
 import { ActivityCreateModal } from '../features/activity/ActivityCreateModal'
 import { SessionCreateModal } from '../features/activity/SessionCreateModal'
+import { SessionManagementModal } from '../features/activity/SessionManagementModal'
 import { apiErrorMessage } from '../shared/api/apiErrorMessage'
-import type { ActivitySummaryView } from '../shared/api/generated/types.gen'
+import type {
+  ActivitySummaryView,
+  SessionView,
+} from '../shared/api/generated/types.gen'
 import { ActivityStatusTag } from '../shared/ui/activityStatus'
 import '../features/activity/admin-business.css'
 
@@ -13,6 +18,8 @@ export function ActivityManagementPage() {
   const queryClient = useQueryClient()
   const [createOpen, setCreateOpen] = useState(false)
   const [sessionActivity, setSessionActivity] = useState<ActivitySummaryView>()
+  const [editingSession, setEditingSession] = useState<SessionView>()
+  const [managedActivity, setManagedActivity] = useState<ActivitySummaryView>()
   const activities = useQuery({
     queryKey: ['merchant-activities'],
     queryFn: getMerchantActivities,
@@ -40,7 +47,12 @@ export function ActivityManagementPage() {
           <h1>活动管理</h1>
           <p>从草稿开始配置场次和票档，信息完整后提交平台审核。</p>
         </div>
-        <Button type="primary" onClick={() => setCreateOpen(true)}>
+        <Button
+          className="business-primary-action"
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setCreateOpen(true)}
+        >
           创建活动
         </Button>
       </div>
@@ -73,8 +85,8 @@ export function ActivityManagementPage() {
               <Space>
                 {['DRAFT', 'REJECTED'].includes(row.status ?? '') && (
                   <>
-                    <Button type="link" onClick={() => setSessionActivity(row)}>
-                      添加场次
+                    <Button type="link" onClick={() => setManagedActivity(row)}>
+                      管理场次
                     </Button>
                     <Button
                       type="link"
@@ -97,8 +109,27 @@ export function ActivityManagementPage() {
       />
       <SessionCreateModal
         activity={sessionActivity}
-        onClose={() => setSessionActivity(undefined)}
+        session={editingSession}
+        onClose={() => {
+          setSessionActivity(undefined)
+          setEditingSession(undefined)
+        }}
         onCreated={refresh}
+      />
+      <SessionManagementModal
+        activity={managedActivity}
+        onClose={() => setManagedActivity(undefined)}
+        onAdd={() => {
+          setEditingSession(undefined)
+          setSessionActivity(managedActivity)
+          setManagedActivity(undefined)
+        }}
+        onEdit={(session) => {
+          setEditingSession(session)
+          setSessionActivity(managedActivity)
+          setManagedActivity(undefined)
+        }}
+        onChanged={refresh}
       />
     </section>
   )

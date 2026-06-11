@@ -3,11 +3,14 @@ import {
   categories,
   create3,
   createSession,
+  deleteSession,
+  detail,
   detail4,
   list2,
   pending,
   reject,
   submit,
+  updateSession,
 } from '../../shared/api/generated/sdk.gen'
 import type {
   ActivityRequest,
@@ -36,6 +39,41 @@ export async function addActivitySession(
   return (
     await createSession({
       path: { activityId },
+      body,
+      throwOnError: true,
+    })
+  ).data.data
+}
+
+export async function getMerchantActivityDetail(activityId: number) {
+  return (
+    await detail({
+      path: { activityId },
+      throwOnError: true,
+    })
+  ).data.data
+}
+
+export async function removeActivitySession(
+  activityId: number,
+  sessionId: number,
+) {
+  return (
+    await deleteSession({
+      path: { activityId, sessionId },
+      throwOnError: true,
+    })
+  ).data.data
+}
+
+export async function updateActivitySession(
+  activityId: number,
+  sessionId: number,
+  body: SessionRequest,
+) {
+  return (
+    await updateSession({
+      path: { activityId, sessionId },
       body,
       throwOnError: true,
     })
