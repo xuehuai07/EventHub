@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { AuthParticleWave } from '../features/auth/AuthParticleWave'
 import { loginUser, registerUser } from '../shared/auth/authApi'
 import { useAuthStore } from '../shared/auth/authStore'
 
@@ -34,6 +35,7 @@ export function RegisterPage() {
 
   return (
     <main className="auth-page">
+      <AuthParticleWave />
       <section className="auth-card auth-card-wide">
         <Link className="auth-brand" to="/">
           <span className="brand-mark">E</span>

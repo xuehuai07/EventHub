@@ -399,6 +399,9 @@ button.header-action {
 }
 
 .auth-page {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   background:
     radial-gradient(
       circle at 85% 18%,
@@ -413,14 +416,46 @@ button.header-action {
     var(--paper);
 }
 
+.auth-page::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.12),
+      rgba(255, 255, 255, 0) 28%
+    ),
+    radial-gradient(
+      ellipse at 50% 102%,
+      rgba(255, 255, 255, 0.42),
+      transparent 62%
+    );
+  content: '';
+  pointer-events: none;
+}
+
+.auth-particle-wave {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
 .auth-card {
+  position: relative;
+  z-index: 1;
   width: min(100%, 480px);
   padding: 42px;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(255, 255, 255, 0.74);
   border-radius: 30px 30px 10px;
-  box-shadow: 0 24px 70px rgba(42, 46, 42, 0.12);
-  backdrop-filter: blur(14px);
+  box-shadow:
+    0 30px 90px rgba(42, 46, 42, 0.15),
+    0 2px 10px rgba(42, 46, 42, 0.05);
+  backdrop-filter: blur(18px) saturate(112%);
 }
 
 .auth-card-wide {
