@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 import { cancelOrder, getOrder, payOrder } from '../entities/order/api'
+import { getOrderTickets } from '../entities/ticket/api'
 import { SeatLockCountdown } from '../features/seat-lock-countdown/SeatLockCountdown'
 import '../features/order/ticketing.css'
 
@@ -23,6 +24,11 @@ export function OrderDetailPage() {
     onSuccess: refresh,
   })
   const data = order.data
+  const tickets = useQuery({
+    queryKey: ['order-tickets', orderId],
+    queryFn: () => getOrderTickets(Number(orderId)),
+    enabled: Boolean(orderId) && order.data?.status === 'PAID',
+  })
 
   if (order.isPending)
     return <div className="ticketing-state">正在读取订单...</div>
@@ -48,6 +54,16 @@ export function OrderDetailPage() {
           <div className="payment-deadline">
             <span>剩余支付时间</span>
             <SeatLockCountdown expiresAt={data.paymentDeadlineAt} />
+          </div>
+        )}
+        {data.status === 'PAID' && Boolean(tickets.data?.length) && (
+          <div className="order-actions">
+            <Link
+              className="ticket-link-button"
+              to={`/tickets/${tickets.data?.[0]?.id}`}
+            >
+              查看电子票
+            </Link>
           </div>
         )}
         <div className="receipt-items">

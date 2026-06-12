@@ -2,7 +2,7 @@ import {
   cancel,
   create,
   create1,
-  detail1,
+  detail2,
   get,
   get1,
   list,
@@ -46,7 +46,7 @@ export async function getOrders() {
 }
 
 export async function getOrder(orderId: number) {
-  return (await detail1({ path: { orderId }, throwOnError: true })).data.data
+  return (await detail2({ path: { orderId }, throwOnError: true })).data.data
 }
 
 export async function payOrder(orderId: number) {

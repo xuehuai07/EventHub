@@ -81,17 +81,21 @@ $env:BOOTSTRAP_MERCHANT_USERNAME = 'merchant'
 $env:BOOTSTRAP_MERCHANT_PASSWORD = '请替换为本地强密码'
 $env:BOOTSTRAP_MERCHANT_NAME = '本地演示商家'
 $env:AUTH_JWT_SECRET = '请替换为至少 32 位的随机字符串'
+$env:TICKET_QR_SECRET = '请替换为独立的至少 32 位随机字符串'
 .\mvnw spring-boot:run
 ```
 
 管理员和演示商家仅在账号不存在时创建，密码不会写入仓库或日志。
 
-## 阶段 3 功能入口
+## 当前功能入口
 
 - 用户端活动列表：http://localhost:3000/activities
 - 用户端我的订单：http://localhost:3000/orders
+- 用户端我的票券：http://localhost:3000/tickets
+- 用户端站内通知：http://localhost:3000/notifications
 - 管理端活动管理或审核：http://localhost:3001/activities
 - 管理端订单查询：http://localhost:3001/orders
+- 管理端票券核销：http://localhost:3001/verification
 - 管理端场馆管理：http://localhost:3001/venues
 - 管理端商家管理：http://localhost:3001/merchants
 
@@ -110,7 +114,9 @@ $env:AUTH_JWT_SECRET = '请替换为至少 32 位的随机字符串'
   -Requests 100
 ```
 
-订单创建和支付事件通过 Outbox 可靠投递到 RabbitMQ。未支付订单由 TTL 死信消息及时关闭，数据库定时扫描继续兜底；支付成功后异步生成电子票记录。票券查询、二维码和正式核销将在后续阶段接入。
+订单创建和支付事件通过 Outbox 可靠投递到 RabbitMQ。未支付订单由 TTL 死信消息及时关闭，数据库定时扫描继续兜底；支付成功后异步生成电子票。用户可查看电子票和短时动态二维码，商家可扫码或输入票号核销所属票券，平台保留首次和重复核销审计记录。
+
+支付、取消、超时关闭和出票会创建站内通知。登录用户通过 STOMP WebSocket 接收状态事件并刷新页面，断线时仍以 HTTP 查询和 MySQL 数据为准。
 
 ## 活动封面上传
 

@@ -36,6 +36,21 @@ const OrderDetailPage = lazy(() =>
     default: module.OrderDetailPage,
   })),
 )
+const TicketListPage = lazy(() =>
+  import('../pages/TicketListPage').then((module) => ({
+    default: module.TicketListPage,
+  })),
+)
+const TicketDetailPage = lazy(() =>
+  import('../pages/TicketDetailPage').then((module) => ({
+    default: module.TicketDetailPage,
+  })),
+)
+const NotificationPage = lazy(() =>
+  import('../pages/NotificationPage').then((module) => ({
+    default: module.NotificationPage,
+  })),
+)
 
 export function App() {
   return (
@@ -54,6 +69,9 @@ export function App() {
         <Route path="/checkout/:lockNo" element={<OrderConfirmationPage />} />
         <Route path="/orders" element={<OrderListPage />} />
         <Route path="/orders/:orderId" element={<OrderDetailPage />} />
+        <Route path="/tickets" element={<TicketListPage />} />
+        <Route path="/tickets/:ticketId" element={<TicketDetailPage />} />
+        <Route path="/notifications" element={<NotificationPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="*" element={<NotFoundPage />} />

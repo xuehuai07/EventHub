@@ -29,3 +29,6 @@ eventhub:
     login-max-failures: 5
     login-failure-window: 10m
     login-lock-duration: 15m
+  ticket:
+    qr-secret: test-ticket-qr-secret-must-have-at-least-thirty-two-bytes
+    qr-ttl: 60s

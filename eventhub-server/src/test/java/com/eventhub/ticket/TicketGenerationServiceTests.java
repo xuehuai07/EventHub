@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.eventhub.notification.NotificationService;
 import com.eventhub.order.domain.order.OrderStatus;
 import com.eventhub.order.infrastructure.messaging.MessageConsumeMapper;
 import com.eventhub.order.infrastructure.outbox.OrderPaidEvent;
@@ -33,6 +34,9 @@ class TicketGenerationServiceTests {
 
     @Mock
     private TicketMapper tickets;
+
+    @Mock
+    private NotificationService notifications;
 
     @InjectMocks
     private TicketGenerationService service;

@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { getActivities } from '../entities/activity/api'
 import { ActivityCard } from '../entities/activity/ActivityCard'
+import { getUnreadCount } from '../entities/notification/api'
 import { getSystemStatus } from '../shared/api/system'
 import { logoutUser, userLabel } from '../shared/auth/authApi'
 import { useAuthStore } from '../shared/auth/authStore'
@@ -32,6 +33,11 @@ export function HomePage() {
   })
   const isUp = systemQuery.data?.data.status === 'UP'
   const user = useAuthStore((state) => state.user)
+  const unreadQuery = useQuery({
+    queryKey: ['unread-count'],
+    queryFn: getUnreadCount,
+    enabled: Boolean(user),
+  })
   const featuredQuery = useQuery({
     queryKey: ['featured-activities'],
     queryFn: () => getActivities({ page: 1, pageSize: 3 }),
@@ -46,12 +52,26 @@ export function HomePage() {
         </Link>
         <nav className="nav-links" aria-label="主导航">
           <Link to="/activities">发现活动</Link>
+          {user && <Link to="/tickets">我的票券</Link>}
+          {user && (
+            <Link className="notification-link" to="/notifications">
+              通知
+              {Boolean(unreadQuery.data?.count) && (
+                <span className="notification-badge">
+                  {Math.min(unreadQuery.data?.count ?? 0, 99)}
+                </span>
+              )}
+            </Link>
+          )}
           <a href="#how-it-works">使用方式</a>
           <a href="#system">系统状态</a>
         </nav>
         {user ? (
           <div className="account-actions">
             <span>你好，{userLabel(user)}</span>
+            <Link className="text-action" to="/orders">
+              我的订单
+            </Link>
             <button className="header-action" onClick={() => void logoutUser()}>
               退出登录
             </button>

@@ -2,6 +2,7 @@ package com.eventhub.order.application.payment;
 
 import com.eventhub.common.error.BusinessException;
 import com.eventhub.common.error.ErrorCode;
+import com.eventhub.notification.NotificationService;
 import com.eventhub.order.application.order.InventoryRestorer;
 import com.eventhub.order.application.order.OrderViewAssembler;
 import com.eventhub.order.domain.order.OrderStatus;
@@ -26,6 +27,7 @@ public class OrderActionService {
     private final InventoryRestorer inventory;
     private final OrderViewAssembler assembler;
     private final OrderOutboxService outbox;
+    private final NotificationService notifications;
 
     public OrderActionService(
             OrderQueryMapper queries,
@@ -33,13 +35,15 @@ public class OrderActionService {
             SeatLockMapper locks,
             InventoryRestorer inventory,
             OrderViewAssembler assembler,
-            OrderOutboxService outbox) {
+            OrderOutboxService outbox,
+            NotificationService notifications) {
         this.queries = queries;
         this.commands = commands;
         this.locks = locks;
         this.inventory = inventory;
         this.assembler = assembler;
         this.outbox = outbox;
+        this.notifications = notifications;
     }
 
     @Transactional
@@ -67,6 +71,13 @@ public class OrderActionService {
         recordAction(user, "PAY_ORDER", orderId, idempotencyKey);
         OrderRecord paidOrder = queries.findById(orderId);
         outbox.appendPaid(paidOrder);
+        notifications.create(
+                paidOrder.userId(),
+                "ORDER_PAID",
+                "订单支付成功",
+                paidOrder.activityTitle() + " 已支付，电子票正在生成。",
+                "ORDER",
+                paidOrder.id());
         return assembler.view(paidOrder);
     }
 
@@ -89,7 +100,15 @@ public class OrderActionService {
         }
         inventory.restore(locks.findById(order.lockId()));
         recordAction(user, "CANCEL_ORDER", orderId, idempotencyKey);
-        return assembler.view(queries.findById(orderId));
+        OrderRecord cancelled = queries.findById(orderId);
+        notifications.create(
+                cancelled.userId(),
+                "ORDER_CANCELLED",
+                "订单已取消",
+                cancelled.activityTitle() + " 的订单已取消。",
+                "ORDER",
+                cancelled.id());
+        return assembler.view(cancelled);
     }
 
     @Transactional
@@ -97,6 +116,13 @@ public class OrderActionService {
         OrderRecord order = queries.findById(orderId);
         if (order != null && commands.expire(order.id(), LocalDateTime.now()) == 1) {
             inventory.restore(locks.findById(order.lockId()));
+            notifications.create(
+                    order.userId(),
+                    "ORDER_EXPIRED",
+                    "订单已超时关闭",
+                    order.activityTitle() + " 的订单因未及时支付已关闭。",
+                    "ORDER",
+                    order.id());
         }
     }
 

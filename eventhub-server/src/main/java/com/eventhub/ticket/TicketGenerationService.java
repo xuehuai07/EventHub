@@ -1,5 +1,6 @@
 package com.eventhub.ticket;
 
+import com.eventhub.notification.NotificationService;
 import com.eventhub.order.domain.order.OrderStatus;
 import com.eventhub.order.infrastructure.messaging.MessageConsumeMapper;
 import com.eventhub.order.infrastructure.outbox.OrderPaidEvent;
@@ -18,11 +19,17 @@ public class TicketGenerationService {
     private final MessageConsumeMapper consumed;
     private final OrderQueryMapper orders;
     private final TicketMapper tickets;
+    private final NotificationService notifications;
 
-    public TicketGenerationService(MessageConsumeMapper consumed, OrderQueryMapper orders, TicketMapper tickets) {
+    public TicketGenerationService(
+            MessageConsumeMapper consumed,
+            OrderQueryMapper orders,
+            TicketMapper tickets,
+            NotificationService notifications) {
         this.consumed = consumed;
         this.orders = orders;
         this.tickets = tickets;
+        this.notifications = notifications;
     }
 
     @Transactional
@@ -46,6 +53,13 @@ public class TicketGenerationService {
                         order.sessionId());
             }
         }
+        notifications.create(
+                order.userId(),
+                "TICKET_ISSUED",
+                "电子票已生成",
+                order.activityTitle() + " 的电子票已生成，可前往“我的票券”查看。",
+                "ORDER",
+                order.id());
     }
 
     private String ticketNo() {

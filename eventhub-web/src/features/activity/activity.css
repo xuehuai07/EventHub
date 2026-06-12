@@ -256,3 +256,22 @@
     padding-left: 20px;
   }
 }
+.notification-link {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.35rem;
+}
+
+.notification-badge {
+  align-items: center;
+  background: #da3d24;
+  border-radius: 999px;
+  color: #fff;
+  display: inline-flex;
+  font-size: 0.65rem;
+  font-weight: 700;
+  height: 1.15rem;
+  justify-content: center;
+  min-width: 1.15rem;
+  padding: 0 0.25rem;
+}

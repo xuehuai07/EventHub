@@ -53,6 +53,11 @@ const OrderManagementPage = lazy(() =>
     default: module.OrderManagementPage,
   })),
 )
+const TicketVerificationPage = lazy(() =>
+  import('../pages/TicketVerificationPage').then((module) => ({
+    default: module.TicketVerificationPage,
+  })),
+)
 
 const commonNavigation = [
   { key: '/', icon: <DashboardOutlined />, label: '工作台' },
@@ -142,8 +147,8 @@ function AdminWorkspace() {
           onClick={({ key }) => navigate(key)}
         />
         <div className="stage-badge">
-          <Tag color="processing">阶段 3</Tag>
-          <p>锁座与订单交易</p>
+          <Tag color="processing">阶段 5</Tag>
+          <p>票券核销与通知</p>
         </div>
       </Sider>
 
@@ -203,7 +208,7 @@ function AdminWorkspace() {
               <Route path="/orders" element={<OrderManagementPage />} />
               <Route
                 path="/verification"
-                element={<PlaceholderPage title="票券核销" />}
+                element={<TicketVerificationPage />}
               />
               <Route
                 path="/users"

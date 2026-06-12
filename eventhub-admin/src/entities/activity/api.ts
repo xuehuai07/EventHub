@@ -5,7 +5,7 @@ import {
   createSession,
   deleteSession,
   detail,
-  detail4,
+  detail5,
   list2,
   pending,
   reject,
@@ -105,7 +105,7 @@ export async function getPendingReviews() {
 }
 
 export async function getReviewDetail(activityId: number) {
-  return (await detail4({ path: { activityId }, throwOnError: true })).data.data
+  return (await detail5({ path: { activityId }, throwOnError: true })).data.data
 }
 
 export async function approveActivity(activityId: number) {

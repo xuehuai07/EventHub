@@ -1,0 +1,315 @@
+.wallet-page,
+.ticket-detail-page,
+.notification-page {
+  min-height: 100vh;
+  color: #17221e;
+  background:
+    radial-gradient(circle at 82% 5%, rgba(235, 184, 72, 0.2), transparent 25%),
+    linear-gradient(135deg, #f4efe4 0%, #ebe4d6 100%);
+}
+
+.wallet-header,
+.notification-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(1120px, calc(100% - 40px));
+  margin: auto;
+  padding: 28px 0;
+}
+
+.wallet-header nav {
+  display: flex;
+  gap: 24px;
+}
+
+.wallet-header nav a,
+.notification-toolbar button {
+  color: #56615b;
+  background: none;
+  border: 0;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.wallet-shell {
+  width: min(980px, calc(100% - 40px));
+  margin: auto;
+  padding: 60px 0 100px;
+}
+
+.wallet-heading span,
+.notification-page > header span {
+  color: #bd4c2d;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.2em;
+}
+
+.wallet-heading h1,
+.notification-page > header h1 {
+  margin: 8px 0;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 6rem);
+  letter-spacing: -0.06em;
+}
+
+.wallet-heading p {
+  margin-bottom: 48px;
+  color: #68726c;
+}
+
+.ticket-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.wallet-ticket {
+  --ticket-accent: #1c352d;
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  align-items: center;
+  min-height: 160px;
+  padding: 0 34px 0 0;
+  overflow: hidden;
+  color: #f8f2e6;
+  background: var(--ticket-accent);
+  border-radius: 26px 8px 26px 8px;
+  box-shadow: 0 22px 55px rgba(27, 38, 33, 0.15);
+  text-decoration: none;
+  transform: translateY(calc(var(--ticket-index) * -1px));
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.wallet-ticket:hover {
+  box-shadow: 0 30px 70px rgba(27, 38, 33, 0.25);
+  transform: translateY(-5px);
+}
+
+.wallet-ticket.status-used {
+  --ticket-accent: #6b706b;
+}
+.wallet-ticket.status-cancelled {
+  --ticket-accent: #8b4b3e;
+}
+
+.ticket-date {
+  display: grid;
+  height: 100%;
+  place-content: center;
+  text-align: center;
+  color: #17221e;
+  background: #efbd4a;
+  border-right: 2px dashed rgba(23, 34, 30, 0.35);
+}
+
+.ticket-date strong {
+  font-family: var(--font-display);
+  font-size: 3.2rem;
+  line-height: 1;
+}
+
+.ticket-copy {
+  padding: 26px 30px;
+}
+.ticket-copy small {
+  color: #efbd4a;
+}
+.ticket-copy h2 {
+  margin: 8px 0;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+}
+.ticket-copy p {
+  margin: 0;
+  color: rgba(248, 242, 230, 0.65);
+}
+.ticket-state {
+  padding: 8px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 99px;
+  font-size: 0.78rem;
+}
+.wallet-empty {
+  padding: 60px;
+  color: #68726c;
+  text-align: center;
+  border: 1px dashed #b9b2a5;
+  border-radius: 20px;
+}
+
+.ticket-detail-page {
+  padding: 30px max(20px, calc((100vw - 1040px) / 2)) 80px;
+}
+
+.admission-pass {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  max-width: 1000px;
+  min-height: 650px;
+  margin: 55px auto 0;
+  overflow: hidden;
+  background: #fffdf7;
+  border-radius: 42px 12px 42px 12px;
+  box-shadow: 0 35px 90px rgba(35, 43, 39, 0.2);
+}
+
+.pass-visual {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  padding: 52px;
+  color: white;
+  background-color: #1a3028;
+  background-position: center;
+  background-size: cover;
+  isolation: isolate;
+}
+
+.pass-visual::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(transparent 15%, rgba(14, 29, 24, 0.92));
+  content: '';
+}
+.pass-visual > span {
+  color: #f0bd4a;
+  font-weight: 850;
+  letter-spacing: 0.18em;
+}
+.pass-visual h1 {
+  margin: 14px 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4.8rem);
+  line-height: 0.95;
+}
+.pass-body {
+  display: grid;
+  align-content: center;
+  gap: 28px;
+  padding: 46px;
+}
+.pass-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+.pass-meta div {
+  display: grid;
+  gap: 5px;
+}
+.pass-meta span {
+  color: #7c827d;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+}
+.ticket-qr {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 18px;
+  background: #f6f0e4;
+  border-radius: 22px;
+}
+.ticket-qr img {
+  width: min(100%, 280px);
+}
+.ticket-qr small,
+.pass-body code {
+  color: #737b75;
+  font-size: 0.72rem;
+  text-align: center;
+}
+.used-stamp {
+  display: grid;
+  padding: 40px 20px;
+  color: #9a4330;
+  border: 4px double #b94d2f;
+  transform: rotate(-2deg);
+  text-align: center;
+}
+.used-stamp strong {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+}
+
+.notification-page {
+  padding-bottom: 90px;
+}
+.notification-page > header,
+.notification-list {
+  width: min(900px, calc(100% - 40px));
+  margin: 40px auto;
+}
+.notification-list {
+  display: grid;
+  gap: 12px;
+}
+.notification-list button {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  gap: 18px;
+  padding: 22px;
+  text-align: left;
+  background: #fffdf7;
+  border: 1px solid #dcd4c6;
+  border-radius: 18px;
+  cursor: pointer;
+}
+.notification-list button > span {
+  color: #bd4c2d;
+  font-size: 0.7rem;
+  font-weight: 850;
+}
+.notification-list button p {
+  margin: 5px 0 0;
+  color: #6d756f;
+}
+.notification-list time {
+  color: #858b86;
+  font-size: 0.72rem;
+}
+.notification-list .is-read {
+  opacity: 0.62;
+}
+.ticket-link-button {
+  display: inline-flex;
+  justify-content: center;
+  padding: 13px 22px;
+  color: white;
+  background: #1b332b;
+  border-radius: 12px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+@media (max-width: 760px) {
+  .wallet-ticket {
+    grid-template-columns: 82px 1fr;
+    padding-right: 16px;
+  }
+  .ticket-state {
+    display: none;
+  }
+  .ticket-copy {
+    padding: 22px 18px;
+  }
+  .admission-pass {
+    grid-template-columns: 1fr;
+  }
+  .pass-visual {
+    min-height: 420px;
+  }
+  .notification-list button {
+    grid-template-columns: 36px 1fr;
+  }
+  .notification-list time {
+    grid-column: 2;
+  }
+}

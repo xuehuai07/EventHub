@@ -6,6 +6,7 @@ import com.eventhub.activity.infrastructure.persistence.SessionSeatSnapshotMappe
 import com.eventhub.activity.infrastructure.persistence.VenueMapper;
 import com.eventhub.admin.dashboard.ActivityDashboardMapper;
 import com.eventhub.admin.merchant.MerchantAdminMapper;
+import com.eventhub.notification.NotificationMapper;
 import com.eventhub.order.infrastructure.messaging.MessageConsumeMapper;
 import com.eventhub.order.infrastructure.outbox.OutboxEventMapper;
 import com.eventhub.order.infrastructure.persistence.AvailabilityMapper;
@@ -62,6 +63,9 @@ class EventhubServerApplicationTests {
 
     @MockitoBean
     private TicketMapper ticketMapper;
+
+    @MockitoBean
+    private NotificationMapper notificationMapper;
 
     @Test
     void contextLoads() {}

@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { PropsWithChildren } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { AuthBootstrap } from '../shared/auth/AuthBootstrap'
+import { RealtimeBridge } from '../shared/realtime/RealtimeBridge'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,7 +18,9 @@ export function AppProviders({ children }: PropsWithChildren) {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AuthBootstrap>{children}</AuthBootstrap>
+        <AuthBootstrap>
+          <RealtimeBridge>{children}</RealtimeBridge>
+        </AuthBootstrap>
       </BrowserRouter>
     </QueryClientProvider>
   )

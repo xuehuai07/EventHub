@@ -2,7 +2,7 @@
 
 import { type Client, type ClientMeta, formDataBodySerializer, type Options as Options2, type RequestResult, type TDataShape } from './client';
 import { client } from './client.gen';
-import type { ActivitiesData, ActivitiesResponses, ActivityCoverData, ActivityCoverResponses, AdminSessionData, AdminSessionResponses, ApproveData, ApproveResponses, BindStaffData, BindStaffResponses, CancelData, CancelResponses, CategoriesData, CategoriesResponses, Create1Data, Create1Responses, Create2Data, Create2Responses, Create3Data, Create3Responses, Create4Data, Create4Responses, CreateData, CreateResponses, CreateSessionData, CreateSessionResponses, DeleteSessionData, DeleteSessionResponses, Detail1Data, Detail1Responses, Detail2Data, Detail2Responses, Detail3Data, Detail3Responses, Detail4Data, Detail4Responses, Detail5Data, Detail5Responses, DetailData, DetailResponses, GenerateSeatsData, GenerateSeatsResponses, Get1Data, Get1Responses, GetData, GetResponses, List1Data, List1Responses, List2Data, List2Responses, List3Data, List3Responses, List4Data, List4Responses, List5Data, List5Responses, ListData, ListResponses, LoginData, LoginResponses, LogoutData, LogoutResponses, MeData, MerchantSessionData, MerchantSessionResponses, MeResponses, OffShelfData, OffShelfResponses, PayData, PayResponses, PendingData, PendingResponses, RefreshData, RefreshResponses, RegisterData, RegisterResponses, RejectData, RejectResponses, ReleaseData, ReleaseResponses, StatusData, StatusResponses, SubmitData, SubmitResponses, SummaryData, SummaryResponses, Update1Data, Update1Responses, UpdateData, UpdateResponses, UpdateSessionData, UpdateSessionResponses, UpdateStatusData, UpdateStatusResponses, UploadActivityCoverData, UploadActivityCoverResponses } from './types.gen';
+import type { ActivitiesData, ActivitiesResponses, ActivityCoverData, ActivityCoverResponses, AdminSessionData, AdminSessionResponses, ApproveData, ApproveResponses, BindStaffData, BindStaffResponses, CancelData, CancelResponses, CategoriesData, CategoriesResponses, Create1Data, Create1Responses, Create2Data, Create2Responses, Create3Data, Create3Responses, Create4Data, Create4Responses, CreateData, CreateResponses, CreateSessionData, CreateSessionResponses, CredentialData, CredentialResponses, DeleteSessionData, DeleteSessionResponses, Detail1Data, Detail1Responses, Detail2Data, Detail2Responses, Detail3Data, Detail3Responses, Detail4Data, Detail4Responses, Detail5Data, Detail5Responses, Detail6Data, Detail6Responses, DetailData, DetailResponses, GenerateSeatsData, GenerateSeatsResponses, Get1Data, Get1Responses, GetData, GetResponses, List1Data, List1Responses, List2Data, List2Responses, List3Data, List3Responses, List4Data, List4Responses, List5Data, List5Responses, List6Data, List6Responses, List7Data, List7Responses, ListData, ListResponses, LoginData, LoginResponses, LogoutData, LogoutResponses, Logs1Data, Logs1Responses, LogsData, LogsResponses, MarkAllReadData, MarkAllReadResponses, MarkReadData, MarkReadResponses, MeData, MerchantSessionData, MerchantSessionResponses, MeResponses, OffShelfData, OffShelfResponses, OrderTicketsData, OrderTicketsResponses, PayData, PayResponses, PendingData, PendingResponses, PreviewData, PreviewResponses, RefreshData, RefreshResponses, RegisterData, RegisterResponses, RejectData, RejectResponses, ReleaseData, ReleaseResponses, StatusData, StatusResponses, SubmitData, SubmitResponses, SummaryData, SummaryResponses, UnreadCountData, UnreadCountResponses, Update1Data, Update1Responses, UpdateData, UpdateResponses, UpdateSessionData, UpdateSessionResponses, UpdateStatusData, UpdateStatusResponses, UploadActivityCoverData, UploadActivityCoverResponses, VerifyData, VerifyResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -79,6 +79,8 @@ export const updateStatus = <ThrowOnError extends boolean = false>(options: Opti
     }
 });
 
+export const credential = <ThrowOnError extends boolean = false>(options: Options<CredentialData, ThrowOnError>): RequestResult<CredentialResponses, unknown, ThrowOnError> => (options.client ?? client).post<CredentialResponses, unknown, ThrowOnError>({ url: '/api/tickets/{ticketId}/credential', ...options });
+
 export const create = <ThrowOnError extends boolean = false>(options: Options<CreateData, ThrowOnError>): RequestResult<CreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<CreateResponses, unknown, ThrowOnError>({
     url: '/api/seat-locks',
     ...options,
@@ -102,6 +104,10 @@ export const create1 = <ThrowOnError extends boolean = false>(options: Options<C
 export const pay = <ThrowOnError extends boolean = false>(options: Options<PayData, ThrowOnError>): RequestResult<PayResponses, unknown, ThrowOnError> => (options.client ?? client).post<PayResponses, unknown, ThrowOnError>({ url: '/api/orders/{orderId}/pay', ...options });
 
 export const cancel = <ThrowOnError extends boolean = false>(options: Options<CancelData, ThrowOnError>): RequestResult<CancelResponses, unknown, ThrowOnError> => (options.client ?? client).post<CancelResponses, unknown, ThrowOnError>({ url: '/api/orders/{orderId}/cancel', ...options });
+
+export const markRead = <ThrowOnError extends boolean = false>(options: Options<MarkReadData, ThrowOnError>): RequestResult<MarkReadResponses, unknown, ThrowOnError> => (options.client ?? client).post<MarkReadResponses, unknown, ThrowOnError>({ url: '/api/notifications/{notificationId}/read', ...options });
+
+export const markAllRead = <ThrowOnError extends boolean = false>(options?: Options<MarkAllReadData, ThrowOnError>): RequestResult<MarkAllReadResponses, unknown, ThrowOnError> => (options?.client ?? client).post<MarkAllReadResponses, unknown, ThrowOnError>({ url: '/api/notifications/read-all', ...options });
 
 /**
  * 查询当前商家的场馆
@@ -130,6 +136,26 @@ export const uploadActivityCover = <ThrowOnError extends boolean = false>(option
     headers: {
         'Content-Type': null,
         ...options?.headers
+    }
+});
+
+export const logs = <ThrowOnError extends boolean = false>(options?: Options<LogsData, ThrowOnError>): RequestResult<LogsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<LogsResponses, unknown, ThrowOnError>({ url: '/api/merchant/ticket-verifications', ...options });
+
+export const verify = <ThrowOnError extends boolean = false>(options: Options<VerifyData, ThrowOnError>): RequestResult<VerifyResponses, unknown, ThrowOnError> => (options.client ?? client).post<VerifyResponses, unknown, ThrowOnError>({
+    url: '/api/merchant/ticket-verifications',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const preview = <ThrowOnError extends boolean = false>(options: Options<PreviewData, ThrowOnError>): RequestResult<PreviewResponses, unknown, ThrowOnError> => (options.client ?? client).post<PreviewResponses, unknown, ThrowOnError>({
+    url: '/api/merchant/ticket-verifications/preview',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
     }
 });
 
@@ -238,6 +264,10 @@ export const offShelf = <ThrowOnError extends boolean = false>(options: Options<
 
 export const approve = <ThrowOnError extends boolean = false>(options: Options<ApproveData, ThrowOnError>): RequestResult<ApproveResponses, unknown, ThrowOnError> => (options.client ?? client).post<ApproveResponses, unknown, ThrowOnError>({ url: '/api/admin/activities/{activityId}/approve', ...options });
 
+export const list4 = <ThrowOnError extends boolean = false>(options?: Options<List4Data, ThrowOnError>): RequestResult<List4Responses, unknown, ThrowOnError> => (options?.client ?? client).get<List4Responses, unknown, ThrowOnError>({ url: '/api/tickets', ...options });
+
+export const detail1 = <ThrowOnError extends boolean = false>(options: Options<Detail1Data, ThrowOnError>): RequestResult<Detail1Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail1Responses, unknown, ThrowOnError>({ url: '/api/tickets/{ticketId}', ...options });
+
 /**
  * 获取公开系统状态
  */
@@ -252,16 +282,22 @@ export const release = <ThrowOnError extends boolean = false>(options: Options<R
 
 export const get1 = <ThrowOnError extends boolean = false>(options: Options<Get1Data, ThrowOnError>): RequestResult<Get1Responses, unknown, ThrowOnError> => (options.client ?? client).get<Get1Responses, unknown, ThrowOnError>({ url: '/api/seat-locks/{lockNo}', ...options });
 
-export const detail1 = <ThrowOnError extends boolean = false>(options: Options<Detail1Data, ThrowOnError>): RequestResult<Detail1Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail1Responses, unknown, ThrowOnError>({ url: '/api/orders/{orderId}', ...options });
+export const detail2 = <ThrowOnError extends boolean = false>(options: Options<Detail2Data, ThrowOnError>): RequestResult<Detail2Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail2Responses, unknown, ThrowOnError>({ url: '/api/orders/{orderId}', ...options });
+
+export const orderTickets = <ThrowOnError extends boolean = false>(options: Options<OrderTicketsData, ThrowOnError>): RequestResult<OrderTicketsResponses, unknown, ThrowOnError> => (options.client ?? client).get<OrderTicketsResponses, unknown, ThrowOnError>({ url: '/api/orders/{orderId}/tickets', ...options });
+
+export const list5 = <ThrowOnError extends boolean = false>(options?: Options<List5Data, ThrowOnError>): RequestResult<List5Responses, unknown, ThrowOnError> => (options?.client ?? client).get<List5Responses, unknown, ThrowOnError>({ url: '/api/notifications', ...options });
+
+export const unreadCount = <ThrowOnError extends boolean = false>(options?: Options<UnreadCountData, ThrowOnError>): RequestResult<UnreadCountResponses, unknown, ThrowOnError> => (options?.client ?? client).get<UnreadCountResponses, unknown, ThrowOnError>({ url: '/api/notifications/unread-count', ...options });
 
 /**
  * 验证商家后台会话
  */
 export const merchantSession = <ThrowOnError extends boolean = false>(options?: Options<MerchantSessionData, ThrowOnError>): RequestResult<MerchantSessionResponses, unknown, ThrowOnError> => (options?.client ?? client).get<MerchantSessionResponses, unknown, ThrowOnError>({ url: '/api/merchant/session', ...options });
 
-export const list4 = <ThrowOnError extends boolean = false>(options?: Options<List4Data, ThrowOnError>): RequestResult<List4Responses, unknown, ThrowOnError> => (options?.client ?? client).get<List4Responses, unknown, ThrowOnError>({ url: '/api/merchant/orders', ...options });
+export const list6 = <ThrowOnError extends boolean = false>(options?: Options<List6Data, ThrowOnError>): RequestResult<List6Responses, unknown, ThrowOnError> => (options?.client ?? client).get<List6Responses, unknown, ThrowOnError>({ url: '/api/merchant/orders', ...options });
 
-export const detail2 = <ThrowOnError extends boolean = false>(options: Options<Detail2Data, ThrowOnError>): RequestResult<Detail2Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail2Responses, unknown, ThrowOnError>({ url: '/api/merchant/orders/{orderId}', ...options });
+export const detail3 = <ThrowOnError extends boolean = false>(options: Options<Detail3Data, ThrowOnError>): RequestResult<Detail3Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail3Responses, unknown, ThrowOnError>({ url: '/api/merchant/orders/{orderId}', ...options });
 
 export const activityCover = <ThrowOnError extends boolean = false>(options: Options<ActivityCoverData, ThrowOnError>): RequestResult<ActivityCoverResponses, unknown, ThrowOnError> => (options.client ?? client).get<ActivityCoverResponses, unknown, ThrowOnError>({ url: '/api/media/activity-covers/{fileName}', ...options });
 
@@ -270,18 +306,20 @@ export const activityCover = <ThrowOnError extends boolean = false>(options: Opt
  */
 export const me = <ThrowOnError extends boolean = false>(options?: Options<MeData, ThrowOnError>): RequestResult<MeResponses, unknown, ThrowOnError> => (options?.client ?? client).get<MeResponses, unknown, ThrowOnError>({ url: '/api/auth/me', ...options });
 
+export const logs1 = <ThrowOnError extends boolean = false>(options?: Options<Logs1Data, ThrowOnError>): RequestResult<Logs1Responses, unknown, ThrowOnError> => (options?.client ?? client).get<Logs1Responses, unknown, ThrowOnError>({ url: '/api/admin/ticket-verifications', ...options });
+
 /**
  * 验证平台管理会话
  */
 export const adminSession = <ThrowOnError extends boolean = false>(options?: Options<AdminSessionData, ThrowOnError>): RequestResult<AdminSessionResponses, unknown, ThrowOnError> => (options?.client ?? client).get<AdminSessionResponses, unknown, ThrowOnError>({ url: '/api/admin/session', ...options });
 
-export const list5 = <ThrowOnError extends boolean = false>(options?: Options<List5Data, ThrowOnError>): RequestResult<List5Responses, unknown, ThrowOnError> => (options?.client ?? client).get<List5Responses, unknown, ThrowOnError>({ url: '/api/admin/orders', ...options });
+export const list7 = <ThrowOnError extends boolean = false>(options?: Options<List7Data, ThrowOnError>): RequestResult<List7Responses, unknown, ThrowOnError> => (options?.client ?? client).get<List7Responses, unknown, ThrowOnError>({ url: '/api/admin/orders', ...options });
 
-export const detail3 = <ThrowOnError extends boolean = false>(options: Options<Detail3Data, ThrowOnError>): RequestResult<Detail3Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail3Responses, unknown, ThrowOnError>({ url: '/api/admin/orders/{orderId}', ...options });
+export const detail4 = <ThrowOnError extends boolean = false>(options: Options<Detail4Data, ThrowOnError>): RequestResult<Detail4Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail4Responses, unknown, ThrowOnError>({ url: '/api/admin/orders/{orderId}', ...options });
 
 export const summary = <ThrowOnError extends boolean = false>(options?: Options<SummaryData, ThrowOnError>): RequestResult<SummaryResponses, unknown, ThrowOnError> => (options?.client ?? client).get<SummaryResponses, unknown, ThrowOnError>({ url: '/api/admin/dashboard/activity-summary', ...options });
 
-export const detail4 = <ThrowOnError extends boolean = false>(options: Options<Detail4Data, ThrowOnError>): RequestResult<Detail4Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail4Responses, unknown, ThrowOnError>({ url: '/api/admin/activities/{activityId}', ...options });
+export const detail5 = <ThrowOnError extends boolean = false>(options: Options<Detail5Data, ThrowOnError>): RequestResult<Detail5Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail5Responses, unknown, ThrowOnError>({ url: '/api/admin/activities/{activityId}', ...options });
 
 export const pending = <ThrowOnError extends boolean = false>(options?: Options<PendingData, ThrowOnError>): RequestResult<PendingResponses, unknown, ThrowOnError> => (options?.client ?? client).get<PendingResponses, unknown, ThrowOnError>({ url: '/api/admin/activities/reviews', ...options });
 
@@ -298,4 +336,4 @@ export const activities = <ThrowOnError extends boolean = false>(options?: Optio
 /**
  * 查询已发布活动详情
  */
-export const detail5 = <ThrowOnError extends boolean = false>(options: Options<Detail5Data, ThrowOnError>): RequestResult<Detail5Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail5Responses, unknown, ThrowOnError>({ url: '/api/activities/{activityId}', ...options });
+export const detail6 = <ThrowOnError extends boolean = false>(options: Options<Detail6Data, ThrowOnError>): RequestResult<Detail6Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail6Responses, unknown, ThrowOnError>({ url: '/api/activities/{activityId}', ...options });

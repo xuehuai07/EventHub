@@ -76,6 +76,9 @@ eventhub:
     login-max-failures: ${AUTH_LOGIN_MAX_FAILURES:5}
     login-failure-window: ${AUTH_LOGIN_FAILURE_WINDOW:10m}
     login-lock-duration: ${AUTH_LOGIN_LOCK_DURATION:15m}
+  ticket:
+    qr-secret: ${TICKET_QR_SECRET:change-this-ticket-qr-secret-before-production-32-bytes}
+    qr-ttl: ${TICKET_QR_TTL:60s}
   bootstrap:
     admin-username: ${BOOTSTRAP_ADMIN_USERNAME:}
     admin-password: ${BOOTSTRAP_ADMIN_PASSWORD:}

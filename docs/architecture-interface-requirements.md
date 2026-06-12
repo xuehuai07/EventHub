@@ -2,7 +2,7 @@
 
 ## 版本
 
-当前稳定约束版本：`0.4.1`（2026-06-12）。
+当前稳定约束版本：`0.5.0`（2026-06-12）。
 
 ## 身份与会话
 
@@ -136,8 +136,42 @@ eventhub.order.dead.q
 - 支付成功后按订单明细数量生成一人一票的 `eh_ticket` 记录。
 - 票号必须使用不可预测随机值，不得直接暴露自增主键。
 - `(order_item_id, unit_no)` 必须唯一，重复支付事件不得生成重复票。
-- 当前票券状态仅为 `UNUSED`；核销状态、核销操作人和审计信息在后续票券阶段扩展。
-- 本阶段不提供公开票券和核销 API。
+- 票券状态固定为 `UNUSED`、`USED`、`CANCELLED`。
+- 动态二维码使用独立 HMAC 密钥签名，默认有效期 60 秒；签名密钥不得与 JWT 密钥共用。
+- 永久票号只作为人工核销兜底，不得使用数据库自增主键作为票码。
+- 商家只能预览和核销所属商家的票券；管理员只能查询平台核销记录。
+- 首次核销必须使用 `WHERE status = 'UNUSED'` 的 MySQL 条件更新保证原子性。
+- 首次和重复核销均写入 `eh_ticket_verification_log`，不得记录 Access Token、二维码密钥或完整请求头。
+
+## 票券与核销接口
+
+```text
+GET  /api/tickets
+GET  /api/tickets/{ticketId}
+POST /api/tickets/{ticketId}/credential
+GET  /api/orders/{orderId}/tickets
+
+POST /api/merchant/ticket-verifications/preview
+POST /api/merchant/ticket-verifications
+GET  /api/merchant/ticket-verifications
+GET  /api/admin/ticket-verifications
+```
+
+## 站内通知与 WebSocket
+
+- 通知类型固定包含 `ORDER_PAID`、`ORDER_CANCELLED`、`ORDER_EXPIRED`、`TICKET_ISSUED`。
+- 通知创建与对应业务状态变化在同一 MySQL 事务中完成。
+- WebSocket 推送在事务提交后执行，推送失败不得回滚订单、票券或通知。
+- STOMP 端点为 `/ws`，`CONNECT` 必须携带有效 Access Token。
+- 用户只允许订阅自己的 `/user/queue/notifications` 和 `/user/queue/status`。
+- WebSocket 只负责及时通知；页面初始加载、重连恢复和最终状态必须通过 HTTP 查询。
+
+```text
+GET  /api/notifications
+GET  /api/notifications/unread-count
+POST /api/notifications/{notificationId}/read
+POST /api/notifications/read-all
+```
 
 ## 订单接口
 
