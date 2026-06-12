@@ -210,6 +210,22 @@ export type OrderView = {
     items?: Array<OrderItemView>;
 };
 
+export type ActivityCoverUploadView = {
+    url?: string;
+    fileName?: string;
+    size?: number;
+    width?: number;
+    height?: number;
+};
+
+export type ApiResponseActivityCoverUploadView = {
+    code?: string;
+    message?: string;
+    data?: ActivityCoverUploadView;
+    requestId?: string;
+    timestamp?: string;
+};
+
 export type RegisterRequest = {
     username?: string;
     phone?: string;
@@ -689,6 +705,24 @@ export type Create2Responses = {
 
 export type Create2Response = Create2Responses[keyof Create2Responses];
 
+export type UploadActivityCoverData = {
+    body?: {
+        file: Blob | File;
+    };
+    path?: never;
+    query?: never;
+    url: '/api/merchant/uploads/activity-cover';
+};
+
+export type UploadActivityCoverResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityCoverUploadView;
+};
+
+export type UploadActivityCoverResponse = UploadActivityCoverResponses[keyof UploadActivityCoverResponses];
+
 export type List2Data = {
     body?: never;
     path?: never;
@@ -1080,6 +1114,24 @@ export type Detail2Responses = {
 };
 
 export type Detail2Response = Detail2Responses[keyof Detail2Responses];
+
+export type ActivityCoverData = {
+    body?: never;
+    path: {
+        fileName: string;
+    };
+    query?: never;
+    url: '/api/media/activity-covers/{fileName}';
+};
+
+export type ActivityCoverResponses = {
+    /**
+     * OK
+     */
+    200: Blob | File;
+};
+
+export type ActivityCoverResponse = ActivityCoverResponses[keyof ActivityCoverResponses];
 
 export type MeData = {
     body?: never;

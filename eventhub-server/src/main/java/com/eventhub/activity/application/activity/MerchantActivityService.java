@@ -84,10 +84,13 @@ public class MerchantActivityService {
     public ActivityDetailView update(AuthenticatedUser user, long activityId, ActivityRequest request) {
         long merchantId = merchantContext.requireActiveMerchant(user).merchantId();
         ActivityRecord current = requireOwned(activityId, merchantId);
-        stateMachine.requireEditable(current.getStatus());
+        stateMachine.requireContentEditable(current.getStatus());
         ActivityRecord updated = record(merchantId, request);
         updated.setId(activityId);
-        if (commands.updateActivity(updated) == 0) {
+        int affected = current.getStatus() == ActivityStatus.PUBLISHED
+                ? updatePublishedContent(current, updated)
+                : commands.updateActivity(updated);
+        if (affected == 0) {
             throw new BusinessException(ErrorCode.ACTIVITY_VERSION_CONFLICT);
         }
         cache.evict(activityId);
@@ -229,6 +232,15 @@ public class MerchantActivityService {
         activity.setCity(request.city().trim());
         activity.setVersion(request.version());
         return activity;
+    }
+
+    private int updatePublishedContent(ActivityRecord current, ActivityRecord updated) {
+        if (current.getCategoryId() != updated.getCategoryId()
+                || !current.getTitle().equals(updated.getTitle())
+                || !current.getCity().equals(updated.getCity())) {
+            throw new BusinessException(ErrorCode.ACTIVITY_STATUS_INVALID, "已发布活动只能修改封面、一句话介绍和活动详情");
+        }
+        return commands.updatePublishedContent(updated);
     }
 
     private SessionRecord session(long activityId, SessionRequest request) {

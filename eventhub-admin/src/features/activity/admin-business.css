@@ -90,6 +90,12 @@
   border-color: #e7ddca;
 }
 
+.activity-form-loading {
+  display: grid;
+  min-height: 320px;
+  place-items: center;
+}
+
 .review-sessions {
   display: grid;
   gap: 12px;

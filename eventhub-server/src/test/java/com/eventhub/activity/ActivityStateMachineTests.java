@@ -21,8 +21,18 @@ class ActivityStateMachineTests {
     }
 
     @Test
-    void publishedActivityCannotBeEdited() {
+    void publishedActivityCannotChangeSaleConfiguration() {
         assertThatThrownBy(() -> stateMachine.requireEditable(ActivityStatus.PUBLISHED))
+                .isInstanceOf(BusinessException.class)
+                .extracting(exception -> ((BusinessException) exception).getErrorCode())
+                .isEqualTo(ErrorCode.ACTIVITY_STATUS_INVALID);
+    }
+
+    @Test
+    void publishedActivityContentIsEditable() {
+        assertThatCode(() -> stateMachine.requireContentEditable(ActivityStatus.PUBLISHED))
+                .doesNotThrowAnyException();
+        assertThatThrownBy(() -> stateMachine.requireContentEditable(ActivityStatus.PENDING_REVIEW))
                 .isInstanceOf(BusinessException.class)
                 .extracting(exception -> ((BusinessException) exception).getErrorCode())
                 .isEqualTo(ErrorCode.ACTIVITY_STATUS_INVALID);

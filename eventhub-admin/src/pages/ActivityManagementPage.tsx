@@ -4,6 +4,7 @@ import { Button, Space, Table, message } from 'antd'
 import { useState } from 'react'
 import { getMerchantActivities, submitActivity } from '../entities/activity/api'
 import { ActivityCreateModal } from '../features/activity/ActivityCreateModal'
+import { ActivityEditModal } from '../features/activity/ActivityEditModal'
 import { SessionCreateModal } from '../features/activity/SessionCreateModal'
 import { SessionManagementModal } from '../features/activity/SessionManagementModal'
 import { apiErrorMessage } from '../shared/api/apiErrorMessage'
@@ -17,6 +18,7 @@ import '../features/activity/admin-business.css'
 export function ActivityManagementPage() {
   const queryClient = useQueryClient()
   const [createOpen, setCreateOpen] = useState(false)
+  const [editingActivity, setEditingActivity] = useState<ActivitySummaryView>()
   const [sessionActivity, setSessionActivity] = useState<ActivitySummaryView>()
   const [editingSession, setEditingSession] = useState<SessionView>()
   const [managedActivity, setManagedActivity] = useState<ActivitySummaryView>()
@@ -83,6 +85,13 @@ export function ActivityManagementPage() {
             title: '操作',
             render: (_, row: ActivitySummaryView) => (
               <Space>
+                {['DRAFT', 'REJECTED', 'PUBLISHED'].includes(
+                  row.status ?? '',
+                ) && (
+                  <Button type="link" onClick={() => setEditingActivity(row)}>
+                    编辑信息
+                  </Button>
+                )}
                 {['DRAFT', 'REJECTED'].includes(row.status ?? '') && (
                   <>
                     <Button type="link" onClick={() => setManagedActivity(row)}>
@@ -106,6 +115,11 @@ export function ActivityManagementPage() {
         open={createOpen}
         onClose={() => setCreateOpen(false)}
         onCreated={refresh}
+      />
+      <ActivityEditModal
+        activity={editingActivity}
+        onClose={() => setEditingActivity(undefined)}
+        onUpdated={refresh}
       />
       <SessionCreateModal
         activity={sessionActivity}

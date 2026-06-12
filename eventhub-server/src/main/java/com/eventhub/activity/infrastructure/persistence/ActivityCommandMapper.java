@@ -43,6 +43,19 @@ public interface ActivityCommandMapper {
             """)
     int updateActivity(ActivityRecord activity);
 
+    @Update("""
+            UPDATE eh_activity
+            SET summary = #{summary},
+                description = #{description},
+                cover_url = #{coverUrl},
+                version = version + 1
+            WHERE id = #{id}
+              AND merchant_id = #{merchantId}
+              AND status = 'PUBLISHED'
+              AND version = #{version}
+            """)
+    int updatePublishedContent(ActivityRecord activity);
+
     @Insert("""
             INSERT INTO eh_activity_session
                 (activity_id, venue_id, name, start_at, end_at, sale_start_at, sale_end_at)

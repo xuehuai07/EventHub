@@ -13,6 +13,12 @@ public class ActivityStateMachine {
         }
     }
 
+    public void requireContentEditable(ActivityStatus status) {
+        if (status != ActivityStatus.DRAFT && status != ActivityStatus.REJECTED && status != ActivityStatus.PUBLISHED) {
+            throw new BusinessException(ErrorCode.ACTIVITY_STATUS_INVALID);
+        }
+    }
+
     public void requireSubmittable(ActivityStatus status) {
         requireEditable(status);
     }

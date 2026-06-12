@@ -10,6 +10,7 @@ import {
   pending,
   reject,
   submit,
+  update1,
   updateSession,
 } from '../../shared/api/generated/sdk.gen'
 import type {
@@ -30,6 +31,19 @@ export async function getMerchantActivities() {
 
 export async function createActivity(body: ActivityRequest) {
   return (await create3({ body, throwOnError: true })).data.data
+}
+
+export async function updateActivity(
+  activityId: number,
+  body: ActivityRequest,
+) {
+  return (
+    await update1({
+      path: { activityId },
+      body,
+      throwOnError: true,
+    })
+  ).data.data
 }
 
 export async function addActivitySession(

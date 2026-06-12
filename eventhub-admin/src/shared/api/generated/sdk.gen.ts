@@ -45,7 +45,7 @@ export const generateSeats = <ThrowOnError extends boolean = false>(options: Opt
 export const detail = <ThrowOnError extends boolean = false>(options: Options<DetailData, ThrowOnError>): RequestResult<DetailResponses, unknown, ThrowOnError> => (options.client ?? client).get<DetailResponses, unknown, ThrowOnError>({ url: '/api/merchant/activities/{activityId}', ...options });
 
 /**
- * 修改活动草稿
+ * 修改活动信息
  */
 export const update1 = <ThrowOnError extends boolean = false>(options: Options<Update1Data, ThrowOnError>): RequestResult<Update1Responses, unknown, ThrowOnError> => (options.client ?? client).put<Update1Responses, unknown, ThrowOnError>({
     url: '/api/merchant/activities/{activityId}',

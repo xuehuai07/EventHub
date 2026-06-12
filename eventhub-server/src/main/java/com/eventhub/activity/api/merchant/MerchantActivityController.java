@@ -57,7 +57,7 @@ public class MerchantActivityController {
         return ApiResponse.success(service.create(user, request));
     }
 
-    @Operation(summary = "修改活动草稿")
+    @Operation(summary = "修改活动信息")
     @PutMapping("/{activityId}")
     ApiResponse<ActivityDetailView> update(
             @AuthenticationPrincipal AuthenticatedUser user,
