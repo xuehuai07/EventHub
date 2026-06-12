@@ -58,6 +58,11 @@ const TicketVerificationPage = lazy(() =>
     default: module.TicketVerificationPage,
   })),
 )
+const OperationAuditPage = lazy(() =>
+  import('../pages/OperationAuditPage').then((module) => ({
+    default: module.OperationAuditPage,
+  })),
+)
 
 const commonNavigation = [
   { key: '/', icon: <DashboardOutlined />, label: '工作台' },
@@ -68,7 +73,6 @@ const commonNavigation = [
     label: '票券核销',
   },
   { key: '/users', icon: <TeamOutlined />, label: '用户与权限' },
-  { key: '/audit', icon: <AuditOutlined />, label: '操作审计' },
 ]
 
 function PlaceholderPage({ title }: { title: string }) {
@@ -127,6 +131,9 @@ function AdminWorkspace() {
       ? [{ key: '/merchants', icon: <ShopOutlined />, label: '商家管理' }]
       : [{ key: '/venues', icon: <BankOutlined />, label: '场馆管理' }]),
     ...commonNavigation.slice(1),
+    ...(isAdmin
+      ? [{ key: '/audit', icon: <AuditOutlined />, label: '操作审计' }]
+      : []),
   ]
 
   return (
@@ -147,15 +154,15 @@ function AdminWorkspace() {
           onClick={({ key }) => navigate(key)}
         />
         <div className="stage-badge">
-          <Tag color="processing">阶段 5</Tag>
-          <p>票券核销与通知</p>
+          <Tag color="processing">0.7.0</Tag>
+          <p>运营与用户参与</p>
         </div>
       </Sider>
 
       <Layout>
         <Header className="admin-header">
           <div>
-            <span className="header-kicker">2026 年 6 月 10 日 · 星期三</span>
+            <span className="header-kicker">{formatAdminDate()}</span>
             <strong>平台运营管理</strong>
           </div>
           <div className="operator-chip">
@@ -216,7 +223,9 @@ function AdminWorkspace() {
               />
               <Route
                 path="/audit"
-                element={<PlaceholderPage title="操作审计" />}
+                element={
+                  isAdmin ? <OperationAuditPage /> : <Navigate to="/" replace />
+                }
               />
             </Routes>
           </Suspense>
@@ -224,4 +233,13 @@ function AdminWorkspace() {
       </Layout>
     </Layout>
   )
+}
+
+function formatAdminDate() {
+  return new Intl.DateTimeFormat('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'long',
+  }).format(new Date())
 }

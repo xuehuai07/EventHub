@@ -16,4 +16,7 @@ public record ActivityDetailView(
         ActivityStatus status,
         String reviewReason,
         int version,
+        long favoriteCount,
+        long reviewCount,
+        Double averageRating,
         List<SessionView> sessions) {}

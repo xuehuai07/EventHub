@@ -2,7 +2,7 @@
 
 ## 版本
 
-当前稳定约束版本：`0.6.0`（2026-06-12）。
+当前稳定约束版本：`0.7.0`（2026-06-12）。
 
 ## 身份与会话
 
@@ -195,6 +195,57 @@ PUT    /api/assistant/conversations/{conversationId}
 DELETE /api/assistant/conversations/{conversationId}
 GET    /api/assistant/conversations/{conversationId}/messages
 POST   /api/assistant/conversations/{conversationId}/messages/stream
+```
+
+## 活动收藏与评价
+
+- 活动收藏由 `eh_activity_favorite` 维护，`(user_id, activity_id)` 必须唯一。
+- 只有已登录普通用户可以收藏 `PUBLISHED` 活动；取消收藏按幂等成功处理。
+- 已下架活动不允许新增收藏，历史收藏记录可以继续查询但不得进入购票流程。
+- 活动评价由 `eh_activity_review` 维护，每个用户对同一活动最多一条。
+- 用户必须存在该活动的本人 `PAID` 订单，且对应场次已经开始，才能创建或更新评价。
+- 评价评分固定为 1 至 5 分整数，正文为最长 1000 字纯文本。
+- 评价状态固定为 `PUBLISHED`、`HIDDEN`。
+- 被管理员隐藏的评价不进入公开列表和评分聚合，用户不得通过编辑自行恢复。
+- 评价隐藏和恢复必须失效对应公开活动详情缓存。
+
+```text
+GET    /api/activity-favorites
+PUT    /api/activity-favorites/{activityId}
+DELETE /api/activity-favorites/{activityId}
+GET    /api/activity-favorites/{activityId}/status
+
+GET    /api/activities/{activityId}/reviews
+GET    /api/activities/{activityId}/review-summary
+GET    /api/activities/{activityId}/my-review
+PUT    /api/activities/{activityId}/my-review
+DELETE /api/activities/{activityId}/my-review
+
+GET  /api/admin/activity-reviews
+POST /api/admin/activity-reviews/{reviewId}/hide
+POST /api/admin/activity-reviews/{reviewId}/restore
+```
+
+## 运营统计与操作审计
+
+- 平台统计覆盖全平台，商家统计必须在 SQL 中使用当前认证商家的 `merchant_id` 限制范围。
+- 成交额、已支付订单和售出票数以 `eh_ticket_order.status = 'PAID'` 为准。
+- 已核销票数以 `eh_ticket.status = 'USED'` 为准。
+- 销售趋势日期范围最多 366 天，默认最近 30 天。
+- `eh_operation_log` 记录关键商家和管理员写操作，不建立指向业务资源的外键。
+- 成功审计记录必须与对应业务写操作处于同一事务。
+- 审计摘要只允许使用业务字段白名单，不得记录密码、Token、Cookie、二维码凭证、完整请求头或完整请求体。
+
+```text
+GET /api/admin/dashboard/operations
+GET /api/admin/dashboard/sales-trend
+GET /api/admin/dashboard/top-activities
+
+GET /api/merchant/dashboard/operations
+GET /api/merchant/dashboard/sales-trend
+GET /api/merchant/dashboard/top-activities
+
+GET /api/admin/operation-logs
 ```
 
 ## 订单接口

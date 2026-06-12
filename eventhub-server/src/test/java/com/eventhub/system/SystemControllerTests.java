@@ -11,10 +11,13 @@ import com.eventhub.activity.infrastructure.persistence.ActivityQueryMapper;
 import com.eventhub.activity.infrastructure.persistence.SessionSeatSnapshotMapper;
 import com.eventhub.activity.infrastructure.persistence.VenueMapper;
 import com.eventhub.admin.dashboard.ActivityDashboardMapper;
+import com.eventhub.admin.dashboard.OperationsDashboardMapper;
 import com.eventhub.admin.merchant.MerchantAdminMapper;
 import com.eventhub.assistant.AssistantConversationMapper;
 import com.eventhub.assistant.AssistantToolMapper;
+import com.eventhub.audit.OperationLogMapper;
 import com.eventhub.common.request.RequestIdFilter;
+import com.eventhub.favorite.ActivityFavoriteMapper;
 import com.eventhub.notification.NotificationMapper;
 import com.eventhub.order.infrastructure.messaging.MessageConsumeMapper;
 import com.eventhub.order.infrastructure.outbox.OutboxEventMapper;
@@ -22,6 +25,7 @@ import com.eventhub.order.infrastructure.persistence.AvailabilityMapper;
 import com.eventhub.order.infrastructure.persistence.OrderCommandMapper;
 import com.eventhub.order.infrastructure.persistence.OrderQueryMapper;
 import com.eventhub.order.infrastructure.persistence.SeatLockMapper;
+import com.eventhub.review.ActivityReviewMapper;
 import com.eventhub.ticket.TicketMapper;
 import com.eventhub.user.UserIdentityMapper;
 import org.junit.jupiter.api.Test;
@@ -34,6 +38,17 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 class SystemControllerTests {
+    @MockitoBean
+    private OperationsDashboardMapper operationsDashboardMapper;
+
+    @MockitoBean
+    private OperationLogMapper operationLogMapper;
+
+    @MockitoBean
+    private ActivityFavoriteMapper activityFavoriteMapper;
+
+    @MockitoBean
+    private ActivityReviewMapper activityReviewMapper;
 
     @Autowired
     private MockMvc mockMvc;

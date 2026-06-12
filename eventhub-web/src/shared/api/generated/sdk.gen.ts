@@ -2,7 +2,7 @@
 
 import { type Client, type ClientMeta, formDataBodySerializer, type Options as Options2, type RequestResult, type TDataShape } from './client';
 import { client } from './client.gen';
-import type { ActivityCoverData, ActivityCoverResponses, AdminSessionData, AdminSessionResponses, ApproveData, ApproveResponses, BindStaffData, BindStaffResponses, CancelData, CancelResponses, Create1Data, Create1Responses, Create2Data, Create2Responses, Create3Data, Create3Responses, Create4Data, Create4Responses, CreateAssistantConversationData, CreateAssistantConversationResponses, CreateData, CreateResponses, CreateSessionData, CreateSessionResponses, CredentialData, CredentialResponses, DeleteAssistantConversationData, DeleteAssistantConversationResponses, DeleteSessionData, DeleteSessionResponses, Detail1Data, Detail1Responses, Detail2Data, Detail2Responses, Detail3Data, Detail3Responses, Detail4Data, Detail4Responses, Detail5Data, Detail5Responses, DetailData, DetailResponses, GenerateSeatsData, GenerateSeatsResponses, Get1Data, Get1Responses, GetData, GetPublicActivityDetailData, GetPublicActivityDetailResponses, GetResponses, List1Data, List1Responses, List2Data, List2Responses, List3Data, List3Responses, List4Data, List4Responses, List5Data, List5Responses, List6Data, List6Responses, List7Data, List7Responses, ListAssistantConversationsData, ListAssistantConversationsResponses, ListAssistantMessagesData, ListAssistantMessagesResponses, ListData, ListPublicActivitiesData, ListPublicActivitiesResponses, ListPublicActivityCategoriesData, ListPublicActivityCategoriesResponses, ListResponses, LoginData, LoginResponses, LogoutData, LogoutResponses, Logs1Data, Logs1Responses, LogsData, LogsResponses, MarkAllReadData, MarkAllReadResponses, MarkReadData, MarkReadResponses, MeData, MerchantSessionData, MerchantSessionResponses, MeResponses, OffShelfData, OffShelfResponses, OrderTicketsData, OrderTicketsResponses, PayData, PayResponses, PendingData, PendingResponses, PreviewData, PreviewResponses, RefreshData, RefreshResponses, RegisterData, RegisterResponses, RejectData, RejectResponses, ReleaseData, ReleaseResponses, RenameAssistantConversationData, RenameAssistantConversationResponses, StatusData, StatusResponses, SubmitData, SubmitResponses, SummaryData, SummaryResponses, UnreadCountData, UnreadCountResponses, Update1Data, Update1Responses, UpdateData, UpdateResponses, UpdateSessionData, UpdateSessionResponses, UpdateStatusData, UpdateStatusResponses, UploadActivityCoverData, UploadActivityCoverResponses, VerifyData, VerifyResponses } from './types.gen';
+import type { ActivityCoverData, ActivityCoverResponses, AdminSessionData, AdminSessionResponses, ApproveData, ApproveResponses, BindStaffData, BindStaffResponses, CancelData, CancelResponses, Create1Data, Create1Responses, Create2Data, Create2Responses, Create3Data, Create3Responses, Create4Data, Create4Responses, CreateAssistantConversationData, CreateAssistantConversationResponses, CreateData, CreateResponses, CreateSessionData, CreateSessionResponses, CredentialData, CredentialResponses, DeleteAssistantConversationData, DeleteAssistantConversationResponses, DeleteMyActivityReviewData, DeleteMyActivityReviewResponses, DeleteSessionData, DeleteSessionResponses, Detail1Data, Detail1Responses, Detail2Data, Detail2Responses, Detail3Data, Detail3Responses, Detail4Data, Detail4Responses, Detail5Data, Detail5Responses, DetailData, DetailResponses, FavoriteActivityData, FavoriteActivityResponses, GenerateSeatsData, GenerateSeatsResponses, Get1Data, Get1Responses, GetActivityReviewSummaryData, GetActivityReviewSummaryResponses, GetAdminOperationsDashboardData, GetAdminOperationsDashboardResponses, GetAdminSalesTrendData, GetAdminSalesTrendResponses, GetAdminTopActivitiesData, GetAdminTopActivitiesResponses, GetData, GetMerchantOperationsDashboardData, GetMerchantOperationsDashboardResponses, GetMerchantSalesTrendData, GetMerchantSalesTrendResponses, GetMerchantTopActivitiesData, GetMerchantTopActivitiesResponses, GetMyActivityFavoriteStatusData, GetMyActivityFavoriteStatusResponses, GetMyActivityReviewData, GetMyActivityReviewResponses, GetPublicActivityDetailData, GetPublicActivityDetailResponses, GetResponses, HideActivityReviewData, HideActivityReviewResponses, List1Data, List1Responses, List2Data, List2Responses, List3Data, List3Responses, List4Data, List4Responses, List5Data, List5Responses, List6Data, List6Responses, List7Data, List7Responses, ListAdminActivityReviewsData, ListAdminActivityReviewsResponses, ListAdminOperationLogsData, ListAdminOperationLogsResponses, ListAssistantConversationsData, ListAssistantConversationsResponses, ListAssistantMessagesData, ListAssistantMessagesResponses, ListData, ListMyActivityFavoritesData, ListMyActivityFavoritesResponses, ListPublicActivitiesData, ListPublicActivitiesResponses, ListPublicActivityCategoriesData, ListPublicActivityCategoriesResponses, ListPublicActivityReviewsData, ListPublicActivityReviewsResponses, ListResponses, LoginData, LoginResponses, LogoutData, LogoutResponses, Logs1Data, Logs1Responses, LogsData, LogsResponses, MarkAllReadData, MarkAllReadResponses, MarkReadData, MarkReadResponses, MeData, MerchantSessionData, MerchantSessionResponses, MeResponses, OffShelfData, OffShelfResponses, OrderTicketsData, OrderTicketsResponses, PayData, PayResponses, PendingData, PendingResponses, PreviewData, PreviewResponses, RefreshData, RefreshResponses, RegisterData, RegisterResponses, RejectData, RejectResponses, ReleaseData, ReleaseResponses, RenameAssistantConversationData, RenameAssistantConversationResponses, RestoreActivityReviewData, RestoreActivityReviewResponses, SaveMyActivityReviewData, SaveMyActivityReviewResponses, StatusData, StatusResponses, SubmitData, SubmitResponses, SummaryData, SummaryResponses, UnfavoriteActivityData, UnfavoriteActivityResponses, UnreadCountData, UnreadCountResponses, Update1Data, Update1Responses, UpdateData, UpdateResponses, UpdateSessionData, UpdateSessionResponses, UpdateStatusData, UpdateStatusResponses, UploadActivityCoverData, UploadActivityCoverResponses, VerifyData, VerifyResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -89,6 +89,38 @@ export const renameAssistantConversation = <ThrowOnError extends boolean = false
 
 export const updateStatus = <ThrowOnError extends boolean = false>(options: Options<UpdateStatusData, ThrowOnError>): RequestResult<UpdateStatusResponses, unknown, ThrowOnError> => (options.client ?? client).put<UpdateStatusResponses, unknown, ThrowOnError>({
     url: '/api/admin/merchants/{merchantId}/status',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * 取消收藏活动
+ */
+export const unfavoriteActivity = <ThrowOnError extends boolean = false>(options: Options<UnfavoriteActivityData, ThrowOnError>): RequestResult<UnfavoriteActivityResponses, unknown, ThrowOnError> => (options.client ?? client).delete<UnfavoriteActivityResponses, unknown, ThrowOnError>({ url: '/api/activity-favorites/{activityId}', ...options });
+
+/**
+ * 收藏活动
+ */
+export const favoriteActivity = <ThrowOnError extends boolean = false>(options: Options<FavoriteActivityData, ThrowOnError>): RequestResult<FavoriteActivityResponses, unknown, ThrowOnError> => (options.client ?? client).put<FavoriteActivityResponses, unknown, ThrowOnError>({ url: '/api/activity-favorites/{activityId}', ...options });
+
+/**
+ * 删除本人活动评价
+ */
+export const deleteMyActivityReview = <ThrowOnError extends boolean = false>(options: Options<DeleteMyActivityReviewData, ThrowOnError>): RequestResult<DeleteMyActivityReviewResponses, unknown, ThrowOnError> => (options.client ?? client).delete<DeleteMyActivityReviewResponses, unknown, ThrowOnError>({ url: '/api/activities/{activityId}/my-review', ...options });
+
+/**
+ * 查询本人活动评价
+ */
+export const getMyActivityReview = <ThrowOnError extends boolean = false>(options: Options<GetMyActivityReviewData, ThrowOnError>): RequestResult<GetMyActivityReviewResponses, unknown, ThrowOnError> => (options.client ?? client).get<GetMyActivityReviewResponses, unknown, ThrowOnError>({ url: '/api/activities/{activityId}/my-review', ...options });
+
+/**
+ * 创建或更新本人活动评价
+ */
+export const saveMyActivityReview = <ThrowOnError extends boolean = false>(options: Options<SaveMyActivityReviewData, ThrowOnError>): RequestResult<SaveMyActivityReviewResponses, unknown, ThrowOnError> => (options.client ?? client).put<SaveMyActivityReviewResponses, unknown, ThrowOnError>({
+    url: '/api/activities/{activityId}/my-review',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -278,6 +310,23 @@ export const bindStaff = <ThrowOnError extends boolean = false>(options: Options
     }
 });
 
+/**
+ * 恢复活动评价
+ */
+export const restoreActivityReview = <ThrowOnError extends boolean = false>(options: Options<RestoreActivityReviewData, ThrowOnError>): RequestResult<RestoreActivityReviewResponses, unknown, ThrowOnError> => (options.client ?? client).post<RestoreActivityReviewResponses, unknown, ThrowOnError>({ url: '/api/admin/activity-reviews/{reviewId}/restore', ...options });
+
+/**
+ * 隐藏活动评价
+ */
+export const hideActivityReview = <ThrowOnError extends boolean = false>(options: Options<HideActivityReviewData, ThrowOnError>): RequestResult<HideActivityReviewResponses, unknown, ThrowOnError> => (options.client ?? client).post<HideActivityReviewResponses, unknown, ThrowOnError>({
+    url: '/api/admin/activity-reviews/{reviewId}/hide',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
 export const reject = <ThrowOnError extends boolean = false>(options: Options<RejectData, ThrowOnError>): RequestResult<RejectResponses, unknown, ThrowOnError> => (options.client ?? client).post<RejectResponses, unknown, ThrowOnError>({
     url: '/api/admin/activities/{activityId}/reject',
     ...options,
@@ -333,6 +382,21 @@ export const list6 = <ThrowOnError extends boolean = false>(options?: Options<Li
 
 export const detail3 = <ThrowOnError extends boolean = false>(options: Options<Detail3Data, ThrowOnError>): RequestResult<Detail3Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail3Responses, unknown, ThrowOnError>({ url: '/api/merchant/orders/{orderId}', ...options });
 
+/**
+ * 查询本商家热门活动
+ */
+export const getMerchantTopActivities = <ThrowOnError extends boolean = false>(options?: Options<GetMerchantTopActivitiesData, ThrowOnError>): RequestResult<GetMerchantTopActivitiesResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetMerchantTopActivitiesResponses, unknown, ThrowOnError>({ url: '/api/merchant/dashboard/top-activities', ...options });
+
+/**
+ * 查询本商家销售趋势
+ */
+export const getMerchantSalesTrend = <ThrowOnError extends boolean = false>(options?: Options<GetMerchantSalesTrendData, ThrowOnError>): RequestResult<GetMerchantSalesTrendResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetMerchantSalesTrendResponses, unknown, ThrowOnError>({ url: '/api/merchant/dashboard/sales-trend', ...options });
+
+/**
+ * 查询本商家运营概览
+ */
+export const getMerchantOperationsDashboard = <ThrowOnError extends boolean = false>(options?: Options<GetMerchantOperationsDashboardData, ThrowOnError>): RequestResult<GetMerchantOperationsDashboardResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetMerchantOperationsDashboardResponses, unknown, ThrowOnError>({ url: '/api/merchant/dashboard/operations', ...options });
+
 export const activityCover = <ThrowOnError extends boolean = false>(options: Options<ActivityCoverData, ThrowOnError>): RequestResult<ActivityCoverResponses, unknown, ThrowOnError> => (options.client ?? client).get<ActivityCoverResponses, unknown, ThrowOnError>({ url: '/api/media/activity-covers/{fileName}', ...options });
 
 /**
@@ -356,11 +420,46 @@ export const list7 = <ThrowOnError extends boolean = false>(options?: Options<Li
 
 export const detail4 = <ThrowOnError extends boolean = false>(options: Options<Detail4Data, ThrowOnError>): RequestResult<Detail4Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail4Responses, unknown, ThrowOnError>({ url: '/api/admin/orders/{orderId}', ...options });
 
+/**
+ * 查询管理操作审计
+ */
+export const listAdminOperationLogs = <ThrowOnError extends boolean = false>(options?: Options<ListAdminOperationLogsData, ThrowOnError>): RequestResult<ListAdminOperationLogsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<ListAdminOperationLogsResponses, unknown, ThrowOnError>({ url: '/api/admin/operation-logs', ...options });
+
+/**
+ * 查询平台热门活动
+ */
+export const getAdminTopActivities = <ThrowOnError extends boolean = false>(options?: Options<GetAdminTopActivitiesData, ThrowOnError>): RequestResult<GetAdminTopActivitiesResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetAdminTopActivitiesResponses, unknown, ThrowOnError>({ url: '/api/admin/dashboard/top-activities', ...options });
+
+/**
+ * 查询平台销售趋势
+ */
+export const getAdminSalesTrend = <ThrowOnError extends boolean = false>(options?: Options<GetAdminSalesTrendData, ThrowOnError>): RequestResult<GetAdminSalesTrendResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetAdminSalesTrendResponses, unknown, ThrowOnError>({ url: '/api/admin/dashboard/sales-trend', ...options });
+
+/**
+ * 查询平台运营概览
+ */
+export const getAdminOperationsDashboard = <ThrowOnError extends boolean = false>(options?: Options<GetAdminOperationsDashboardData, ThrowOnError>): RequestResult<GetAdminOperationsDashboardResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetAdminOperationsDashboardResponses, unknown, ThrowOnError>({ url: '/api/admin/dashboard/operations', ...options });
+
 export const summary = <ThrowOnError extends boolean = false>(options?: Options<SummaryData, ThrowOnError>): RequestResult<SummaryResponses, unknown, ThrowOnError> => (options?.client ?? client).get<SummaryResponses, unknown, ThrowOnError>({ url: '/api/admin/dashboard/activity-summary', ...options });
+
+/**
+ * 查询平台活动评价
+ */
+export const listAdminActivityReviews = <ThrowOnError extends boolean = false>(options?: Options<ListAdminActivityReviewsData, ThrowOnError>): RequestResult<ListAdminActivityReviewsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<ListAdminActivityReviewsResponses, unknown, ThrowOnError>({ url: '/api/admin/activity-reviews', ...options });
 
 export const detail5 = <ThrowOnError extends boolean = false>(options: Options<Detail5Data, ThrowOnError>): RequestResult<Detail5Responses, unknown, ThrowOnError> => (options.client ?? client).get<Detail5Responses, unknown, ThrowOnError>({ url: '/api/admin/activities/{activityId}', ...options });
 
 export const pending = <ThrowOnError extends boolean = false>(options?: Options<PendingData, ThrowOnError>): RequestResult<PendingResponses, unknown, ThrowOnError> => (options?.client ?? client).get<PendingResponses, unknown, ThrowOnError>({ url: '/api/admin/activities/reviews', ...options });
+
+/**
+ * 查询本人收藏活动
+ */
+export const listMyActivityFavorites = <ThrowOnError extends boolean = false>(options?: Options<ListMyActivityFavoritesData, ThrowOnError>): RequestResult<ListMyActivityFavoritesResponses, unknown, ThrowOnError> => (options?.client ?? client).get<ListMyActivityFavoritesResponses, unknown, ThrowOnError>({ url: '/api/activity-favorites', ...options });
+
+/**
+ * 查询本人活动收藏状态
+ */
+export const getMyActivityFavoriteStatus = <ThrowOnError extends boolean = false>(options: Options<GetMyActivityFavoriteStatusData, ThrowOnError>): RequestResult<GetMyActivityFavoriteStatusResponses, unknown, ThrowOnError> => (options.client ?? client).get<GetMyActivityFavoriteStatusResponses, unknown, ThrowOnError>({ url: '/api/activity-favorites/{activityId}/status', ...options });
 
 /**
  * 查询活动分类
@@ -376,3 +475,13 @@ export const listPublicActivities = <ThrowOnError extends boolean = false>(optio
  * 查询已发布活动详情
  */
 export const getPublicActivityDetail = <ThrowOnError extends boolean = false>(options: Options<GetPublicActivityDetailData, ThrowOnError>): RequestResult<GetPublicActivityDetailResponses, unknown, ThrowOnError> => (options.client ?? client).get<GetPublicActivityDetailResponses, unknown, ThrowOnError>({ url: '/api/activities/{activityId}', ...options });
+
+/**
+ * 查询活动公开评价
+ */
+export const listPublicActivityReviews = <ThrowOnError extends boolean = false>(options: Options<ListPublicActivityReviewsData, ThrowOnError>): RequestResult<ListPublicActivityReviewsResponses, unknown, ThrowOnError> => (options.client ?? client).get<ListPublicActivityReviewsResponses, unknown, ThrowOnError>({ url: '/api/activities/{activityId}/reviews', ...options });
+
+/**
+ * 查询活动评价摘要
+ */
+export const getActivityReviewSummary = <ThrowOnError extends boolean = false>(options: Options<GetActivityReviewSummaryData, ThrowOnError>): RequestResult<GetActivityReviewSummaryResponses, unknown, ThrowOnError> => (options.client ?? client).get<GetActivityReviewSummaryResponses, unknown, ThrowOnError>({ url: '/api/activities/{activityId}/review-summary', ...options });

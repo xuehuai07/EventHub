@@ -15,6 +15,7 @@ import com.eventhub.activity.infrastructure.persistence.SessionRecord;
 import com.eventhub.activity.infrastructure.persistence.TicketTypeRecord;
 import com.eventhub.activity.infrastructure.persistence.VenueMapper;
 import com.eventhub.activity.infrastructure.persistence.VenueRecord;
+import com.eventhub.audit.OperationLogService;
 import com.eventhub.common.api.PageResponse;
 import com.eventhub.common.error.BusinessException;
 import com.eventhub.common.error.ErrorCode;
@@ -35,6 +36,7 @@ public class MerchantActivityService {
     private final ActivityViewAssembler assembler;
     private final ActivityDetailCache cache;
     private final SessionSeatSnapshotService seatSnapshots;
+    private final OperationLogService operationLogs;
 
     public MerchantActivityService(
             ActivityCommandMapper commands,
@@ -44,7 +46,8 @@ public class MerchantActivityService {
             ActivityStateMachine stateMachine,
             ActivityViewAssembler assembler,
             ActivityDetailCache cache,
-            SessionSeatSnapshotService seatSnapshots) {
+            SessionSeatSnapshotService seatSnapshots,
+            OperationLogService operationLogs) {
         this.commands = commands;
         this.queries = queries;
         this.venueMapper = venueMapper;
@@ -53,6 +56,7 @@ public class MerchantActivityService {
         this.assembler = assembler;
         this.cache = cache;
         this.seatSnapshots = seatSnapshots;
+        this.operationLogs = operationLogs;
     }
 
     public PageResponse<ActivitySummaryView> list(
@@ -77,6 +81,8 @@ public class MerchantActivityService {
         long merchantId = merchantContext.requireActiveMerchant(user).merchantId();
         ActivityRecord activity = record(merchantId, request);
         commands.insertActivity(activity);
+        operationLogs.record(
+                user, merchantId, "ACTIVITY_CREATE", "ACTIVITY", activity.getId(), "创建活动草稿：" + activity.getTitle());
         return assembler.detail(queries.findDetail(activity.getId()));
     }
 
@@ -94,6 +100,8 @@ public class MerchantActivityService {
             throw new BusinessException(ErrorCode.ACTIVITY_VERSION_CONFLICT);
         }
         cache.evict(activityId);
+        operationLogs.record(
+                user, merchantId, "ACTIVITY_UPDATE", "ACTIVITY", activityId, "更新活动信息：" + updated.getTitle());
         return assembler.detail(queries.findDetail(activityId));
     }
 
@@ -109,6 +117,8 @@ public class MerchantActivityService {
         replaceTickets(session.getId(), request);
         seatSnapshots.rebuild(session.getId(), request.venueId());
         cache.evict(activityId);
+        operationLogs.record(
+                user, merchantId, "SESSION_CREATE", "SESSION", session.getId(), "创建活动场次：" + session.getName());
         return assembler.detail(queries.findDetail(activityId));
     }
 
@@ -128,6 +138,7 @@ public class MerchantActivityService {
         replaceTickets(sessionId, request);
         seatSnapshots.rebuild(sessionId, request.venueId());
         cache.evict(activityId);
+        operationLogs.record(user, merchantId, "SESSION_UPDATE", "SESSION", sessionId, "更新活动场次：" + session.getName());
         return assembler.detail(queries.findDetail(activityId));
     }
 
@@ -144,6 +155,7 @@ public class MerchantActivityService {
         commands.deleteTicketTypes(sessionId);
         commands.deleteSession(activityId, sessionId);
         cache.evict(activityId);
+        operationLogs.record(user, merchantId, "SESSION_DELETE", "SESSION", sessionId, "删除活动场次");
         return assembler.detail(queries.findDetail(activityId));
     }
 
@@ -160,6 +172,7 @@ public class MerchantActivityService {
             throw new BusinessException(ErrorCode.ACTIVITY_STATUS_INVALID);
         }
         cache.evict(activityId);
+        operationLogs.record(user, merchantId, "ACTIVITY_SUBMIT", "ACTIVITY", activityId, "提交活动审核");
         return assembler.detail(queries.findDetail(activityId));
     }
 

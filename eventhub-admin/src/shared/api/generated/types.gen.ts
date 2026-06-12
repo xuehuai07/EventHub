@@ -74,6 +74,9 @@ export type ActivityDetailView = {
     status?: 'DRAFT' | 'PENDING_REVIEW' | 'PUBLISHED' | 'REJECTED' | 'OFF_SHELF' | 'FINISHED';
     reviewReason?: string;
     version?: number;
+    favoriteCount?: number;
+    reviewCount?: number;
+    averageRating?: number;
     sessions?: Array<SessionView>;
 };
 
@@ -131,6 +134,26 @@ export type TicketTypeRequest = {
     saleLimitPerUser?: number;
 };
 
+export type ConversationRequest = {
+    title: string;
+};
+
+export type ApiResponseConversationView = {
+    code?: string;
+    message?: string;
+    data?: ConversationView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type ConversationView = {
+    id?: number;
+    title?: string;
+    lastMessageAt?: string;
+    createdAt?: string;
+    updatedAt?: string;
+};
+
 export type MerchantStatusRequest = {
     status: string;
 };
@@ -139,6 +162,45 @@ export type ApiResponseVoid = {
     code?: string;
     message?: string;
     data?: unknown;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type ActivityFavoriteStatusView = {
+    favorited?: boolean;
+};
+
+export type ApiResponseActivityFavoriteStatusView = {
+    code?: string;
+    message?: string;
+    data?: ActivityFavoriteStatusView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type ActivityReviewRequest = {
+    rating?: number;
+    content: string;
+};
+
+export type ActivityReviewView = {
+    id?: number;
+    activityId?: number;
+    activityTitle?: string;
+    userId?: number;
+    userDisplayName?: string;
+    rating?: number;
+    content?: string;
+    status?: string;
+    hiddenReason?: string;
+    createdAt?: string;
+    updatedAt?: string;
+};
+
+export type ApiResponseActivityReviewView = {
+    code?: string;
+    message?: string;
+    data?: ActivityReviewView;
     requestId?: string;
     timestamp?: string;
 };
@@ -350,6 +412,10 @@ export type MerchantStaffRequest = {
     identifier: string;
 };
 
+export type ReviewModerationRequest = {
+    reason: string;
+};
+
 export type ReviewRequest = {
     reason: string;
 };
@@ -534,6 +600,53 @@ export type VerificationLogView = {
     operatorName?: string;
 };
 
+export type ApiResponseListTopActivityView = {
+    code?: string;
+    message?: string;
+    data?: Array<TopActivityView>;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type TopActivityView = {
+    activityId?: number;
+    title?: string;
+    paidAmountCents?: number;
+    soldTicketCount?: number;
+};
+
+export type ApiResponseListSalesTrendView = {
+    code?: string;
+    message?: string;
+    data?: Array<SalesTrendView>;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type SalesTrendView = {
+    date?: string;
+    paidAmountCents?: number;
+    paidOrderCount?: number;
+    soldTicketCount?: number;
+};
+
+export type ApiResponseOperationsDashboardView = {
+    code?: string;
+    message?: string;
+    data?: OperationsDashboardView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type OperationsDashboardView = {
+    paidAmountCents?: number;
+    paidOrderCount?: number;
+    soldTicketCount?: number;
+    usedTicketCount?: number;
+    publishedActivityCount?: number;
+    activeMerchantCount?: number;
+};
+
 export type ActivitySummaryView = {
     id?: number;
     title?: string;
@@ -564,6 +677,79 @@ export type PageResponseActivitySummaryView = {
     totalPages?: number;
 };
 
+export type ApiResponsePageResponseConversationView = {
+    code?: string;
+    message?: string;
+    data?: PageResponseConversationView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type PageResponseConversationView = {
+    items?: Array<ConversationView>;
+    page?: number;
+    pageSize?: number;
+    total?: number;
+    totalPages?: number;
+};
+
+export type ApiResponseListMessageView = {
+    code?: string;
+    message?: string;
+    data?: Array<MessageView>;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type MessageView = {
+    id?: number;
+    role?: string;
+    content?: string;
+    resources?: Array<ResourceCard>;
+    model?: string;
+    promptTokens?: number;
+    completionTokens?: number;
+    createdAt?: string;
+};
+
+export type ResourceCard = {
+    type?: string;
+    id?: number;
+    title?: string;
+    subtitle?: string;
+    href?: string;
+};
+
+export type ApiResponsePageResponseOperationLogView = {
+    code?: string;
+    message?: string;
+    data?: PageResponseOperationLogView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type OperationLogView = {
+    id?: number;
+    operatorUserId?: number;
+    operatorName?: string;
+    operatorRole?: string;
+    merchantId?: number;
+    action?: string;
+    resourceType?: string;
+    resourceId?: number;
+    summary?: string;
+    requestId?: string;
+    createdAt?: string;
+};
+
+export type PageResponseOperationLogView = {
+    items?: Array<OperationLogView>;
+    page?: number;
+    pageSize?: number;
+    total?: number;
+    totalPages?: number;
+};
+
 export type ApiResponseListMerchantView = {
     code?: string;
     message?: string;
@@ -588,6 +774,51 @@ export type ApiResponseActivityDashboardSummary = {
     timestamp?: string;
 };
 
+export type ApiResponsePageResponseActivityReviewView = {
+    code?: string;
+    message?: string;
+    data?: PageResponseActivityReviewView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type PageResponseActivityReviewView = {
+    items?: Array<ActivityReviewView>;
+    page?: number;
+    pageSize?: number;
+    total?: number;
+    totalPages?: number;
+};
+
+export type ActivityFavoriteView = {
+    activityId?: number;
+    title?: string;
+    summary?: string;
+    coverUrl?: string;
+    city?: string;
+    categoryName?: string;
+    status?: 'DRAFT' | 'PENDING_REVIEW' | 'PUBLISHED' | 'REJECTED' | 'OFF_SHELF' | 'FINISHED';
+    nextSessionAt?: string;
+    minimumPriceCents?: number;
+    favoritedAt?: string;
+};
+
+export type ApiResponsePageResponseActivityFavoriteView = {
+    code?: string;
+    message?: string;
+    data?: PageResponseActivityFavoriteView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type PageResponseActivityFavoriteView = {
+    items?: Array<ActivityFavoriteView>;
+    page?: number;
+    pageSize?: number;
+    total?: number;
+    totalPages?: number;
+};
+
 export type ApiResponseListCategoryView = {
     code?: string;
     message?: string;
@@ -600,6 +831,20 @@ export type CategoryView = {
     id?: number;
     code?: string;
     name?: string;
+};
+
+export type ActivityReviewSummaryView = {
+    reviewCount?: number;
+    averageRating?: number;
+    eligible?: boolean;
+};
+
+export type ApiResponseActivityReviewSummaryView = {
+    code?: string;
+    message?: string;
+    data?: ActivityReviewSummaryView;
+    requestId?: string;
+    timestamp?: string;
 };
 
 export type UpdateData = {
@@ -712,6 +957,42 @@ export type UpdateSessionResponses = {
 
 export type UpdateSessionResponse = UpdateSessionResponses[keyof UpdateSessionResponses];
 
+export type DeleteAssistantConversationData = {
+    body?: never;
+    path: {
+        conversationId: number;
+    };
+    query?: never;
+    url: '/api/assistant/conversations/{conversationId}';
+};
+
+export type DeleteAssistantConversationResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseVoid;
+};
+
+export type DeleteAssistantConversationResponse = DeleteAssistantConversationResponses[keyof DeleteAssistantConversationResponses];
+
+export type RenameAssistantConversationData = {
+    body: ConversationRequest;
+    path: {
+        conversationId: number;
+    };
+    query?: never;
+    url: '/api/assistant/conversations/{conversationId}';
+};
+
+export type RenameAssistantConversationResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseConversationView;
+};
+
+export type RenameAssistantConversationResponse = RenameAssistantConversationResponses[keyof RenameAssistantConversationResponses];
+
 export type UpdateStatusData = {
     body: MerchantStatusRequest;
     path: {
@@ -729,6 +1010,96 @@ export type UpdateStatusResponses = {
 };
 
 export type UpdateStatusResponse = UpdateStatusResponses[keyof UpdateStatusResponses];
+
+export type UnfavoriteActivityData = {
+    body?: never;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/activity-favorites/{activityId}';
+};
+
+export type UnfavoriteActivityResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityFavoriteStatusView;
+};
+
+export type UnfavoriteActivityResponse = UnfavoriteActivityResponses[keyof UnfavoriteActivityResponses];
+
+export type FavoriteActivityData = {
+    body?: never;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/activity-favorites/{activityId}';
+};
+
+export type FavoriteActivityResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityFavoriteStatusView;
+};
+
+export type FavoriteActivityResponse = FavoriteActivityResponses[keyof FavoriteActivityResponses];
+
+export type DeleteMyActivityReviewData = {
+    body?: never;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/activities/{activityId}/my-review';
+};
+
+export type DeleteMyActivityReviewResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseVoid;
+};
+
+export type DeleteMyActivityReviewResponse = DeleteMyActivityReviewResponses[keyof DeleteMyActivityReviewResponses];
+
+export type GetMyActivityReviewData = {
+    body?: never;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/activities/{activityId}/my-review';
+};
+
+export type GetMyActivityReviewResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityReviewView;
+};
+
+export type GetMyActivityReviewResponse = GetMyActivityReviewResponses[keyof GetMyActivityReviewResponses];
+
+export type SaveMyActivityReviewData = {
+    body: ActivityReviewRequest;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/activities/{activityId}/my-review';
+};
+
+export type SaveMyActivityReviewResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityReviewView;
+};
+
+export type SaveMyActivityReviewResponse = SaveMyActivityReviewResponses[keyof SaveMyActivityReviewResponses];
 
 export type CredentialData = {
     body?: never;
@@ -1125,6 +1496,41 @@ export type LoginResponses = {
 
 export type LoginResponse = LoginResponses[keyof LoginResponses];
 
+export type ListAssistantConversationsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        page?: number;
+        pageSize?: number;
+    };
+    url: '/api/assistant/conversations';
+};
+
+export type ListAssistantConversationsResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponsePageResponseConversationView;
+};
+
+export type ListAssistantConversationsResponse = ListAssistantConversationsResponses[keyof ListAssistantConversationsResponses];
+
+export type CreateAssistantConversationData = {
+    body: ConversationRequest;
+    path?: never;
+    query?: never;
+    url: '/api/assistant/conversations';
+};
+
+export type CreateAssistantConversationResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseConversationView;
+};
+
+export type CreateAssistantConversationResponse = CreateAssistantConversationResponses[keyof CreateAssistantConversationResponses];
+
 export type List3Data = {
     body?: never;
     path?: never;
@@ -1174,6 +1580,42 @@ export type BindStaffResponses = {
 };
 
 export type BindStaffResponse = BindStaffResponses[keyof BindStaffResponses];
+
+export type RestoreActivityReviewData = {
+    body?: never;
+    path: {
+        reviewId: number;
+    };
+    query?: never;
+    url: '/api/admin/activity-reviews/{reviewId}/restore';
+};
+
+export type RestoreActivityReviewResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityReviewView;
+};
+
+export type RestoreActivityReviewResponse = RestoreActivityReviewResponses[keyof RestoreActivityReviewResponses];
+
+export type HideActivityReviewData = {
+    body: ReviewModerationRequest;
+    path: {
+        reviewId: number;
+    };
+    query?: never;
+    url: '/api/admin/activity-reviews/{reviewId}/hide';
+};
+
+export type HideActivityReviewResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityReviewView;
+};
+
+export type HideActivityReviewResponse = HideActivityReviewResponses[keyof HideActivityReviewResponses];
 
 export type RejectData = {
     body: ReviewRequest;
@@ -1463,6 +1905,59 @@ export type Detail3Responses = {
 
 export type Detail3Response = Detail3Responses[keyof Detail3Responses];
 
+export type GetMerchantTopActivitiesData = {
+    body?: never;
+    path?: never;
+    query?: {
+        limit?: number;
+    };
+    url: '/api/merchant/dashboard/top-activities';
+};
+
+export type GetMerchantTopActivitiesResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseListTopActivityView;
+};
+
+export type GetMerchantTopActivitiesResponse = GetMerchantTopActivitiesResponses[keyof GetMerchantTopActivitiesResponses];
+
+export type GetMerchantSalesTrendData = {
+    body?: never;
+    path?: never;
+    query?: {
+        startDate?: string;
+        endDate?: string;
+    };
+    url: '/api/merchant/dashboard/sales-trend';
+};
+
+export type GetMerchantSalesTrendResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseListSalesTrendView;
+};
+
+export type GetMerchantSalesTrendResponse = GetMerchantSalesTrendResponses[keyof GetMerchantSalesTrendResponses];
+
+export type GetMerchantOperationsDashboardData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/merchant/dashboard/operations';
+};
+
+export type GetMerchantOperationsDashboardResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseOperationsDashboardView;
+};
+
+export type GetMerchantOperationsDashboardResponse = GetMerchantOperationsDashboardResponses[keyof GetMerchantOperationsDashboardResponses];
+
 export type ActivityCoverData = {
     body?: never;
     path: {
@@ -1496,6 +1991,27 @@ export type MeResponses = {
 };
 
 export type MeResponse = MeResponses[keyof MeResponses];
+
+export type ListAssistantMessagesData = {
+    body?: never;
+    path: {
+        conversationId: number;
+    };
+    query?: {
+        beforeId?: number;
+        pageSize?: number;
+    };
+    url: '/api/assistant/conversations/{conversationId}/messages';
+};
+
+export type ListAssistantMessagesResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseListMessageView;
+};
+
+export type ListAssistantMessagesResponse = ListAssistantMessagesResponses[keyof ListAssistantMessagesResponses];
 
 export type Logs1Data = {
     body?: never;
@@ -1571,6 +2087,83 @@ export type Detail4Responses = {
 
 export type Detail4Response = Detail4Responses[keyof Detail4Responses];
 
+export type ListAdminOperationLogsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        operatorUserId?: number;
+        action?: string;
+        resourceType?: string;
+        startDate?: string;
+        endDate?: string;
+        page?: number;
+        pageSize?: number;
+    };
+    url: '/api/admin/operation-logs';
+};
+
+export type ListAdminOperationLogsResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponsePageResponseOperationLogView;
+};
+
+export type ListAdminOperationLogsResponse = ListAdminOperationLogsResponses[keyof ListAdminOperationLogsResponses];
+
+export type GetAdminTopActivitiesData = {
+    body?: never;
+    path?: never;
+    query?: {
+        limit?: number;
+    };
+    url: '/api/admin/dashboard/top-activities';
+};
+
+export type GetAdminTopActivitiesResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseListTopActivityView;
+};
+
+export type GetAdminTopActivitiesResponse = GetAdminTopActivitiesResponses[keyof GetAdminTopActivitiesResponses];
+
+export type GetAdminSalesTrendData = {
+    body?: never;
+    path?: never;
+    query?: {
+        startDate?: string;
+        endDate?: string;
+    };
+    url: '/api/admin/dashboard/sales-trend';
+};
+
+export type GetAdminSalesTrendResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseListSalesTrendView;
+};
+
+export type GetAdminSalesTrendResponse = GetAdminSalesTrendResponses[keyof GetAdminSalesTrendResponses];
+
+export type GetAdminOperationsDashboardData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/admin/dashboard/operations';
+};
+
+export type GetAdminOperationsDashboardResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseOperationsDashboardView;
+};
+
+export type GetAdminOperationsDashboardResponse = GetAdminOperationsDashboardResponses[keyof GetAdminOperationsDashboardResponses];
+
 export type SummaryData = {
     body?: never;
     path?: never;
@@ -1586,6 +2179,27 @@ export type SummaryResponses = {
 };
 
 export type SummaryResponse = SummaryResponses[keyof SummaryResponses];
+
+export type ListAdminActivityReviewsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        status?: string;
+        keyword?: string;
+        page?: number;
+        pageSize?: number;
+    };
+    url: '/api/admin/activity-reviews';
+};
+
+export type ListAdminActivityReviewsResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponsePageResponseActivityReviewView;
+};
+
+export type ListAdminActivityReviewsResponse = ListAdminActivityReviewsResponses[keyof ListAdminActivityReviewsResponses];
 
 export type Detail5Data = {
     body?: never;
@@ -1625,23 +2239,60 @@ export type PendingResponses = {
 
 export type PendingResponse = PendingResponses[keyof PendingResponses];
 
-export type CategoriesData = {
+export type ListMyActivityFavoritesData = {
+    body?: never;
+    path?: never;
+    query?: {
+        page?: number;
+        pageSize?: number;
+    };
+    url: '/api/activity-favorites';
+};
+
+export type ListMyActivityFavoritesResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponsePageResponseActivityFavoriteView;
+};
+
+export type ListMyActivityFavoritesResponse = ListMyActivityFavoritesResponses[keyof ListMyActivityFavoritesResponses];
+
+export type GetMyActivityFavoriteStatusData = {
+    body?: never;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/activity-favorites/{activityId}/status';
+};
+
+export type GetMyActivityFavoriteStatusResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityFavoriteStatusView;
+};
+
+export type GetMyActivityFavoriteStatusResponse = GetMyActivityFavoriteStatusResponses[keyof GetMyActivityFavoriteStatusResponses];
+
+export type ListPublicActivityCategoriesData = {
     body?: never;
     path?: never;
     query?: never;
     url: '/api/activity-categories';
 };
 
-export type CategoriesResponses = {
+export type ListPublicActivityCategoriesResponses = {
     /**
      * OK
      */
     200: ApiResponseListCategoryView;
 };
 
-export type CategoriesResponse = CategoriesResponses[keyof CategoriesResponses];
+export type ListPublicActivityCategoriesResponse = ListPublicActivityCategoriesResponses[keyof ListPublicActivityCategoriesResponses];
 
-export type ActivitiesData = {
+export type ListPublicActivitiesData = {
     body?: never;
     path?: never;
     query?: {
@@ -1655,16 +2306,16 @@ export type ActivitiesData = {
     url: '/api/activities';
 };
 
-export type ActivitiesResponses = {
+export type ListPublicActivitiesResponses = {
     /**
      * OK
      */
     200: ApiResponsePageResponseActivitySummaryView;
 };
 
-export type ActivitiesResponse = ActivitiesResponses[keyof ActivitiesResponses];
+export type ListPublicActivitiesResponse = ListPublicActivitiesResponses[keyof ListPublicActivitiesResponses];
 
-export type Detail6Data = {
+export type GetPublicActivityDetailData = {
     body?: never;
     path: {
         activityId: number;
@@ -1673,11 +2324,50 @@ export type Detail6Data = {
     url: '/api/activities/{activityId}';
 };
 
-export type Detail6Responses = {
+export type GetPublicActivityDetailResponses = {
     /**
      * OK
      */
     200: ApiResponseActivityDetailView;
 };
 
-export type Detail6Response = Detail6Responses[keyof Detail6Responses];
+export type GetPublicActivityDetailResponse = GetPublicActivityDetailResponses[keyof GetPublicActivityDetailResponses];
+
+export type ListPublicActivityReviewsData = {
+    body?: never;
+    path: {
+        activityId: number;
+    };
+    query?: {
+        page?: number;
+        pageSize?: number;
+    };
+    url: '/api/activities/{activityId}/reviews';
+};
+
+export type ListPublicActivityReviewsResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponsePageResponseActivityReviewView;
+};
+
+export type ListPublicActivityReviewsResponse = ListPublicActivityReviewsResponses[keyof ListPublicActivityReviewsResponses];
+
+export type GetActivityReviewSummaryData = {
+    body?: never;
+    path: {
+        activityId: number;
+    };
+    query?: never;
+    url: '/api/activities/{activityId}/review-summary';
+};
+
+export type GetActivityReviewSummaryResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseActivityReviewSummaryView;
+};
+
+export type GetActivityReviewSummaryResponse = GetActivityReviewSummaryResponses[keyof GetActivityReviewSummaryResponses];

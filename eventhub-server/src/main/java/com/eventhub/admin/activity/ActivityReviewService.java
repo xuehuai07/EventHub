@@ -9,6 +9,7 @@ import com.eventhub.activity.infrastructure.persistence.ActivityCommandMapper;
 import com.eventhub.activity.infrastructure.persistence.ActivityDetailRow;
 import com.eventhub.activity.infrastructure.persistence.ActivityQueryMapper;
 import com.eventhub.activity.infrastructure.persistence.ActivityRecord;
+import com.eventhub.audit.OperationLogService;
 import com.eventhub.common.api.PageResponse;
 import com.eventhub.common.error.BusinessException;
 import com.eventhub.common.error.ErrorCode;
@@ -25,18 +26,21 @@ public class ActivityReviewService {
     private final ActivityStateMachine stateMachine;
     private final ActivityViewAssembler assembler;
     private final ActivityDetailCache cache;
+    private final OperationLogService operationLogs;
 
     public ActivityReviewService(
             ActivityCommandMapper commands,
             ActivityQueryMapper queries,
             ActivityStateMachine stateMachine,
             ActivityViewAssembler assembler,
-            ActivityDetailCache cache) {
+            ActivityDetailCache cache,
+            OperationLogService operationLogs) {
         this.commands = commands;
         this.queries = queries;
         this.stateMachine = stateMachine;
         this.assembler = assembler;
         this.cache = cache;
+        this.operationLogs = operationLogs;
     }
 
     public PageResponse<ActivitySummaryView> pending(String keyword, int page, int pageSize) {
@@ -63,6 +67,7 @@ public class ActivityReviewService {
             throw new BusinessException(ErrorCode.ACTIVITY_STATUS_INVALID);
         }
         cache.evict(activityId);
+        operationLogs.record(reviewer, null, "ACTIVITY_APPROVE", "ACTIVITY", activityId, "审核通过活动");
         return detail(activityId);
     }
 
@@ -74,6 +79,7 @@ public class ActivityReviewService {
             throw new BusinessException(ErrorCode.ACTIVITY_STATUS_INVALID);
         }
         cache.evict(activityId);
+        operationLogs.record(reviewer, null, "ACTIVITY_REJECT", "ACTIVITY", activityId, "驳回活动，原因：" + reason.trim());
         return detail(activityId);
     }
 
@@ -85,6 +91,7 @@ public class ActivityReviewService {
             throw new BusinessException(ErrorCode.ACTIVITY_STATUS_INVALID);
         }
         cache.evict(activityId);
+        operationLogs.record(reviewer, null, "ACTIVITY_OFF_SHELF", "ACTIVITY", activityId, "下架活动，原因：" + reason.trim());
         return detail(activityId);
     }
 

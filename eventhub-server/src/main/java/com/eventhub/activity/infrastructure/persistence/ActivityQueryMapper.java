@@ -125,7 +125,13 @@ public interface ActivityQueryMapper {
             SELECT activity.id, activity.merchant_id, activity.category_id,
                    category.name AS category_name, merchant.name AS merchant_name,
                    activity.title, activity.summary, activity.description, activity.cover_url,
-                   activity.city, activity.status, activity.review_reason, activity.version
+                   activity.city, activity.status, activity.review_reason, activity.version,
+                   (SELECT COUNT(*) FROM eh_activity_favorite favorite
+                    WHERE favorite.activity_id = activity.id) AS favorite_count,
+                   (SELECT COUNT(*) FROM eh_activity_review review
+                    WHERE review.activity_id = activity.id AND review.status = 'PUBLISHED') AS review_count,
+                   (SELECT ROUND(AVG(review.rating), 1) FROM eh_activity_review review
+                    WHERE review.activity_id = activity.id AND review.status = 'PUBLISHED') AS average_rating
             FROM eh_activity activity
             JOIN eh_activity_category category ON category.id = activity.category_id
             JOIN eh_merchant merchant ON merchant.id = activity.merchant_id

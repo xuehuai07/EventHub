@@ -9,6 +9,7 @@ import com.eventhub.activity.dto.VenueView;
 import com.eventhub.activity.infrastructure.persistence.VenueMapper;
 import com.eventhub.activity.infrastructure.persistence.VenueRecord;
 import com.eventhub.activity.infrastructure.persistence.VenueSeatRecord;
+import com.eventhub.audit.OperationLogService;
 import com.eventhub.common.error.BusinessException;
 import com.eventhub.common.error.ErrorCode;
 import com.eventhub.security.AuthenticatedUser;
@@ -26,10 +27,12 @@ public class VenueService {
 
     private final VenueMapper mapper;
     private final MerchantContextService merchantContext;
+    private final OperationLogService operationLogs;
 
-    public VenueService(VenueMapper mapper, MerchantContextService merchantContext) {
+    public VenueService(VenueMapper mapper, MerchantContextService merchantContext, OperationLogService operationLogs) {
         this.mapper = mapper;
         this.merchantContext = merchantContext;
+        this.operationLogs = operationLogs;
     }
 
     public List<VenueView> list(AuthenticatedUser user) {
@@ -42,6 +45,8 @@ public class VenueService {
         MerchantBinding binding = merchantContext.requireActiveMerchant(user);
         VenueRecord venue = record(binding.merchantId(), request);
         mapper.insert(venue);
+        operationLogs.record(
+                user, binding.merchantId(), "VENUE_CREATE", "VENUE", venue.getId(), "创建场馆：" + venue.getName());
         return view(venue);
     }
 
@@ -54,6 +59,7 @@ public class VenueService {
         if (mapper.update(updated) == 0) {
             throw new BusinessException(ErrorCode.ACTIVITY_VERSION_CONFLICT);
         }
+        operationLogs.record(user, merchantId, "VENUE_UPDATE", "VENUE", venueId, "更新场馆：" + updated.getName());
         return view(mapper.findById(venueId));
     }
 
@@ -70,6 +76,8 @@ public class VenueService {
             mapper.insertSeats(seats.subList(start, Math.min(start + 500, seats.size())));
         }
         mapper.updateCapacity(venueId, seats.size());
+        operationLogs.record(
+                user, merchantId, "VENUE_SEATS_REBUILD", "VENUE", venueId, "重建固定座位，共 " + seats.size() + " 个");
         return view(mapper.findById(venueId));
     }
 

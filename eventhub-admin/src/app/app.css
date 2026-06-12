@@ -421,6 +421,267 @@
   border-radius: 16px;
 }
 
+.operations-dashboard {
+  display: grid;
+  gap: 26px;
+}
+
+.operations-hero {
+  display: flex;
+  min-height: 210px;
+  padding: 36px 42px;
+  color: #f7efe2;
+  align-items: center;
+  justify-content: space-between;
+  background:
+    linear-gradient(105deg, rgba(12, 18, 15, 0.98), rgba(46, 60, 46, 0.92)),
+    #182019;
+  border-radius: 18px;
+}
+
+.operations-hero h1 {
+  margin: 10px 0 12px;
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  font-weight: 400;
+}
+
+.operations-hero p {
+  max-width: 620px;
+  margin: 0;
+  color: #c9c7ba;
+}
+
+.operations-scope {
+  display: grid;
+  min-width: 220px;
+  padding-left: 32px;
+  gap: 8px;
+  border-left: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.operations-scope span {
+  color: #e98b66;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.operations-scope strong {
+  font-size: 1.2rem;
+}
+
+.operations-scope small {
+  color: #9fa69b;
+}
+
+.operations-metrics {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.operations-metrics article {
+  display: grid;
+  min-height: 142px;
+  padding: 20px;
+  align-content: space-between;
+  background: #fff;
+  border: 1px solid #ebe4d9;
+  border-radius: 14px;
+}
+
+.operations-metrics article > span {
+  color: #b94d2f;
+  font-size: 1.25rem;
+}
+
+.operations-metrics article small {
+  color: #88857c;
+}
+
+.operations-metrics article strong {
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 1.45rem;
+  font-weight: 500;
+}
+
+.operations-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(340px, 0.75fr);
+  gap: 20px;
+}
+
+.trend-panel,
+.ranking-panel,
+.audit-panel {
+  padding: 28px;
+  background: #fff;
+  border: 1px solid #ebe4d9;
+  border-radius: 16px;
+}
+
+.operations-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.operations-heading h2 {
+  margin: 7px 0 0;
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+.operations-heading > small {
+  color: #8c887f;
+}
+
+.trend-chart {
+  display: flex;
+  height: 260px;
+  margin-top: 28px;
+  padding-top: 20px;
+  gap: 6px;
+  align-items: flex-end;
+  border-bottom: 1px solid #ded7cb;
+}
+
+.trend-column {
+  display: flex;
+  height: 100%;
+  min-width: 8px;
+  flex: 1;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.trend-column > span {
+  width: 72%;
+  min-height: 6px;
+  background: linear-gradient(#c85d3e, #7f3422);
+  border-radius: 5px 5px 0 0;
+  transition: opacity 160ms ease;
+}
+
+.trend-column:hover > span {
+  opacity: 0.72;
+}
+
+.trend-column small {
+  color: #969188;
+  font-size: 0.62rem;
+  writing-mode: vertical-rl;
+}
+
+.activity-ranking {
+  display: grid;
+  margin-top: 20px;
+}
+
+.activity-ranking > div {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  padding: 15px 0;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid #eee8de;
+}
+
+.activity-ranking b {
+  color: #bd4e31;
+  font-family: Georgia, serif;
+}
+
+.activity-ranking span {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.activity-ranking span strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.activity-ranking span small {
+  color: #928d84;
+}
+
+.activity-ranking em {
+  font-style: normal;
+  font-weight: 700;
+}
+
+.dashboard-loading,
+.operations-empty {
+  display: grid;
+  min-height: 150px;
+  color: #918c82;
+  place-items: center;
+}
+
+.audit-page {
+  display: grid;
+  gap: 20px;
+}
+
+.admin-page-heading h1 {
+  margin: 8px 0;
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 2.7rem;
+  font-weight: 500;
+}
+
+.admin-page-heading p {
+  color: #77746d;
+}
+
+.audit-filters {
+  margin-bottom: 22px;
+}
+
+.audit-stars {
+  color: #c55738;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 1200px) {
+  .operations-metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .operations-hero,
+  .operations-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .operations-scope {
+    width: 100%;
+    padding: 20px 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    border-left: 0;
+  }
+
+  .operations-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .operations-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .panel-heading {
   display: flex;
   align-items: center;

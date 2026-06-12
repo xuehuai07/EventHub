@@ -19,6 +19,7 @@ import com.eventhub.activity.infrastructure.persistence.ActivityDetailRow;
 import com.eventhub.activity.infrastructure.persistence.ActivityQueryMapper;
 import com.eventhub.activity.infrastructure.persistence.ActivityRecord;
 import com.eventhub.activity.infrastructure.persistence.VenueMapper;
+import com.eventhub.audit.OperationLogService;
 import com.eventhub.common.error.BusinessException;
 import com.eventhub.common.error.ErrorCode;
 import com.eventhub.security.AuthenticatedUser;
@@ -56,6 +57,9 @@ class MerchantActivityServiceTests {
     @Mock
     private SessionSeatSnapshotService seatSnapshots;
 
+    @Mock
+    private OperationLogService operationLogs;
+
     private MerchantActivityService service;
 
     private final AuthenticatedUser user =
@@ -71,7 +75,8 @@ class MerchantActivityServiceTests {
                 new ActivityStateMachine(),
                 assembler,
                 cache,
-                seatSnapshots);
+                seatSnapshots,
+                operationLogs);
         when(merchantContext.requireActiveMerchant(user))
                 .thenReturn(new MerchantBinding(9, "测试商家", "ACTIVE", "ACTIVE"));
     }
@@ -155,7 +160,22 @@ class MerchantActivityServiceTests {
 
     private ActivityDetailRow detailRow(int version) {
         return new ActivityDetailRow(
-                1, 9, 3, "音乐", "测试商家", "原活动", "新简介", "新详情", "/new.png", "上海", ActivityStatus.PUBLISHED, null, version);
+                1,
+                9,
+                3,
+                "音乐",
+                "测试商家",
+                "原活动",
+                "新简介",
+                "新详情",
+                "/new.png",
+                "上海",
+                ActivityStatus.PUBLISHED,
+                null,
+                version,
+                0,
+                0,
+                null);
     }
 
     private ActivityDetailView detailView(int version) {
@@ -172,6 +192,9 @@ class MerchantActivityServiceTests {
                 ActivityStatus.PUBLISHED,
                 null,
                 version,
+                0,
+                0,
+                null,
                 List.of());
     }
 }

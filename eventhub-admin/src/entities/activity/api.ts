@@ -1,6 +1,5 @@
 import {
   approve,
-  categories,
   create3,
   createSession,
   deleteSession,
@@ -9,6 +8,7 @@ import {
   list2,
   pending,
   reject,
+  listPublicActivityCategories,
   submit,
   update1,
   updateSession,
@@ -20,7 +20,9 @@ import type {
 } from '../../shared/api/generated/types.gen'
 
 export async function getCategories() {
-  return (await categories({ throwOnError: true })).data.data ?? []
+  return (
+    (await listPublicActivityCategories({ throwOnError: true })).data.data ?? []
+  )
 }
 
 export async function getMerchantActivities() {

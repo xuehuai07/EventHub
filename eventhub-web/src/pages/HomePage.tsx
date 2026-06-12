@@ -53,6 +53,7 @@ export function HomePage() {
         <nav className="nav-links" aria-label="主导航">
           <Link to="/activities">发现活动</Link>
           {user && <Link to="/tickets">我的票券</Link>}
+          {user && <Link to="/favorites">我的收藏</Link>}
           {user && (
             <Link className="notification-link" to="/notifications">
               通知

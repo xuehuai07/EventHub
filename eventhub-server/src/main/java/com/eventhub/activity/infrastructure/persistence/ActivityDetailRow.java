@@ -15,4 +15,7 @@ public record ActivityDetailRow(
         String city,
         ActivityStatus status,
         String reviewReason,
-        int version) {}
+        int version,
+        long favoriteCount,
+        long reviewCount,
+        Double averageRating) {}

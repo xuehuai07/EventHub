@@ -31,6 +31,9 @@ public class ActivityViewAssembler {
                 row.status(),
                 row.reviewReason(),
                 row.version(),
+                row.favoriteCount(),
+                row.reviewCount(),
+                row.averageRating(),
                 mapper.findSessions(row.id()).stream().map(this::session).toList());
     }
 

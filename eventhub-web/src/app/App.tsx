@@ -51,6 +51,11 @@ const NotificationPage = lazy(() =>
     default: module.NotificationPage,
   })),
 )
+const FavoriteListPage = lazy(() =>
+  import('../pages/FavoriteListPage').then((module) => ({
+    default: module.FavoriteListPage,
+  })),
+)
 
 export function App() {
   return (
@@ -72,6 +77,7 @@ export function App() {
         <Route path="/tickets" element={<TicketListPage />} />
         <Route path="/tickets/:ticketId" element={<TicketDetailPage />} />
         <Route path="/notifications" element={<NotificationPage />} />
+        <Route path="/favorites" element={<FavoriteListPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="*" element={<NotFoundPage />} />
