@@ -11,6 +11,8 @@ import com.eventhub.activity.infrastructure.persistence.SessionSeatSnapshotMappe
 import com.eventhub.activity.infrastructure.persistence.VenueMapper;
 import com.eventhub.admin.dashboard.ActivityDashboardMapper;
 import com.eventhub.admin.merchant.MerchantAdminMapper;
+import com.eventhub.assistant.AssistantConversationMapper;
+import com.eventhub.assistant.AssistantToolMapper;
 import com.eventhub.notification.NotificationMapper;
 import com.eventhub.order.infrastructure.messaging.MessageConsumeMapper;
 import com.eventhub.order.infrastructure.outbox.OutboxEventMapper;
@@ -83,6 +85,12 @@ class AuthorizationBoundaryTests {
 
     @MockitoBean
     private NotificationMapper notificationMapper;
+
+    @MockitoBean
+    private AssistantConversationMapper assistantConversationMapper;
+
+    @MockitoBean
+    private AssistantToolMapper assistantToolMapper;
 
     @Test
     void userCannotAccessMerchantOrAdminEndpoints() throws Exception {

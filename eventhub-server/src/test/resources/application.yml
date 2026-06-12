@@ -32,3 +32,8 @@ eventhub:
   ticket:
     qr-secret: test-ticket-qr-secret-must-have-at-least-thirty-two-bytes
     qr-ttl: 60s
+  assistant:
+    api-key:
+    base-url: http://127.0.0.1
+    model: deepseek-v4-flash
+    timeout: 60s

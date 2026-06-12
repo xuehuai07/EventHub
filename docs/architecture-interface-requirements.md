@@ -2,7 +2,7 @@
 
 ## 版本
 
-当前稳定约束版本：`0.5.0`（2026-06-12）。
+当前稳定约束版本：`0.6.0`（2026-06-12）。
 
 ## 身份与会话
 
@@ -171,6 +171,30 @@ GET  /api/notifications
 GET  /api/notifications/unread-count
 POST /api/notifications/{notificationId}/read
 POST /api/notifications/read-all
+```
+
+## AI 智能助手
+
+- AI 助手模块固定为 `com.eventhub.assistant`，只允许已登录的 `USER_WEB` 普通用户访问。
+- 会话和消息分别保存于 `eh_ai_conversation`、`eh_ai_message`；会话归属必须使用当前认证用户 ID 校验。
+- 删除会话时数据库级联硬删除消息；未完整生成的助手回复不得保存。
+- DeepSeek Key 只允许通过后端 `DEEPSEEK_API_KEY` 环境变量注入，不得进入前端、数据库、日志或 Git。
+- 模型不得直接访问数据库、任意接口或任意 URL，只能调用后端注册的固定只读工具。
+- 首版工具固定为活动搜索、活动可售场次、本人已支付订单、本人订单票券和本人票券列表。
+- 订单和票券工具必须在 SQL 或应用服务入口使用当前用户 ID 限制归属，不接受模型提供用户 ID。
+- 发往模型的数据不得包含手机号、密码、Token、永久票号或二维码凭证。
+- 工具结果按不可信数据处理；模型生成的 URL 不作为可点击链接，资源链接只能由后端按站内路由生成。
+- 每条输入最多 2000 字，只发送最近 20 轮，最多执行 3 轮工具调用，总超时 60 秒。
+- 每个用户同时只允许一个生成流，Redis 键固定使用 `eventhub:assistant:stream:{userId}`。
+- SSE 事件固定为 `ack`、`delta`、`resources`、`done`、`error`。
+
+```text
+GET    /api/assistant/conversations
+POST   /api/assistant/conversations
+PUT    /api/assistant/conversations/{conversationId}
+DELETE /api/assistant/conversations/{conversationId}
+GET    /api/assistant/conversations/{conversationId}/messages
+POST   /api/assistant/conversations/{conversationId}/messages/stream
 ```
 
 ## 订单接口

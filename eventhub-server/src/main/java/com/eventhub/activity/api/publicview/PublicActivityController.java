@@ -24,13 +24,13 @@ public class PublicActivityController {
         this.service = service;
     }
 
-    @Operation(summary = "查询活动分类")
+    @Operation(operationId = "listPublicActivityCategories", summary = "查询活动分类")
     @GetMapping("/api/activity-categories")
     ApiResponse<List<CategoryView>> categories() {
         return ApiResponse.success(service.categories());
     }
 
-    @Operation(summary = "查询已发布活动")
+    @Operation(operationId = "listPublicActivities", summary = "查询已发布活动")
     @GetMapping("/api/activities")
     ApiResponse<PageResponse<ActivitySummaryView>> activities(
             @RequestParam(required = false) Long categoryId,
@@ -42,7 +42,7 @@ public class PublicActivityController {
         return ApiResponse.success(service.list(categoryId, city, keyword, date, page, pageSize));
     }
 
-    @Operation(summary = "查询已发布活动详情")
+    @Operation(operationId = "getPublicActivityDetail", summary = "查询已发布活动详情")
     @GetMapping("/api/activities/{activityId}")
     ApiResponse<ActivityDetailView> detail(@PathVariable long activityId) {
         return ApiResponse.success(service.detail(activityId));

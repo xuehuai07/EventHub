@@ -131,6 +131,26 @@ export type TicketTypeRequest = {
     saleLimitPerUser?: number;
 };
 
+export type ConversationRequest = {
+    title: string;
+};
+
+export type ApiResponseConversationView = {
+    code?: string;
+    message?: string;
+    data?: ConversationView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type ConversationView = {
+    id?: number;
+    title?: string;
+    lastMessageAt?: string;
+    createdAt?: string;
+    updatedAt?: string;
+};
+
 export type MerchantStatusRequest = {
     status: string;
 };
@@ -564,6 +584,49 @@ export type PageResponseActivitySummaryView = {
     totalPages?: number;
 };
 
+export type ApiResponsePageResponseConversationView = {
+    code?: string;
+    message?: string;
+    data?: PageResponseConversationView;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type PageResponseConversationView = {
+    items?: Array<ConversationView>;
+    page?: number;
+    pageSize?: number;
+    total?: number;
+    totalPages?: number;
+};
+
+export type ApiResponseListMessageView = {
+    code?: string;
+    message?: string;
+    data?: Array<MessageView>;
+    requestId?: string;
+    timestamp?: string;
+};
+
+export type MessageView = {
+    id?: number;
+    role?: string;
+    content?: string;
+    resources?: Array<ResourceCard>;
+    model?: string;
+    promptTokens?: number;
+    completionTokens?: number;
+    createdAt?: string;
+};
+
+export type ResourceCard = {
+    type?: string;
+    id?: number;
+    title?: string;
+    subtitle?: string;
+    href?: string;
+};
+
 export type ApiResponseListMerchantView = {
     code?: string;
     message?: string;
@@ -711,6 +774,42 @@ export type UpdateSessionResponses = {
 };
 
 export type UpdateSessionResponse = UpdateSessionResponses[keyof UpdateSessionResponses];
+
+export type DeleteAssistantConversationData = {
+    body?: never;
+    path: {
+        conversationId: number;
+    };
+    query?: never;
+    url: '/api/assistant/conversations/{conversationId}';
+};
+
+export type DeleteAssistantConversationResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseVoid;
+};
+
+export type DeleteAssistantConversationResponse = DeleteAssistantConversationResponses[keyof DeleteAssistantConversationResponses];
+
+export type RenameAssistantConversationData = {
+    body: ConversationRequest;
+    path: {
+        conversationId: number;
+    };
+    query?: never;
+    url: '/api/assistant/conversations/{conversationId}';
+};
+
+export type RenameAssistantConversationResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseConversationView;
+};
+
+export type RenameAssistantConversationResponse = RenameAssistantConversationResponses[keyof RenameAssistantConversationResponses];
 
 export type UpdateStatusData = {
     body: MerchantStatusRequest;
@@ -1125,6 +1224,41 @@ export type LoginResponses = {
 
 export type LoginResponse = LoginResponses[keyof LoginResponses];
 
+export type ListAssistantConversationsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        page?: number;
+        pageSize?: number;
+    };
+    url: '/api/assistant/conversations';
+};
+
+export type ListAssistantConversationsResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponsePageResponseConversationView;
+};
+
+export type ListAssistantConversationsResponse = ListAssistantConversationsResponses[keyof ListAssistantConversationsResponses];
+
+export type CreateAssistantConversationData = {
+    body: ConversationRequest;
+    path?: never;
+    query?: never;
+    url: '/api/assistant/conversations';
+};
+
+export type CreateAssistantConversationResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseConversationView;
+};
+
+export type CreateAssistantConversationResponse = CreateAssistantConversationResponses[keyof CreateAssistantConversationResponses];
+
 export type List3Data = {
     body?: never;
     path?: never;
@@ -1497,6 +1631,27 @@ export type MeResponses = {
 
 export type MeResponse = MeResponses[keyof MeResponses];
 
+export type ListAssistantMessagesData = {
+    body?: never;
+    path: {
+        conversationId: number;
+    };
+    query?: {
+        beforeId?: number;
+        pageSize?: number;
+    };
+    url: '/api/assistant/conversations/{conversationId}/messages';
+};
+
+export type ListAssistantMessagesResponses = {
+    /**
+     * OK
+     */
+    200: ApiResponseListMessageView;
+};
+
+export type ListAssistantMessagesResponse = ListAssistantMessagesResponses[keyof ListAssistantMessagesResponses];
+
 export type Logs1Data = {
     body?: never;
     path?: never;
@@ -1625,23 +1780,23 @@ export type PendingResponses = {
 
 export type PendingResponse = PendingResponses[keyof PendingResponses];
 
-export type CategoriesData = {
+export type ListPublicActivityCategoriesData = {
     body?: never;
     path?: never;
     query?: never;
     url: '/api/activity-categories';
 };
 
-export type CategoriesResponses = {
+export type ListPublicActivityCategoriesResponses = {
     /**
      * OK
      */
     200: ApiResponseListCategoryView;
 };
 
-export type CategoriesResponse = CategoriesResponses[keyof CategoriesResponses];
+export type ListPublicActivityCategoriesResponse = ListPublicActivityCategoriesResponses[keyof ListPublicActivityCategoriesResponses];
 
-export type ActivitiesData = {
+export type ListPublicActivitiesData = {
     body?: never;
     path?: never;
     query?: {
@@ -1655,16 +1810,16 @@ export type ActivitiesData = {
     url: '/api/activities';
 };
 
-export type ActivitiesResponses = {
+export type ListPublicActivitiesResponses = {
     /**
      * OK
      */
     200: ApiResponsePageResponseActivitySummaryView;
 };
 
-export type ActivitiesResponse = ActivitiesResponses[keyof ActivitiesResponses];
+export type ListPublicActivitiesResponse = ListPublicActivitiesResponses[keyof ListPublicActivitiesResponses];
 
-export type Detail6Data = {
+export type GetPublicActivityDetailData = {
     body?: never;
     path: {
         activityId: number;
@@ -1673,11 +1828,11 @@ export type Detail6Data = {
     url: '/api/activities/{activityId}';
 };
 
-export type Detail6Responses = {
+export type GetPublicActivityDetailResponses = {
     /**
      * OK
      */
     200: ApiResponseActivityDetailView;
 };
 
-export type Detail6Response = Detail6Responses[keyof Detail6Responses];
+export type GetPublicActivityDetailResponse = GetPublicActivityDetailResponses[keyof GetPublicActivityDetailResponses];

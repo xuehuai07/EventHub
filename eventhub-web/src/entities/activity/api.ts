@@ -1,17 +1,19 @@
 import {
-  activities,
-  categories,
-  detail5,
+  getPublicActivityDetail,
+  listPublicActivities,
+  listPublicActivityCategories,
 } from '../../shared/api/generated/sdk.gen'
-import type { ActivitiesData } from '../../shared/api/generated/types.gen'
+import type { ListPublicActivitiesData } from '../../shared/api/generated/types.gen'
 
 export async function getActivityCategories() {
-  return (await categories({ throwOnError: true })).data.data ?? []
+  return (
+    (await listPublicActivityCategories({ throwOnError: true })).data.data ?? []
+  )
 }
 
-export async function getActivities(query?: ActivitiesData['query']) {
+export async function getActivities(query?: ListPublicActivitiesData['query']) {
   return (
-    await activities({
+    await listPublicActivities({
       query: { page: 1, pageSize: 12, ...query },
       throwOnError: true,
     })
@@ -19,5 +21,10 @@ export async function getActivities(query?: ActivitiesData['query']) {
 }
 
 export async function getActivityDetail(activityId: number) {
-  return (await detail5({ path: { activityId }, throwOnError: true })).data.data
+  return (
+    await getPublicActivityDetail({
+      path: { activityId },
+      throwOnError: true,
+    })
+  ).data.data
 }

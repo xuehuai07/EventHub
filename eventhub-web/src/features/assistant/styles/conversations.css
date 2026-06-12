@@ -1,0 +1,130 @@
+.ai-toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.54);
+  border-bottom: 1px solid rgba(25, 50, 41, 0.1);
+}
+
+.ai-toolbar span {
+  flex: 1;
+}
+
+.ai-toolbar button,
+.ai-history-heading button {
+  padding: 0;
+  color: #59645d;
+  background: none;
+  border: 0;
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ai-toolbar button:first-child {
+  color: var(--ai-coral);
+}
+
+.ai-toolbar button:disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+
+.ai-guest-bar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  color: #59645d;
+  background: rgba(255, 255, 255, 0.54);
+  border-bottom: 1px solid rgba(25, 50, 41, 0.1);
+  font-size: 0.68rem;
+}
+
+.ai-guest-bar button {
+  flex: none;
+  padding: 5px 9px;
+  color: #fffaf0;
+  background: var(--ai-coral);
+  border: 0;
+  border-radius: 7px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ai-history {
+  position: absolute;
+  z-index: 5;
+  top: 65px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 18px;
+  background: rgba(247, 241, 228, 0.97);
+  backdrop-filter: blur(18px);
+  animation: ai-history-in 180ms ease;
+}
+
+@keyframes ai-history-in {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+.ai-history-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.ai-history-heading strong {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+}
+
+.ai-history-list {
+  display: grid;
+  gap: 7px;
+  max-height: calc(100% - 46px);
+  overflow: auto;
+}
+
+.ai-history-list > button {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  padding: 13px 14px;
+  color: #27312b;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(25, 50, 41, 0.1);
+  border-radius: 13px;
+  cursor: pointer;
+}
+
+.ai-history-list > button.is-active {
+  color: #fffaf0;
+  background: var(--ai-green);
+}
+
+.ai-history-list span {
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ai-history-list small {
+  opacity: 0.6;
+}
+
+.ai-history-list p {
+  color: #798079;
+  font-size: 0.8rem;
+}

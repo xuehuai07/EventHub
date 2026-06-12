@@ -79,6 +79,11 @@ eventhub:
   ticket:
     qr-secret: ${TICKET_QR_SECRET:change-this-ticket-qr-secret-before-production-32-bytes}
     qr-ttl: ${TICKET_QR_TTL:60s}
+  assistant:
+    api-key: ${DEEPSEEK_API_KEY:}
+    base-url: ${DEEPSEEK_BASE_URL:https://api.deepseek.com}
+    model: ${DEEPSEEK_MODEL:deepseek-v4-flash}
+    timeout: ${DEEPSEEK_TIMEOUT:60s}
   bootstrap:
     admin-username: ${BOOTSTRAP_ADMIN_USERNAME:}
     admin-password: ${BOOTSTRAP_ADMIN_PASSWORD:}

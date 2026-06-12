@@ -82,10 +82,14 @@ $env:BOOTSTRAP_MERCHANT_PASSWORD = '请替换为本地强密码'
 $env:BOOTSTRAP_MERCHANT_NAME = '本地演示商家'
 $env:AUTH_JWT_SECRET = '请替换为至少 32 位的随机字符串'
 $env:TICKET_QR_SECRET = '请替换为独立的至少 32 位随机字符串'
+$env:DEEPSEEK_API_KEY = '仅设置在本机环境中的 DeepSeek Key'
+$env:DEEPSEEK_BASE_URL = 'https://api.deepseek.com'
+$env:DEEPSEEK_MODEL = 'deepseek-v4-flash'
 .\mvnw spring-boot:run
 ```
 
 管理员和演示商家仅在账号不存在时创建，密码不会写入仓库或日志。
+DeepSeek Key 只允许通过后端环境变量注入，不得写入前端、数据库、日志或 Git。
 
 ## 当前功能入口
 
@@ -117,6 +121,8 @@ $env:TICKET_QR_SECRET = '请替换为独立的至少 32 位随机字符串'
 订单创建和支付事件通过 Outbox 可靠投递到 RabbitMQ。未支付订单由 TTL 死信消息及时关闭，数据库定时扫描继续兜底；支付成功后异步生成电子票。用户可查看电子票和短时动态二维码，商家可扫码或输入票号核销所属票券，平台保留首次和重复核销审计记录。
 
 支付、取消、超时关闭和出票会创建站内通知。登录用户通过 STOMP WebSocket 接收状态事件并刷新页面，断线时仍以 HTTP 查询和 MySQL 数据为准。
+
+登录用户可通过全站右下角的 AI 智能助手获取活动建议、可售场次入口，并查询本人已支付订单和票券状态。助手只调用后端固定的只读工具，不具备创建订单、支付、取消或核销能力；未配置 `DEEPSEEK_API_KEY` 时接口返回 `AI_NOT_CONFIGURED`。
 
 ## 活动封面上传
 
