@@ -20,24 +20,41 @@ export function AssistantMessages({
     <div className="ai-messages" ref={scrollRef} aria-live="polite">
       {!messages.length && !loading && <Welcome onPrompt={onPrompt} />}
       {loading && <div className="ai-loading">正在翻阅对话记录...</div>}
-      {messages.map((message) => (
-        <article
-          className={`ai-message ai-message-${message.role?.toLowerCase()} ${
-            message.failed ? 'is-failed' : ''
-          }`}
-          key={message.id || message.localId}
-        >
-          <small>{message.role === 'USER' ? '你' : 'EventHub 助手'}</small>
-          <p>{message.content}</p>
-          {message.pending && <span className="ai-typing">生成中</span>}
-          {!!message.resources?.length && (
-            <ResourceCards
-              resources={message.resources}
-              onResource={onResource}
-            />
-          )}
-        </article>
-      ))}
+      {messages.map((message) => {
+        const isAssistant = message.role === 'ASSISTANT'
+        const isThinking = isAssistant && message.pending && !message.content
+
+        return (
+          <article
+            className={`ai-message ai-message-${message.role?.toLowerCase()} ${
+              message.failed ? 'is-failed' : ''
+            }`}
+            key={message.id || message.localId}
+          >
+            {isAssistant && (
+              <span
+                className="ai-message-assistant-mark"
+                aria-label="EventHub 助手"
+              >
+                E
+              </span>
+            )}
+            {message.content && <p>{message.content}</p>}
+            {isThinking && (
+              <span className="ai-thinking" role="status">
+                <i aria-hidden="true" />
+                正在思考中
+              </span>
+            )}
+            {!!message.resources?.length && (
+              <ResourceCards
+                resources={message.resources}
+                onResource={onResource}
+              />
+            )}
+          </article>
+        )
+      })}
     </div>
   )
 }

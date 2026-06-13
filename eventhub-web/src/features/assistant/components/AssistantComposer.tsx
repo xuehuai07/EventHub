@@ -39,7 +39,7 @@ export function AssistantComposer({
       <textarea
         value={input}
         maxLength={2000}
-        rows={2}
+        rows={1}
         placeholder="描述时间、城市、预算或想看的活动..."
         onChange={(event) => onInput(event.target.value)}
         onKeyDown={(event) => {

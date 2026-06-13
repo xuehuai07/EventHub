@@ -4,10 +4,11 @@ import { useAuthStore } from '../auth/authStore'
 
 const clientType = 'ADMIN_WEB'
 const csrfCookieName = 'eventhub_admin_csrf'
+const apiOrigin = import.meta.env.VITE_API_ORIGIN || window.location.origin
 let refreshPromise: Promise<string> | null = null
 
 client.setConfig({
-  baseURL: import.meta.env.VITE_API_ORIGIN || '',
+  baseURL: apiOrigin,
   timeout: 10_000,
   withCredentials: true,
 })

@@ -10,7 +10,7 @@ export async function streamAssistantMessage(
 ) {
   const request = async (retried: boolean): Promise<void> => {
     const token = useAuthStore.getState().accessToken
-    const origin = import.meta.env.VITE_API_ORIGIN || ''
+    const origin = import.meta.env.VITE_API_ORIGIN || window.location.origin
     const response = await fetch(
       `${origin}/api/assistant/conversations/${conversationId}/messages/stream`,
       {
