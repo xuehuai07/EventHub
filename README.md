@@ -124,6 +124,8 @@ EventHub/
 
 前端按 Page、Feature、Entity 和 Shared 分层。服务端状态使用 TanStack Query，认证状态使用 Zustand，OpenAPI 生成目录不手工修改。
 
+![image](https://github.com/xuehuai07/EventHub/blob/main/Snipaste_2026-06-13_17-11-47.png)
+
 ## 快速开始
 
 ### 环境要求
